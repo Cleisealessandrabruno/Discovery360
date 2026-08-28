@@ -5,7 +5,79 @@
     es: { label: 'Español', locale: 'es-ES' }
   };
 
+  const keyedCatalog = {
+    'dashboard.section': { pt: 'Sua operação comercial', en: 'Your sales operation', es: 'Su operación comercial' },
+    'dashboard.greeting': { pt: 'Olá,', en: 'Hello,', es: 'Hola,' },
+    'dashboard.subtitle': { pt: 'Aqui está sua visão comercial de hoje.', en: "Here is today's sales overview.", es: 'Aquí está su panorama comercial de hoy.' },
+    'dashboard.newMeeting': { pt: '+ Nova reunião', en: '+ New meeting', es: '+ Nueva reunión' },
+    'dashboard.inProgress': { pt: 'EM ANDAMENTO', en: 'IN PROGRESS', es: 'EN CURSO' },
+    'dashboard.activeConversations': { pt: 'conversas ativas', en: 'active conversations', es: 'conversaciones activas' },
+    'dashboard.meetings': { pt: 'REUNIÕES', en: 'MEETINGS', es: 'REUNIONES' },
+    'dashboard.history': { pt: 'no seu histórico', en: 'in your history', es: 'en su historial' },
+    'dashboard.opportunities': { pt: 'OPORTUNIDADES', en: 'OPPORTUNITIES', es: 'OPORTUNIDADES' },
+    'dashboard.identified': { pt: 'identificadas', en: 'identified', es: 'identificadas' },
+    'dashboard.nextSteps': { pt: 'PRÓXIMOS PASSOS', en: 'NEXT STEPS', es: 'PRÓXIMOS PASOS' },
+    'common.pending': { pt: 'pendentes', en: 'pending', es: 'pendientes' },
+    'dashboard.followConversations': { pt: 'Acompanhe suas conversas', en: 'Track your conversations', es: 'Acompañe sus conversaciones' },
+    'dashboard.recentMeetings': { pt: 'Reuniões recentes', en: 'Recent meetings', es: 'Reuniones recientes' },
+    'dashboard.empty': { pt: 'Nenhuma reunião cadastrada ainda.', en: 'No meetings registered yet.', es: 'Aún no hay reuniones registradas.' },
+    'dashboard.guide': { pt: '📖 Guia de Descoberta do CLM', en: '📖 CLM Discovery Guide', es: '📖 Guía de Descubrimiento del CLM' },
+    'dashboard.meetingCount.one': { pt: '1 reunião', en: '1 meeting', es: '1 reunión' },
+    'dashboard.meetingCount.many': { pt: '{count} reuniões', en: '{count} meetings', es: '{count} reuniones' }
+  };
+
   const translations = {
+    'EM ANDAMENTO': ['IN PROGRESS', 'EN CURSO'], 'Conversas ativas': ['Active conversations', 'Conversaciones activas'],
+    'conversas ativas': ['active conversations', 'conversaciones activas'], 'REUNIÕES': ['MEETINGS', 'REUNIONES'],
+    'no seu histórico': ['in your history', 'en su historial'], 'OPORTUNIDADES': ['OPPORTUNITIES', 'OPORTUNIDADES'],
+    'identificadas': ['identified', 'identificadas'], 'PRÓXIMOS PASSOS': ['NEXT STEPS', 'PRÓXIMOS PASOS'],
+    'Nenhuma reunião cadastrada ainda.': ['No meetings registered yet.', 'Aún no hay reuniones registradas.'],
+    'Guia de Descoberta do CLM': ['CLM Discovery Guide', 'Guía de Descubrimiento del CLM'],
+    '📖 Guia de Descoberta do CLM': ['📖 CLM Discovery Guide', '📖 Guía de Descubrimiento del CLM'],
+    'Descobertas mais': ['Clearer', 'Descubrimientos más'], 'claras.': ['discoveries.', 'claros.'],
+    'Conversas melhores.': ['Better conversations.', 'Mejores conversaciones.'],
+    'Conduza conversas, registre descobertas e organize oportunidades.': ['Lead conversations, capture discoveries and organize opportunities.', 'Conduzca conversaciones, registre descubrimientos y organice oportunidades.'],
+    'Roteiros de descoberta': ['Discovery scripts', 'Guiones de descubrimiento'], 'Registro estruturado': ['Structured records', 'Registro estructurado'],
+    'Histórico de perguntas e respostas': ['Question and answer history', 'Historial de preguntas y respuestas'], 'Relatórios para análise': ['Analysis reports', 'Informes para análisis'],
+    'Acesso restrito a usuários autorizados · Discovery 360': ['Access restricted to authorized users · Discovery 360', 'Acceso restringido a usuarios autorizados · Discovery 360'],
+    'Prepare o contexto antes da conversa. Campos com * são obrigatórios.': ['Prepare the context before the conversation. Fields marked * are required.', 'Prepare el contexto antes de la conversación. Los campos con * son obligatorios.'],
+    'Cliente *': ['Customer *', 'Cliente *'], 'Assunto *': ['Subject *', 'Asunto *'], 'Data *': ['Date *', 'Fecha *'],
+    'Número da Lead *': ['Lead number *', 'Número del Lead *'], 'Lead ou Oportunidade da reunião *': ['Meeting Lead or Opportunity *', 'Lead u Oportunidad de la reunión *'],
+    'Desligado: Lead · Ligado: Oportunidade': ['Off: Lead · On: Opportunity', 'Desactivado: Lead · Activado: Oportunidad'],
+    'Segmento': ['Segment', 'Segmento'], 'Solução Microsoft em discussão': ['Microsoft solution being discussed', 'Solución Microsoft en discusión'],
+    'Contexto da conversa': ['Conversation context', 'Contexto de la conversación'], 'Contexto prévio da reunião': ['Previous meeting context', 'Contexto previo de la reunión'],
+    '+ Adicionar mais contexto': ['+ Add more context', '+ Agregar más contexto'], 'Observações de preparação': ['Preparation notes', 'Observaciones de preparación'],
+    'Registro da conversa': ['Conversation record', 'Registro de la conversación'], 'REUNIÃO ATIVA': ['ACTIVE MEETING', 'REUNIÓN ACTIVA'],
+    'Gerou oportunidade': ['Generated opportunity', 'Generó oportunidad'], 'Registrar próximo passo': ['Record next step', 'Registrar próximo paso'],
+    'Selecione uma pergunta para começar.': ['Select a question to begin.', 'Seleccione una pregunta para comenzar.'],
+    'Registre aqui exatamente o que o cliente respondeu.': ['Record exactly what the customer answered.', 'Registre exactamente lo que respondió el cliente.'],
+    'Relatório de descoberta': ['Discovery report', 'Informe de descubrimiento'], 'Análise inteligente': ['Intelligent analysis', 'Análisis inteligente'],
+    'Catálogo de referência': ['Reference catalog', 'Catálogo de referencia'], 'Consulta independente. Abrir conteúdos aqui não altera nenhuma reunião.': ['Independent consultation. Opening content here does not change any meeting.', 'Consulta independiente. Abrir contenido aquí no modifica ninguna reunión.'],
+    'Explore os Sales Plays por sinal, categoria e solução potencial.': ['Explore Sales Plays by signal, category and potential solution.', 'Explore los Sales Plays por señal, categoría y solución potencial.'],
+    'Nenhum play encontrado. Tente outro termo ou remova o filtro.': ['No play found. Try another term or remove the filter.', 'No se encontró ningún play. Pruebe otro término o quite el filtro.'],
+    'Matriz rápida de oportunidades': ['Quick opportunity matrix', 'Matriz rápida de oportunidades'], 'Sinal do cliente': ['Customer signal', 'Señal del cliente'],
+    'Abordagem principal': ['Primary approach', 'Enfoque principal'], 'Tipo': ['Type', 'Tipo'],
+    'Use cada checklist para manter o registro comercial completo.': ['Use each checklist to keep the sales record complete.', 'Use cada lista para mantener completo el registro comercial.'],
+    '+ Nova instância': ['+ New instance', '+ Nueva instancia'], 'Instância ativa': ['Active instance', 'Instancia activa'],
+    'Avalie a aderência da conversa ao processo Microsoft e gere um feedback estruturado.': ['Assess how well the conversation follows the Microsoft process and generate structured feedback.', 'Evalúe la adherencia de la conversación al proceso Microsoft y genere comentarios estructurados.'],
+    'O número deve pertencer a uma reunião já cadastrada.': ['The number must belong to an existing meeting.', 'El número debe pertenecer a una reunión registrada.'],
+    'Qualidade comercial': ['Sales quality', 'Calidad comercial'], 'Higiene operacional': ['Operational hygiene', 'Higiene operativa'],
+    'Reuniões por pessoa': ['Meetings by person', 'Reuniones por persona'], 'Pessoa': ['Person', 'Persona'], 'Última reunião': ['Last meeting', 'Última reunión'],
+    'Log de auditoria consolidado': ['Consolidated audit log', 'Registro consolidado de auditoría'], 'Evento': ['Event', 'Evento'],
+    'Checklist de oportunidade com alto potencial de pipeline': ['High-potential pipeline opportunity checklist', 'Lista de oportunidad con alto potencial de pipeline'],
+    'Confirme cada indicador antes de finalizar a reunião.': ['Confirm each indicator before finishing the meeting.', 'Confirme cada indicador antes de finalizar la reunión.'],
+    'Voltar e buscar mais informações': ['Go back and gather more information', 'Volver y buscar más información'],
+    'Etapa obrigatória': ['Required step', 'Paso obligatorio'], 'SOLUÇÃO POTENCIAL': ['POTENTIAL SOLUTION', 'SOLUCIÓN POTENCIAL'],
+    'SINAIS DE ALTO POTENCIAL': ['HIGH-POTENTIAL SIGNALS', 'SEÑALES DE ALTO POTENCIAL'], 'Usar este Play em uma reunião': ['Use this Play in a meeting', 'Usar este Play en una reunión'],
+    'Estrutura de decisão do CLM — Do sinal à oportunidade': ['CLM decision framework — From signal to opportunity', 'Marco de decisión del CLM — De la señal a la oportunidad'],
+    'Use dados da conta, licenciamento, atividades, setor e contexto do cliente.': ['Use account data, licensing, activities, industry and customer context.', 'Use datos de la cuenta, licencias, actividades, sector y contexto del cliente.'],
+    'Selecione o problema de negócio mais plausível. Trate-o como hipótese, não como fato.': ['Select the most plausible business problem. Treat it as a hypothesis, not a fact.', 'Seleccione el problema de negocio más plausible. Trátelo como hipótesis, no como hecho.'],
+    'Faça de duas a quatro perguntas de alto valor sobre Situação e Problema.': ['Ask two to four high-value questions about Situation and Problem.', 'Haga de dos a cuatro preguntas de alto valor sobre Situación y Problema.'],
+    'Explore impacto em tempo, custo, risco, produtividade, receita, conformidade ou crescimento.': ['Explore impact on time, cost, risk, productivity, revenue, compliance or growth.', 'Explore el impacto en tiempo, costo, riesgo, productividad, ingresos, cumplimiento o crecimiento.'],
+    'Use perguntas de Necessidade–Solução para que o cliente expresse o valor.': ['Use Need–Payoff questions so the customer expresses the value.', 'Use preguntas de Necesidad–Solución para que el cliente exprese el valor.'],
+    'Relacione a necessidade validada à carga de trabalho Microsoft pertinente.': ['Connect the validated need to the relevant Microsoft workload.', 'Relacione la necesidad validada con la carga de trabajo Microsoft pertinente.'],
+    'Confirme adequação, partes interessadas, prazo, orçamento e próxima etapa.': ['Confirm fit, stakeholders, timeline, budget and next step.', 'Confirme adecuación, partes interesadas, plazo, presupuesto y próximo paso.'],
+    'Avalie o potencial e determine se deve se tornar uma oportunidade.': ['Assess the potential and determine whether it should become an opportunity.', 'Evalúe el potencial y determine si debe convertirse en una oportunidad.'],
     'Entrar': ['Sign in', 'Iniciar sesión'], 'Use suas credenciais corporativas.': ['Use your corporate credentials.', 'Use sus credenciales corporativas.'],
     'E-mail corporativo': ['Corporate email', 'Correo corporativo'], 'Senha': ['Password', 'Contraseña'], 'Mostrar': ['Show', 'Mostrar'], 'Ocultar': ['Hide', 'Ocultar'],
     'Manter conectado': ['Keep me signed in', 'Mantener la sesión iniciada'], 'Esqueci minha senha': ['Forgot my password', 'Olvidé mi contraseña'],
@@ -71,7 +143,12 @@
   const placeholders = {
     'nome.sobrenome@empresa.com': ['name.surname@company.com', 'nombre.apellido@empresa.com'],
     'Digite a resposta...': ['Type the answer...', 'Escriba la respuesta...'],
-    'Buscar na Biblioteca 360...': ['Search the 360 Library...', 'Buscar en la Biblioteca 360...']
+    'Buscar na Biblioteca 360...': ['Search the 360 Library...', 'Buscar en la Biblioteca 360...'],
+    'Buscar na matriz...': ['Search the matrix...', 'Buscar en la matriz...'], 'Nome do contato': ['Contact name', 'Nombre del contacto'],
+    'Empresa do cliente': ["Customer's company", 'Empresa del cliente'], 'Informe o número da Lead': ['Enter the Lead number', 'Ingrese el número del Lead'],
+    'Opcional': ['Optional', 'Opcional'], 'Ex.: Varejo, Finanças...': ['E.g.: Retail, Finance...', 'Ej.: Retail, Finanzas...'],
+    'O foco desta conversa': ['The focus of this conversation', 'El foco de esta conversación'],
+    'Digite ou selecione uma solução': ['Type or select a solution', 'Escriba o seleccione una solución']
   };
 
   const originalText = new WeakMap();
@@ -87,12 +164,23 @@
     if (!originalText.has(node)) originalText.set(node, node.nodeValue);
     const original = originalText.get(node);
     const trimmed = original.trim();
+    const meetingCount = trimmed.match(/^(\d+) reuniões?$/i);
+    if (meetingCount) {
+      const count = Number(meetingCount[1]);
+      node.nodeValue = original.replace(trimmed, t(count === 1 ? 'dashboard.meetingCount.one' : 'dashboard.meetingCount.many', { count: String(count) }));
+      return;
+    }
     if (!trimmed || !translations[trimmed]) return;
     node.nodeValue = original.replace(trimmed, translated(trimmed, currentLanguage));
   }
 
   function translateElement(element) {
     if (!(element instanceof Element) || element.closest('[data-no-translate], textarea, script, style')) return;
+    const key = element.getAttribute('data-i18n');
+    if (key && keyedCatalog[key]) {
+      const value = keyedCatalog[key][currentLanguage] || keyedCatalog[key].pt;
+      if (element.textContent !== value) element.textContent = value;
+    }
     element.childNodes.forEach((node) => { if (node.nodeType === Node.TEXT_NODE) translateTextNode(node); });
     ['placeholder', 'title', 'aria-label'].forEach((attribute) => {
       if (!element.hasAttribute(attribute)) return;
@@ -136,5 +224,11 @@
     }))).observe(document.body, { childList: true, subtree: true });
   });
 
-  window.DiscoveryI18n = { setLanguage: applyLanguage, getLanguage: () => currentLanguage, getLocale: () => languages[currentLanguage].locale, t: (text) => translated(text, currentLanguage) };
+  function t(key, variables = {}) {
+    const item = keyedCatalog[key];
+    const template = item ? (item[currentLanguage] || item.pt) : translated(key, currentLanguage);
+    return Object.entries(variables).reduce((value, [name, replacement]) => value.replaceAll(`{${name}}`, replacement), template);
+  }
+  window.DiscoveryI18n = { setLanguage: applyLanguage, getLanguage: () => currentLanguage, getLocale: () => languages[currentLanguage].locale, t };
+  window.t = t;
 }());
