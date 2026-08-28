@@ -945,3 +945,31 @@ select:focus-visible,
 
 @media (max-width: 1000px) { .visual-library-nav, .security-map { grid-template-columns: repeat(2, 1fr); } .adoption-journey { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 700px) { .visual-library { width: calc(100% - 24px); padding: 18px; } .visual-library-heading { display: block; } .visual-library-heading > span { display: inline-block; margin-top: 14px; } .visual-library-nav, .security-map, .copilot-map, .zero-trust-principles, .adoption-journey { grid-template-columns: 1fr; } .visual-library-content { padding: 18px; } }
+
+/* Identificação obrigatória da reunião */
+.meeting-identifier-field { display: grid; grid-template-columns: minmax(240px, .7fr) 1.3fr; align-items: end; gap: 22px; padding: 20px; border: 1px solid #cda9e2; border-radius: 12px; background: linear-gradient(100deg, #f8f1fc, #ead7f7); }
+.meeting-identifier-field > label { display: flex; flex-direction: column; gap: 8px; color: #2b123b; font-size: 15px; font-weight: 800; }
+.meeting-identifier-field > label input { min-height: 48px; border-color: #a100ff; background: #fff; font-size: 16px; font-weight: 700; }
+.identifier-type-control { display: flex; flex-direction: column; gap: 8px; }
+.identifier-type-control small { color: #6d5d76; font-size: 12px; }
+.switch-control { display: flex; flex-direction: row !important; align-items: center; gap: 12px !important; cursor: pointer; }
+.switch-control input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+.switch-track { position: relative; width: 52px; height: 28px; border: 2px solid #8f7c99; border-radius: 999px; background: #fff; transition: .2s ease; }
+.switch-track::after { content: ''; position: absolute; top: 3px; left: 3px; width: 18px; height: 18px; border-radius: 50%; background: #6f6874; transition: .2s ease; }
+.switch-control input:checked + .switch-track { border-color: #a100ff; background: #a100ff; }
+.switch-control input:checked + .switch-track::after { left: 27px; background: #fff; }
+.switch-control input:focus-visible + .switch-track { outline: 3px solid rgba(161, 0, 255, .3); outline-offset: 3px; }
+.switch-control strong { color: #5b168b; font-size: 18px; }
+.report-identifier { padding: 11px 13px; border-left: 4px solid #a100ff; color: #2b123b; background: #f0e2fa; font-size: 15px; }
+.audit-lead-card label small { display: block; margin-top: 6px; color: #6d5d76; font-size: 12px; font-weight: 500; }
+
+@media (max-width: 700px) { .meeting-identifier-field { grid-template-columns: 1fr; } }
+
+/* Alerta de novas solicitações ao lado do perfil administrador */
+.topbar-meta { display: flex; align-items: center; }
+.access-alert-button { display: inline-flex; align-items: center; gap: 5px; margin-left: 12px; padding: 5px 8px 5px 5px; border: 1px solid rgba(255,255,255,.45); border-radius: 999px; color: #2b123b; background: #ead7f7; cursor: pointer; animation: accessAlertPulse 1.8s ease-in-out infinite; }
+.access-alert-button > span { display: grid; width: 23px; height: 23px; place-items: center; border-radius: 50%; color: #fff; background: #a100ff; font-size: 15px; font-weight: 900; }
+.access-alert-button > b { min-width: 14px; font-size: 13px; text-align: center; }
+.access-alert-button:hover { color: #fff; background: #a100ff; }
+.access-alert-button:hover > span { color: #a100ff; background: #fff; }
+@keyframes accessAlertPulse { 0%,100% { box-shadow: 0 0 0 0 rgba(161,0,255,.28); } 50% { box-shadow: 0 0 0 6px rgba(161,0,255,.13); } }

@@ -43,6 +43,8 @@ function renderCallAuditAnalysis() {
 function renderCallAudit() {
   const container = document.getElementById('callAuditQuestions');
   if (!container) return;
+  const meetings = typeof getMeetings === 'function' ? getMeetings().filter((meeting) => meeting.identificador_numero) : [];
+  document.getElementById('callAuditMeetingIdentifiers').innerHTML = meetings.map((meeting) => `<option value="${callAuditEscape(meeting.identificador_numero)}">${meeting.identificador_tipo === 'oportunidade' ? 'Oportunidade' : 'Lead'} · ${callAuditEscape(meeting.empresa)} · ${callAuditEscape(meeting.assunto)}</option>`).join('');
   document.getElementById('callAuditLead').value = activeCallAudit.lead;
   document.getElementById('callAuditScore').textContent = activeCallAudit.score ?? '—';
   container.innerHTML = CALL_AUDIT_SECTIONS.map((section, sectionIndex) => `<section class="call-audit-group"><div class="call-audit-group-heading"><span>${String(sectionIndex + 1).padStart(2, '0')}</span><h2>${section.title}</h2></div>${section.questions.map((question, questionIndex) => { const key = `${sectionIndex}-${questionIndex}`; return `<div class="call-audit-question"><p>${question}</p><div class="audit-answer-options" role="group" aria-label="Resposta para: ${callAuditEscape(question)}"><button type="button" data-audit-key="${key}" data-audit-answer="sim" class="${activeCallAudit.answers[key] === 'sim' ? 'selected yes' : ''}">Sim</button><button type="button" data-audit-key="${key}" data-audit-answer="nao" class="${activeCallAudit.answers[key] === 'nao' ? 'selected no' : ''}">Não</button></div></div>`; }).join('')}</section>`).join('');
@@ -53,9 +55,13 @@ function renderCallAudit() {
 function generateCallAnalysis() {
   const lead = document.getElementById('callAuditLead').value.trim();
   const message = document.getElementById('callAuditMessage');
-  if (!lead) { message.textContent = 'Informe o número da lead.'; return; }
+  if (!lead) { message.textContent = 'Informe o número da Lead ou Oportunidade.'; return; }
+  const meeting = typeof getMeetings === 'function' ? getMeetings().find((item) => item.identificador_numero === lead) : null;
+  if (!meeting) { message.textContent = 'Não foi encontrada uma reunião com esse número de Lead ou Oportunidade.'; return; }
   if (Object.keys(activeCallAudit.answers).length !== callAuditQuestionCount) { message.textContent = `Responda Sim ou Não para todas as ${callAuditQuestionCount} perguntas.`; return; }
   activeCallAudit.lead = lead;
+  activeCallAudit.meetingId = meeting.id;
+  activeCallAudit.identifierType = meeting.identificador_tipo;
   activeCallAudit.score = calculateCallAuditScore();
   activeCallAudit.analysis = buildCallAuditAnalysis();
   activeCallAudit.updatedAt = new Date().toISOString();
@@ -69,7 +75,8 @@ function exportCallAuditWord() {
   if (!activeCallAudit.analysis) { message.textContent = 'Gere a análise antes de exportar.'; return; }
   const rows = CALL_AUDIT_SECTIONS.map((section, sectionIndex) => `<h2>${section.title}</h2><table><tr><th>Pergunta</th><th>Resposta</th></tr>${section.questions.map((question, questionIndex) => `<tr><td>${callAuditEscape(question)}</td><td>${activeCallAudit.answers[`${sectionIndex}-${questionIndex}`] === 'sim' ? 'Sim' : 'Não'}</td></tr>`).join('')}</table>`).join('');
   const analysis = document.getElementById('callAuditAnalysisContent').innerHTML;
-  const html = `<!doctype html><html><head><meta charset="utf-8"><style>body{font-family:Arial;color:#17121f;margin:32px}h1,h2,h3{color:#5b168b}table{width:100%;border-collapse:collapse;margin-bottom:22px}th,td{border:1px solid #d8c3e5;padding:8px;text-align:left}th{background:#f0e2fa}</style></head><body><h1>Auditoria de Ligação</h1><p><b>Número da lead:</b> ${callAuditEscape(activeCallAudit.lead)}<br><b>Overall Call Score:</b> ${activeCallAudit.score} de 5</p>${rows}<h2>Análise da Ligação</h2>${analysis}</body></html>`;
+  const identifierLabel = activeCallAudit.identifierType === 'oportunidade' ? 'Oportunidade' : 'Lead';
+  const html = `<!doctype html><html><head><meta charset="utf-8"><style>body{font-family:Arial;color:#17121f;margin:32px}h1,h2,h3{color:#5b168b}table{width:100%;border-collapse:collapse;margin-bottom:22px}th,td{border:1px solid #d8c3e5;padding:8px;text-align:left}th{background:#f0e2fa}</style></head><body><h1>Auditoria de Ligação</h1><p><b>${identifierLabel}:</b> ${callAuditEscape(activeCallAudit.lead)}<br><b>Overall Call Score:</b> ${activeCallAudit.score} de 5</p>${rows}<h2>Análise da Ligação</h2>${analysis}</body></html>`;
   const link = document.createElement('a'); link.href = URL.createObjectURL(new Blob(['\ufeff', html], { type: 'application/msword' })); link.download = `Auditoria_Ligacao_${activeCallAudit.lead.replace(/[^a-z0-9_-]/gi, '_')}.doc`; link.click(); setTimeout(() => URL.revokeObjectURL(link.href), 1000);
 }
 

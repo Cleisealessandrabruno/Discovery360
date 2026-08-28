@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=8">
+  <link rel="stylesheet" href="styles.css?v=10">
 </head>
 <body>
   <section id="loginView" class="login-view" hidden>
@@ -20,7 +20,7 @@
       <a class="brand" href="#dashboard" aria-label="Discovery 360">
         <span><strong>Discovery 360</strong></span>
       </a>
-        <nav class="global-nav" aria-label="Menu principal"><a href="#dashboard">Dashboard</a><a href="#nova-reuniao">Nova reunião</a><a href="#biblioteca">Biblioteca 360</a><a href="#checklists">Checklists</a><a href="#auditoria-ligacao">Auditoria de ligação</a><a id="accessNav" href="#validacao-acessos" hidden>Validação de acessos <span id="accessNotificationBadge" class="notification-badge" hidden>0</span></a><button id="logoutButton">Sair</button></nav><div class="topbar-meta"><span class="live-dot"></span> Discovery 360 <span class="divider"></span> <span id="roleLabel">ADMIN</span></div>
+        <nav class="global-nav" aria-label="Menu principal"><a href="#dashboard">Dashboard</a><a href="#nova-reuniao">Nova reunião</a><a href="#biblioteca">Biblioteca 360</a><a href="#checklists">Checklists</a><a href="#auditoria-ligacao">Auditoria de ligação</a><a id="accessNav" href="#validacao-acessos" hidden>Validação de acessos <span id="accessNotificationBadge" class="notification-badge" hidden>0</span></a><button id="logoutButton">Sair</button></nav><div class="topbar-meta"><span class="live-dot"></span> Discovery 360 <span class="divider"></span> <span id="roleLabel">ADMIN</span><button id="accessAlertButton" class="access-alert-button" type="button" hidden aria-label="Abrir solicitações de acesso pendentes"><span aria-hidden="true">!</span><b id="accessAlertCount">0</b></button></div>
     </header>
 
     <main id="top">
@@ -46,6 +46,7 @@
           <div class="form-grid">
             <label>Cliente *<input name="cliente" required type="text" placeholder="Nome do contato"></label>
             <label>Empresa *<input name="empresa" required type="text" placeholder="Empresa do cliente"></label>
+            <div class="meeting-identifier-field full-width"><div class="identifier-type-control"><label class="switch-control"><input id="identifierTypeToggle" type="checkbox"><span class="switch-track" aria-hidden="true"></span><strong id="identifierTypeLabel">Lead</strong></label><small>Desligado: Lead · Ligado: Oportunidade</small></div><label><span id="identifierNumberLabel">Número da Lead *</span><input id="identifierNumber" name="identificador_numero" required type="text" placeholder="Informe o número da Lead"></label></div>
             <label>TPID<input name="tpid" type="text" placeholder="Opcional"></label>
             <label>Segmento<input name="segmento" type="text" placeholder="Ex.: Varejo, Finanças..."></label>
             <label>Data *<input name="data" required type="date"></label>
@@ -70,7 +71,7 @@
 
       <section id="callAuditView" class="call-audit-view" hidden>
         <div class="audit-page-header"><div><p class="eyebrow">Qualidade comercial</p><h1>Auditoria de ligação</h1><p>Avalie a aderência da conversa ao processo Microsoft e gere um feedback estruturado.</p></div><div class="audit-header-actions"><button id="newCallAuditButton" class="secondary-button">Nova auditoria</button><button id="exportCallAuditButton" class="primary-button">Exportar para Word</button></div></div>
-        <div class="audit-lead-card"><label>Número da lead *<input id="callAuditLead" type="text" placeholder="Informe o número da lead"></label><div><span>Overall Call Score</span><strong id="callAuditScore">—</strong><small>de 5</small></div></div>
+        <div class="audit-lead-card"><label>Lead ou Oportunidade da reunião *<input id="callAuditLead" type="text" list="callAuditMeetingIdentifiers" placeholder="Informe ou selecione o número"><datalist id="callAuditMeetingIdentifiers"></datalist><small>O número deve pertencer a uma reunião já cadastrada.</small></label><div><span>Overall Call Score</span><strong id="callAuditScore">—</strong><small>de 5</small></div></div>
         <p id="callAuditMessage" class="form-error" aria-live="polite"></p>
         <div id="callAuditQuestions" class="call-audit-groups"></div>
         <div class="audit-generate-row"><button id="generateCallAnalysisButton" class="primary-button">Gerar análise da ligação</button></div>
@@ -158,8 +159,8 @@
   <script src="meeting-partner-store.js"></script>
   <script src="word-export.js"></script>
   <script src="auth-store.js"></script>
-  <script src="call-audit.js?v=1"></script>
+  <script src="call-audit.js?v=2"></script>
   <script src="visual-library.js?v=1"></script>
-  <script src="app.js?v=3"></script>
+  <script src="app.js?v=5"></script>
 </body>
 </html>
