@@ -39,10 +39,11 @@ const views = {
   ,library: document.getElementById('libraryView')
   ,access: document.getElementById('accessView')
   ,checklists: document.getElementById('checklistsView')
+  ,callAudit: document.getElementById('callAuditView')
 };
 
 function navigate(view, meetingId = null) {
-  const routeByView = { form: 'nova-reuniao', library: 'biblioteca', access: 'validacao-acessos' };
+  const routeByView = { form: 'nova-reuniao', library: 'biblioteca', access: 'validacao-acessos', callAudit: 'auditoria-ligacao' };
   const hash = view === 'report' ? `relatorio/${meetingId}` : view === 'workspace' ? `reuniao/${meetingId}` : (routeByView[view] || view);
   window.location.hash = hash;
   state.activeMeetingId = meetingId;
@@ -53,6 +54,7 @@ function navigate(view, meetingId = null) {
   views.library.hidden = view !== 'library';
   views.access.hidden = view !== 'access';
   views.checklists.hidden = view !== 'checklists';
+  views.callAudit.hidden = view !== 'callAudit';
   views.login.hidden = view !== 'login';
   document.querySelector('.app-shell').hidden = view === 'login';
   if (view === 'dashboard') renderDashboard();
@@ -62,6 +64,7 @@ function navigate(view, meetingId = null) {
   if (view === 'library') renderLibrary();
   if (view === 'access') renderAccessView();
   if (view === 'checklists') renderChecklists();
+  if (view === 'callAudit') initializeCallAudit();
   if (view === 'login') clearSession();
 }
 
@@ -151,7 +154,7 @@ function updateFinalChecklistMessage() { const values = getFinalChecklistValues(
 function openQualificationModal() { renderFinalChecklist(); document.getElementById('qualificationModal').hidden = false; }
 function closeQualificationModal() { document.getElementById('qualificationModal').hidden = true; }
 function finalizeMeeting() { const values = getFinalChecklistValues(); const total = values.filter((item) => item.resposta === 'sim').length; const checklist = { meeting_id: state.activeMeetingId, respostas: values, total_sim: total, percentual: total * 10, decisao_usuario: total < 8 ? 'finalizou_apos_alerta' : 'finalizar_direto', respondido_em: new Date().toISOString() }; saveFinalChecklist(state.activeMeetingId, checklist); registrarAuditoria(state.activeMeetingId, `Checklist de qualificação final registrado (${total}/10 · ${total * 10}%).`); const meeting = getMeetingById(state.activeMeetingId); meeting.status = 'concluida'; saveMeeting(meeting); registrarAuditoria(state.activeMeetingId, 'Reunião finalizada e relatório gerado.'); closeQualificationModal(); navigate('workspace', state.activeMeetingId); setMeetingTab('summary'); }
-function reportCard(title, content, key = '') { const editable = REPORTABLE_MATERIALS.includes(key); return `<article class="report-card ${editable ? 'editable-report-card' : ''}"><div class="report-card-heading"><h2>${title}</h2>${editable ? `<button class="save-material-button" data-material-key="${key}" hidden>Salvar</button>` : ''}</div><div class="report-card-content" data-material-content="${key}">${editable ? `<p>${escapeHtml(content).replaceAll('\n', '<br>')}</p>` : content}</div></article>`; }
+function reportCard(title, content, key = '') { const friendlyTitles = { accountPlan: 'Account Plan', followUpEmail: 'Follow Up Email', crmDescription: 'Profile Description', executiveSummary: 'Executive Summary', nextSteps: 'Next Steps', customerProfile: 'Customer Profile', businessChallenges: 'Business Challenges' }; const displayTitle = friendlyTitles[title] || title.replace(/([a-z])([A-Z])/g, '$1 $2').replace(/\b\w/g, (letter) => letter.toUpperCase()); const editable = REPORTABLE_MATERIALS.includes(key); return `<article class="report-card ${editable ? 'editable-report-card' : ''}"><div class="report-card-heading"><h2>${displayTitle}</h2>${editable ? `<button class="save-material-button" data-material-key="${key}" hidden>Salvar</button>` : ''}</div><div class="report-card-content" data-material-content="${key}">${editable ? `<p>${escapeHtml(content).replaceAll('\n', '<br>')}</p>` : content}</div></article>`; }
 function renderReport(meetingId) { const meeting = getMeetingById(meetingId); if (!meeting) return; const intelligence = gerarInteligenciaEstruturada(meetingId); const materials = getReportMaterials(meetingId); const checklist = getFinalChecklist(meetingId); const partner = getDadosParceiro(meetingId); document.getElementById('reportTitle').textContent = `${meeting.empresa}${meeting.tpid ? ` (${meeting.tpid})` : ''}`; document.getElementById('reportSubtitle').textContent = `${primaryPlay(meeting)?.titulo || meeting.assunto} · atualizado em ${new Date(meeting.updated_at).toLocaleString('pt-BR')}`; const checklistHtml = checklist ? `<strong>${checklist.total_sim}/10 · ${checklist.percentual}%</strong><ul>${checklist.respostas.map((item) => `<li class="${item.resposta === 'nao' ? 'report-no' : ''}">${item.resposta === 'sim' ? '✓' : '×'} ${escapeHtml(item.pergunta)}</li>`).join('')}</ul><p>${checklist.percentual < 80 ? 'Reunião finalizada abaixo do recomendado (80%), por decisão do CLM.' : 'Esta reunião apresenta bons indicadores de oportunidade.'}</p>` : '<p>Não registrado.</p>'; const dataHtml = `<p><b>Cliente:</b> ${escapeHtml(meeting.cliente)}<br><b>TPID:</b> ${escapeHtml(meeting.tpid || 'Não informado')}<br><b>Status:</b> Concluída<br><b>Participantes:</b> ${escapeHtml(meeting.cliente)} (Cliente), ${USER_NAME} (CLM)</p><p><b>Anotações originais:</b><br>${escapeHtml([meeting.contexto_previo, ...(meeting.contextos_adicionais || [])].filter(Boolean).join('\n') || 'Não informado.')}</p>`; const intelligenceHtml = `<p>${escapeHtml(intelligence.opening)}</p><p><b>Produtos:</b> ${escapeHtml(intelligence.products.join(', '))}<br><b>SPIN:</b> ${escapeHtml(intelligence.spin)}<br><b>Oportunidades:</b> ${escapeHtml(intelligence.opportunities.join(', '))}<br><b>${escapeHtml(intelligence.qualification)}</b></p>`; const partnerHtml = partner ? `<p><b>Opportunity Intent:</b> ${escapeHtml((OPPORTUNITY_MOTIONS.find((motion) => motion.id === partner.opportunity_intent) || {}).label || partner.opportunity_intent)}<br><b>Parceiro:</b> ${escapeHtml(partner.parceiro_nome)}${partner.distribuidora ? `<br><b>Distribuidora:</b> ${escapeHtml(partner.distribuidora)}` : ''}<br><b>DAS / Owner:</b> ${escapeHtml(partner.das)}<br><b>Engajamento:</b> ${escapeHtml(partner.engajamento)}</p>` : '<p>Não informado.</p>'; document.getElementById('reportCards').innerHTML = reportCard('Dados da reunião', dataHtml) + reportCard('Parceiro envolvido', partnerHtml) + reportCard('Inteligência estruturada', intelligenceHtml) + reportCard('accountPlan', materials.account_plan, 'account_plan') + reportCard('followUpEmail', materials.follow_up_email, 'follow_up_email') + reportCard('crmDescription', materials.crm_description, 'crm_description') + reportCard('executiveSummary', materials.executive_summary, 'executive_summary') + reportCard(`Perguntas e Respostas Registradas (${allSavedResponses(meeting).length})`, `<pre>${escapeHtml(gerarTranscricaoCompleta(meetingId))}</pre><button id="copyTranscriptButton" class="copy-button">Copiar como texto</button>`) + reportCard('Checklist de Qualificação Final', checklistHtml) + reportCard('Auditoria', `<ul class="audit-list">${auditHtml(meetingId)}</ul>`); bindReportActions(meetingId); }
 function bindReportActions(meetingId) { document.getElementById('copyTranscriptButton')?.addEventListener('click', () => navigator.clipboard?.writeText(gerarTranscricaoCompleta(meetingId))); document.querySelectorAll('.save-material-button').forEach((button) => button.addEventListener('click', () => { const key = button.dataset.materialKey; const editor = button.parentElement.nextElementSibling.querySelector('textarea'); saveReportMaterial(meetingId, { [key]: editor.value }); registrarAuditoria(meetingId, `Texto de ${key} editado manualmente por ${USER_NAME}.`); renderReport(meetingId); })); }
 function toggleMaterialEditing(meetingId) { document.querySelectorAll('.editable-report-card').forEach((card) => { const content = card.querySelector('.report-card-content'); const key = content.dataset.materialContent; const current = getReportMaterials(meetingId)[key]; content.innerHTML = `<textarea>${escapeHtml(current)}</textarea>`; card.querySelector('.save-material-button').hidden = false; }); }
@@ -324,6 +327,7 @@ window.addEventListener('hashchange', () => {
   if (view === 'nova-reuniao') navigate('form');
   if (view === 'biblioteca') navigate('library');
   if (view === 'checklists') navigate('checklists');
+  if (view === 'auditoria-ligacao') navigate('callAudit');
   if (view === 'validacao-acessos') { if (isAdmin()) navigate('access'); else { navigate('dashboard'); showToast('Você não tem permissão para acessar esta página.'); } }
 });
 
@@ -336,6 +340,7 @@ if (!CURRENT_SESSION) {
 else if (initialRoute.startsWith('reuniao/')) navigate('workspace', initialRoute.split('/')[1]);
 else if (initialRoute === 'biblioteca') navigate('library');
 else if (initialRoute === 'checklists') navigate('checklists');
+else if (initialRoute === 'auditoria-ligacao') navigate('callAudit');
 else if (initialRoute === 'validacao-acessos') { if (isAdmin()) navigate('access'); else navigate('dashboard'); }
 else if (initialRoute === 'nova-reuniao') navigate('form');
 else navigate('dashboard');

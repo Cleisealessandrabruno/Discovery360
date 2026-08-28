@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=6">
+  <link rel="stylesheet" href="styles.css?v=8">
 </head>
 <body>
   <section id="loginView" class="login-view" hidden>
@@ -18,10 +18,9 @@
   <div class="app-shell">
     <header class="topbar">
       <a class="brand" href="#dashboard" aria-label="Discovery 360">
-        <img class="header-accenture-logo" src="assets/accenture-logo.webp" alt="Accenture">
         <span><strong>Discovery 360</strong></span>
       </a>
-        <nav class="global-nav" aria-label="Menu principal"><a href="#dashboard">Dashboard</a><a href="#nova-reuniao">Nova reunião</a><a href="#biblioteca">Biblioteca 360</a><a href="#checklists">Checklists</a><a id="accessNav" href="#validacao-acessos" hidden>Validação de acessos <span id="accessNotificationBadge" class="notification-badge" hidden>0</span></a><button id="logoutButton">Sair</button></nav><div class="topbar-meta"><span class="live-dot"></span> Discovery 360 <span class="divider"></span> <span id="roleLabel">ADMIN</span></div>
+        <nav class="global-nav" aria-label="Menu principal"><a href="#dashboard">Dashboard</a><a href="#nova-reuniao">Nova reunião</a><a href="#biblioteca">Biblioteca 360</a><a href="#checklists">Checklists</a><a href="#auditoria-ligacao">Auditoria de ligação</a><a id="accessNav" href="#validacao-acessos" hidden>Validação de acessos <span id="accessNotificationBadge" class="notification-badge" hidden>0</span></a><button id="logoutButton">Sair</button></nav><div class="topbar-meta"><span class="live-dot"></span> Discovery 360 <span class="divider"></span> <span id="roleLabel">ADMIN</span></div>
     </header>
 
     <main id="top">
@@ -68,6 +67,15 @@
 
       <section id="accessView" class="access-view" hidden><div class="form-heading"><p class="eyebrow">Administração</p><h1>Validação de acessos</h1><p>Visão consolidada da operação e auditoria.</p></div><div class="access-tabs"><button class="access-tab active" data-access-tab="requests">Solicitações de acesso</button><button class="access-tab" data-access-tab="emails">E-mails simulados</button><button class="access-tab" data-access-tab="overview">Visão operacional</button></div><div id="accessRequestsPane"><div class="access-filters"><button class="filter active" data-request-filter="todos">Todos</button><button class="filter" data-request-filter="pendente">Pendentes</button><button class="filter" data-request-filter="aprovado">Aprovados</button><button class="filter" data-request-filter="rejeitado">Rejeitados</button></div><div class="meetings-table-wrap"><table class="meetings-table"><thead><tr><th>Data</th><th>Nome</th><th>Empresa</th><th>E-mail</th><th>Cargo</th><th>Status</th><th>Ações</th></tr></thead><tbody id="accessRequestsBody"></tbody></table></div></div><div id="accessEmailsPane" class="access-tab-pane" hidden><div id="simulatedEmailsList"></div></div><div id="accessOverviewPane" class="access-tab-pane" hidden><div class="kpi-grid"><div class="kpi-card"><span>SOLICITAÇÕES</span><strong id="pendingRequestCount">0</strong><small>pendentes</small></div></div><div class="meetings-heading"><h2>Reuniões por pessoa</h2></div><div class="meetings-table-wrap"><table class="meetings-table"><thead><tr><th>Pessoa</th><th>Total</th><th>Rascunhos</th><th>Em andamento</th><th>Concluídas</th><th>Última reunião</th></tr></thead><tbody id="accessPeopleBody"></tbody></table></div><div class="meetings-heading"><h2>Log de auditoria consolidado</h2></div><div class="meetings-table-wrap"><table class="meetings-table"><thead><tr><th>Data</th><th>Evento</th><th>Reunião</th></tr></thead><tbody id="accessAuditBody"></tbody></table></div></div></section>
       <section id="checklistsView" class="checklists-view" hidden><div class="form-heading"><p class="eyebrow">Higiene operacional</p><h1>Checklists</h1><p>Use cada checklist para manter o registro comercial completo.</p></div><div id="checklistTabs" class="checklist-tabs" role="tablist"></div><div class="checklist-toolbar"><label>Instância ativa<select id="checklistInstanceSelect"></select></label><button id="newChecklistInstanceButton" class="secondary-button">+ Nova instância</button><div id="newChecklistInstanceForm" class="new-checklist-instance" hidden><input id="newChecklistInstanceName" type="text" placeholder="TPID ou nome do cliente"><button id="confirmChecklistInstanceButton" class="primary-button">Criar</button></div></div><div id="checklistContent"></div></section>
+
+      <section id="callAuditView" class="call-audit-view" hidden>
+        <div class="audit-page-header"><div><p class="eyebrow">Qualidade comercial</p><h1>Auditoria de ligação</h1><p>Avalie a aderência da conversa ao processo Microsoft e gere um feedback estruturado.</p></div><div class="audit-header-actions"><button id="newCallAuditButton" class="secondary-button">Nova auditoria</button><button id="exportCallAuditButton" class="primary-button">Exportar para Word</button></div></div>
+        <div class="audit-lead-card"><label>Número da lead *<input id="callAuditLead" type="text" placeholder="Informe o número da lead"></label><div><span>Overall Call Score</span><strong id="callAuditScore">—</strong><small>de 5</small></div></div>
+        <p id="callAuditMessage" class="form-error" aria-live="polite"></p>
+        <div id="callAuditQuestions" class="call-audit-groups"></div>
+        <div class="audit-generate-row"><button id="generateCallAnalysisButton" class="primary-button">Gerar análise da ligação</button></div>
+        <section id="callAuditAnalysis" class="call-audit-analysis" hidden><p class="eyebrow">Análise inteligente</p><h2>Análise da Ligação</h2><div id="callAuditAnalysisContent"></div></section>
+      </section>
 
       <section id="workspaceView" class="workspace-view">
       <div id="meetingTabs" class="meeting-tabs" hidden><button class="meeting-tab active" data-meeting-tab="questions">Perguntas</button><button class="meeting-tab" data-meeting-tab="history">Perguntas e respostas <span id="historyCount">0</span></button><button class="meeting-tab" data-meeting-tab="partner">Parceiro</button><button class="meeting-tab" data-meeting-tab="summary">Resumo final</button></div>
@@ -150,6 +158,8 @@
   <script src="meeting-partner-store.js"></script>
   <script src="word-export.js"></script>
   <script src="auth-store.js"></script>
-  <script src="app.js?v=2"></script>
+  <script src="call-audit.js?v=1"></script>
+  <script src="visual-library.js?v=1"></script>
+  <script src="app.js?v=3"></script>
 </body>
 </html>
