@@ -563,3 +563,146 @@ button, input { font: inherit; }
 .access-request-modal * {
   outline: none;
 }
+
+/* Legibilidade e acabamento visual */
+html { font-size: 16px; }
+body { line-height: 1.55; }
+p, li, td, label, input, textarea, select, button, a { line-height: 1.5; }
+
+.global-nav a,
+.global-nav button,
+.meeting-tab,
+.filter,
+.primary-button,
+.secondary-button,
+.back-button,
+.complete-button,
+.table-action,
+.custom-question-button,
+.ask-question-button,
+.answer-primary-button,
+.answer-status-actions button,
+.save-material-button,
+.copy-button { font-size: 14px; }
+
+.eyebrow,
+.result-count,
+.hero-aside p,
+.play-card .trigger,
+.card-footer,
+.dashboard-empty,
+.form-grid label,
+.meetings-table td,
+.meeting-tab-pane pre,
+.partial-summary,
+.checklist-item,
+.checklist-intro > p:not(.eyebrow),
+.report-card-content,
+.guide-grid ol,
+.qualification-modal > p:not(.eyebrow),
+.final-check-item,
+.discovery-question-row p,
+.answer-label,
+.answer-label small,
+.partner-form legend,
+.partner-form > label,
+.partner-fields-grid label { font-size: 14px; }
+
+.login-form label,
+.login-options,
+.login-options label,
+.login-options button,
+.login-form > p,
+.request-row { font-size: 14px; }
+
+.login-form label > input[type="email"],
+.login-form label > input[type="password"],
+.login-form label > input[type="text"],
+.login-password input { font-size: 16px; }
+
+.meetings-table th,
+.meetings-table td small,
+.kpi-card small,
+.checklist-progress small,
+.discovery-question-row small,
+.login-form-panel footer,
+.login-form-panel footer small { font-size: 12px; }
+
+input,
+textarea,
+select,
+.form-grid input,
+.form-grid textarea,
+.partner-form > label input,
+.partner-fields-grid input,
+.checklist-toolbar select,
+.new-checklist-instance input,
+.qualification-controls select,
+.qualification-controls input,
+.next-step-form input,
+.next-step-form textarea,
+.answer-label textarea { font-size: 15px; }
+
+.play-card,
+.report-card,
+.checklist-section,
+.answer-panel,
+.qualification-modal {
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(43, 18, 59, .07);
+}
+
+.primary-button,
+.secondary-button,
+.complete-button,
+.answer-primary-button,
+.login-primary,
+.login-secondary { min-height: 44px; border-radius: 8px; }
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+.access-request-modal *:focus-visible {
+  outline: 3px solid rgba(161, 0, 255, .35);
+  outline-offset: 3px;
+}
+
+@media (max-width: 700px) {
+  .global-nav { gap: 14px; }
+  .topbar { min-height: 76px; height: auto; padding-block: 10px; }
+  .dashboard-view, .meeting-form-view, .checklists-view, .report-view { padding-inline: 18px; }
+  .kpi-card { min-height: 140px; }
+}
+
+/* Paleta inspirada na Accenture: cabecalho e filtros da Biblioteca */
+.topbar {
+  color: #fff;
+  background: linear-gradient(105deg, #17051f 0%, #2b123b 62%, #4c126d 100%);
+  border-bottom-color: rgba(255, 255, 255, .14);
+  box-shadow: 0 6px 22px rgba(43, 18, 59, .18);
+}
+.topbar .brand { padding: 9px 14px 9px 10px; border-radius: 10px; background: rgba(255, 255, 255, .08); }
+.topbar .brand-mark { display: none; }
+.topbar .brand { gap: 0; padding-left: 14px; }
+.topbar .brand strong { color: #fff; }
+.topbar .brand-mark::before, .topbar .brand-mark::after { background: #a100ff; }
+.global-nav a, .global-nav button { padding: 9px 11px; border-radius: 7px; color: #e9dff0; transition: color .2s ease, background .2s ease, transform .2s ease; }
+.global-nav a:hover, .global-nav button:hover, .global-nav a:focus-visible, .global-nav button:focus-visible { color: #fff; background: rgba(161, 0, 255, .28); transform: translateY(-1px); }
+.topbar-meta { color: #e9dff0; }
+.topbar-meta .divider { border-left-color: rgba(255, 255, 255, .28); }
+.topbar .live-dot { background: #d6ff00; box-shadow: 0 0 0 3px rgba(214, 255, 0, .12); }
+
+.library-view .toolbar { gap: 16px; padding: 14px; border: 1px solid #dfc9ed; border-radius: 12px; background: #f5ecfa; }
+.library-view .search-box { padding: 9px 12px; border: 1px solid #d8bce8; border-radius: 8px; background: #fff; }
+.library-view .filter-group { gap: 8px; }
+.library-view .filter { min-height: 40px; padding: 9px 13px; border-color: #cda9e2; border-radius: 8px; color: #5b168b; background: #fff; font-weight: 700; box-shadow: 0 2px 5px rgba(43, 18, 59, .06); }
+.library-view .filter:hover { border-color: #a100ff; color: #7500bd; background: #ead7f7; transform: translateY(-1px); }
+.library-view .filter.active { border-color: #a100ff; color: #fff; background: linear-gradient(135deg, #a100ff, #7500bd); box-shadow: 0 5px 13px rgba(161, 0, 255, .24); }
+
+@media (max-width: 900px) {
+  .topbar { align-items: flex-start; flex-wrap: wrap; gap: 10px; padding-block: 12px; }
+  .global-nav { order: 3; width: 100%; padding-bottom: 3px; }
+  .library-view .toolbar { padding: 12px; }
+}

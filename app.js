@@ -42,7 +42,8 @@ const views = {
 };
 
 function navigate(view, meetingId = null) {
-  const hash = view === 'form' ? 'nova-reuniao' : view === 'report' ? `relatorio/${meetingId}` : view;
+  const routeByView = { form: 'nova-reuniao', library: 'biblioteca', access: 'validacao-acessos' };
+  const hash = view === 'report' ? `relatorio/${meetingId}` : view === 'workspace' ? `reuniao/${meetingId}` : (routeByView[view] || view);
   window.location.hash = hash;
   state.activeMeetingId = meetingId;
   views.dashboard.hidden = view !== 'dashboard';
@@ -105,46 +106,20 @@ function setMeetingTab(tab) { document.querySelectorAll('.meeting-tab').forEach(
 function renderLibrary() { const query = (document.getElementById('librarySearchInput')?.value || '').toLocaleLowerCase('pt-BR'); const filter = document.querySelector('#libraryFilterGroup .active')?.dataset.filter || 'TODOS'; const plays = state.plays.filter((play) => (filter === 'TODOS' || play.categoria.includes(filter)) && [play.titulo, play.gatilho, play.solucao_potencial, ...play.categoria].join(' ').toLocaleLowerCase('pt-BR').includes(query)); document.getElementById('libraryResultCount').textContent = `${plays.length} resultados`; document.getElementById('libraryGrid').innerHTML = plays.map((play) => `<article class="play-card" data-library-id="${play.id}"><div class="card-top"><span class="play-number">${String(play.id).padStart(2, '0')}</span><div class="chips">${play.categoria.map((category) => `<span class="chip">${category}</span>`).join('')}</div></div><h3>${play.titulo}</h3><p class="trigger">${play.gatilho}</p><div class="card-footer"><span>${play.solucao_potencial}</span><span class="arrow">↗</span></div></article>`).join(''); document.querySelectorAll('[data-library-id]').forEach((card) => card.addEventListener('click', () => openDetail(Number(card.dataset.libraryId)))); }
 function renderAccessView() { if (!isAdmin()) { navigate('dashboard'); showToast('Você não tem permissão para acessar esta página.'); return; } renderAccessRequests(); renderSimulatedEmails(); const meetings = getMeetings(); const people = {}; meetings.forEach((meeting) => { const person = meeting.usuario_responsavel || USER_NAME; people[person] = people[person] || []; people[person].push(meeting); }); document.getElementById('accessPeopleBody').innerHTML = Object.entries(people).map(([person, items]) => `<tr><td>${person}</td><td>${items.length}</td><td>${items.filter((item) => item.status === 'rascunho').length}</td><td>${items.filter((item) => item.status === 'em_andamento').length}</td><td>${items.filter((item) => item.status === 'concluida').length}</td><td>${formatDate(items.sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at))[0].data)}</td></tr>`).join('') || '<tr><td colspan="6">Nenhum dado disponível.</td></tr>'; const events = meetings.flatMap((meeting) => getAudit(meeting.id).map((event) => ({ ...event, meeting }))).sort((a, b) => new Date(b.data_hora) - new Date(a.data_hora)); document.getElementById('accessAuditBody').innerHTML = events.map((event) => `<tr><td>${new Date(event.data_hora).toLocaleString('pt-BR')}</td><td>${event.descricao}</td><td>${event.meeting.empresa}</td></tr>`).join('') || '<tr><td colspan="3">Nenhum evento registrado.</td></tr>'; }
 let requestFilter = 'todos'; let selectedRequestId = null;
-function renderAccessRequests() { const requests = getAccessRequests().filter((request) => requestFilter === 'todos' || request.status === requestFilter).sort((a, b) => new Date(b.criado_em) - new Date(a.criado_em)); document.getElementById('pendingRequestCount').textContent = getAccessRequests().filter((request) => request.status === 'pendente').length; document.getElementById('accessRequestsBody').innerHTML = requests.map((request) => `<tr><td>${new Date(request.criado_em).toLocaleDateString('pt-BR')}</td><td><strong>${request.nome}</strong></td><td>${request.empresa}</td><td>${request.email}</td><td>${request.cargo}</td><td>${request.motivo_acesso}</td><td><span class="status-pill ${request.status}">${request.status}</span></td><td>${request.status === 'pendente' ? `<select class="role-select" data-approve-request="${request.request_id}"><option value="">Perfil...</option><option>Administrador</option><option>Gerente</option><option>CLM</option><option>Especialista</option><option>Parceiro</option></select><button class="table-action" data-view-request="${request.request_id}">Detalhes</button><button class="table-action reject-action" data-reject-request="${request.request_id}">Rejeitar</button>` : `<button class="table-action" data-view-request="${request.request_id}">Detalhes</button>`}</td></tr>`).join('') || '<tr><td colspan="8">Nenhuma solicitação encontrada.</td></tr>'; document.querySelectorAll('[data-approve-request]').forEach((select) => select.addEventListener('change', () => { if (select.value) approveRequest(select.dataset.approveRequest, select.value); })); document.querySelectorAll('[data-reject-request]').forEach((button) => button.addEventListener('click', () => openRejectRequest(button.dataset.rejectRequest))); document.querySelectorAll('[data-view-request]').forEach((button) => button.addEventListener('click', () => showRequestDetails(button.dataset.viewRequest))); }
+function renderAccessRequests() { const requests = getAccessRequests().filter((request) => requestFilter === 'todos' || request.status === requestFilter).sort((a, b) => new Date(b.criado_em) - new Date(a.criado_em)); document.getElementById('pendingRequestCount').textContent = getAccessRequests().filter((request) => request.status === 'pendente').length; document.getElementById('accessRequestsBody').innerHTML = requests.map((request) => `<tr><td>${new Date(request.criado_em).toLocaleDateString('pt-BR')}</td><td><strong>${request.nome}</strong></td><td>${request.empresa}</td><td>${request.email}</td><td>${request.cargo}</td><td><span class="status-pill ${request.status}">${request.status}</span></td><td>${request.status === 'pendente' ? `<select class="role-select" data-approve-request="${request.request_id}"><option value="">Perfil...</option><option>Administrador</option><option>Gerente</option><option>CLM</option><option>Especialista</option><option>Parceiro</option></select><button class="table-action" data-view-request="${request.request_id}">Detalhes</button><button class="table-action reject-action" data-reject-request="${request.request_id}">Rejeitar</button>` : `<button class="table-action" data-view-request="${request.request_id}">Detalhes</button>`}</td></tr>`).join('') || '<tr><td colspan="7">Nenhuma solicitação encontrada.</td></tr>'; document.querySelectorAll('[data-approve-request]').forEach((select) => select.addEventListener('change', () => { if (select.value) approveRequest(select.dataset.approveRequest, select.value); })); document.querySelectorAll('[data-reject-request]').forEach((button) => button.addEventListener('click', () => openRejectRequest(button.dataset.rejectRequest))); document.querySelectorAll('[data-view-request]').forEach((button) => button.addEventListener('click', () => showRequestDetails(button.dataset.viewRequest))); }
 function showRequestDetails(id) { const request = getAccessRequests().find((item) => item.request_id === id); if (request) showToast(`${request.nome} · ${request.email} · ${request.descricao_uso}`); }
 function approveRequest(id, perfil) { const request = getAccessRequests().find((item) => item.request_id === id); if (!request) return; const password = generateTemporaryPassword(); const users = getUsers(); users.push({ user_id: `u_${Date.now()}`, nome: request.nome, email: request.email, senha_hash: simpleHash(password), perfil, empresa: request.empresa, cargo: request.cargo, status: 'ativo', criado_em: new Date().toISOString(), origem_solicitacao_id: id }); saveUsers(users); request.status = 'aprovado'; request.aprovado_por = USER_NAME; request.aprovado_em = new Date().toISOString(); updateAccessRequest(request); addSimulatedEmail({ de: 'sistema@discovery360.local', para: request.email, assunto: 'Acesso aprovado — Discovery 360', corpo: `Olá, ${request.nome}.\n\nSeu acesso foi aprovado.\nE-mail: ${request.email}\nSenha temporária: ${password}\nPerfil: ${perfil}` , relacionado_a: { tipo: 'solicitacao_acesso', id } }); showToast(`Acesso aprovado. Senha temporária: ${password}`); renderAccessView(); }
 function openRejectRequest(id) { selectedRequestId = id; document.getElementById('rejectReason').value = ''; document.getElementById('rejectError').textContent = ''; document.getElementById('rejectRequestModal').hidden = false; }
 function rejectRequest() { const reason = document.getElementById('rejectReason').value.trim(); if (!reason) { document.getElementById('rejectError').textContent = 'Informe o motivo da rejeição.'; return; } const request = getAccessRequests().find((item) => item.request_id === selectedRequestId); if (!request) return; request.status = 'rejeitado'; request.rejeitado_por = USER_NAME; request.rejeitado_em = new Date().toISOString(); request.motivo_rejeicao = reason; updateAccessRequest(request); addSimulatedEmail({ de: 'sistema@discovery360.local', para: request.email, assunto: 'Solicitação de acesso não aprovada', corpo: `Olá, ${request.nome}.\n\nSua solicitação não foi aprovada.\nMotivo: ${reason}`, relacionado_a: { tipo: 'solicitacao_acesso', id: request.request_id } }); document.getElementById('rejectRequestModal').hidden = true; renderAccessView(); }
 function renderSimulatedEmails() { document.getElementById('simulatedEmailsList').innerHTML = getSimulatedEmails().slice().reverse().map((email) => `<details class="simulated-email"><summary>${email.assunto} <span>${email.para}</span></summary><pre>${email.corpo}</pre></details>`).join('') || '<p class="empty-state">Nenhum e-mail simulado.</p>'; }
-
-// ===== PATCH: Motivo do acesso — renderizar pills e capturar seleção =====
-const ACCESS_REASON_OPTIONS = [
-  { id: 'sou_clm', label: 'Sou CLM' },
-  { id: 'sou_gerente', label: 'Sou gerente' },
-  { id: 'sou_parceiro', label: 'Sou parceiro' },
-  { id: 'sou_especialista', label: 'Sou especialista Microsoft' },
-  { id: 'outro', label: 'Outro' }
-];
-
-function renderAccessReasonOptions(selectedValue = '') {
-  const container = document.getElementById('accessReasonOptions');
-  if (!container) return;
-  container.innerHTML = ACCESS_REASON_OPTIONS.map((reason) => `<button type="button" class="intent-pill ${reason.id === selectedValue ? 'active' : ''}" data-reason="${reason.id}">${reason.label}</button>`).join('');
-  container.querySelectorAll('.intent-pill').forEach((button) => {
-    button.addEventListener('click', () => {
-      const hiddenField = document.getElementById('motivoAcessoHidden');
-      if (hiddenField) hiddenField.value = button.dataset.reason;
-      container.querySelectorAll('.intent-pill').forEach((item) => item.classList.toggle('active', item === button));
-    });
-  });
-}
-
 function openRequestModal() {
-  document.getElementById('accessRequestForm')?.reset();
-  const hiddenField = document.getElementById('motivoAcessoHidden');
-  if (hiddenField) hiddenField.value = '';
-  renderAccessReasonOptions();
+  document.getElementById('accessRequestForm')?.reset();  document.getElementById('accessRequestForm')?.reset();
   const errorEl = document.getElementById('requestError');
   if (errorEl) errorEl.textContent = '';
   document.getElementById('accessRequestModal').hidden = false;
 }
 function closeRequestModal() { document.getElementById('accessRequestModal').hidden = true; }
-function submitAccessRequest(event) { event.preventDefault(); const form = event.currentTarget; const data = Object.fromEntries(new FormData(form).entries()); if (!data.motivo_acesso) { document.getElementById('requestError').textContent = 'Selecione um motivo de acesso.'; return; } const request = createAccessRequest(data); addSimulatedEmail({ de: data.email, para: 'cleise.andre@microsoft.com', assunto: `Nova solicitação de acesso — ${data.nome}`, corpo: Object.entries(data).map(([key, value]) => `${key}: ${value}`).join('\n'), relacionado_a: { tipo: 'solicitacao_acesso', id: request.request_id } }); addSimulatedEmail({ de: 'sistema@discovery360.local', para: data.email, assunto: 'Solicitação de acesso recebida', corpo: `Olá, ${data.nome}.\n\nSua solicitação foi recebida e está pendente de análise.`, relacionado_a: { tipo: 'solicitacao_acesso', id: request.request_id } }); form.reset(); closeRequestModal(); showToast('Solicitação enviada com sucesso.'); }
+function submitAccessRequest(event) { event.preventDefault(); const form = event.currentTarget; const data = Object.fromEntries(new FormData(form).entries()); const request = createAccessRequest(data); addSimulatedEmail({ de: data.email, para: 'cleise.andre@microsoft.com', assunto: `Nova solicitação de acesso — ${data.nome}`, corpo: Object.entries(data).map(([key, value]) => `${key}: ${value}`).join('\n'), relacionado_a: { tipo: 'solicitacao_acesso', id: request.request_id } }); addSimulatedEmail({ de: 'sistema@discovery360.local', para: data.email, assunto: 'Solicitação de acesso recebida', corpo: `Olá, ${data.nome}.\n\nSua solicitação foi recebida e está pendente de análise.`, relacionado_a: { tipo: 'solicitacao_acesso', id: request.request_id } }); form.reset(); closeRequestModal(); showToast('Solicitação enviada com sucesso.'); }
 function showToast(message) { const toast = document.getElementById('toastMessage'); toast.textContent = message; toast.hidden = false; setTimeout(() => { toast.hidden = true; }, 2800); }
 let partnerState = { motion: '', partner: null, manual: '', distributor: null, manualMode: false };
 function openWorkspace(id) { const meeting = id ? getMeetingById(id) : null; state.readOnly = meeting?.status === 'concluida'; const bar = document.getElementById('activeMeetingBar'); bar.hidden = !meeting; document.getElementById('meetingTabs').hidden = !meeting; if (!meeting) return; partnerState = { motion: '', partner: null, manual: '', distributor: null, manualMode: false }; document.getElementById('activeMeetingLabel').textContent = `${meeting.cliente} — ${meeting.assunto}`; document.getElementById('opportunityInput').checked = meeting.gerou_oportunidade; document.getElementById('nextStepInput').value = meeting.proximo_passo || ''; document.getElementById('opportunityInput').disabled = state.readOnly; document.getElementById('nextStepInput').disabled = state.readOnly; document.getElementById('completeMeetingButton').hidden = state.readOnly; activePlayId = meeting.sales_play_ativo || activePlayId; activeDiscoveryStage = meeting.etapa_discovery_ativa || activeDiscoveryStage; renderDiscovery(); renderReport(id); renderMeetingTabs(); }
@@ -253,8 +228,7 @@ document.getElementById('closePanel').addEventListener('click', closeDetail);
 elements.backdrop.addEventListener('click', closeDetail);
 document.getElementById('usePlayButton').addEventListener('click', () => { const active = getMeetings().filter((meeting) => meeting.status === 'em_andamento').sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at))[0]; if (!active) { closeDetail(); navigate('form'); showToast('Nenhuma reunião em andamento no momento.'); return; } const play = state.plays.find((item) => item.id === selectedLibraryPlayId); const meeting = getMeetingById(active.id); meeting.sales_play_ativo = play?.id || null; saveMeeting(meeting); closeDetail(); navigate('workspace', active.id); });
 document.addEventListener('keydown', (event) => { if (event.key === 'Escape') closeDetail(); });
-document.getElementById('newMeetingButton').addEventListener('click', () => navigate('form'));
-document.getElementById('formBackButton').addEventListener('click', () => navigate('dashboard'));
+document.getElementById('newMeetingButton').addEventListener('click', () => navigate('form'));document.getElementById('formBackButton').addEventListener('click', () => navigate('dashboard'));
 document.getElementById('cancelFormButton').addEventListener('click', () => navigate('dashboard'));
 document.getElementById('addContextButton').addEventListener('click', () => addContextField());
 document.getElementById('saveDraftButton').addEventListener('click', () => saveFromForm('rascunho'));
@@ -297,9 +271,6 @@ document.getElementById('addCustomQuestionButton').addEventListener('click', () 
 document.getElementById('workspaceView').addEventListener('change', (event) => { const selector = event.target.closest('#salesPlaySelector'); if (!selector) return; activePlayId = Number(selector.value); selectedQuestion = null; if (state.activeMeetingId && !state.readOnly) { const meeting = getMeetingById(state.activeMeetingId); meeting.sales_play_ativo = activePlayId; saveMeeting(meeting); } renderDiscovery(); });
 renderDiscovery();
 
-// ===== PATCH: conexões da tela de Login (adicionado) =====
-
-// Envio do formulário de login
 document.getElementById('loginForm').addEventListener('submit', (event) => {
   event.preventDefault();
   const email = document.getElementById('loginEmail').value.trim();
@@ -313,10 +284,9 @@ document.getElementById('loginForm').addEventListener('submit', (event) => {
   }
   errorEl.textContent = '';
   saveSession(user, remember);
-  location.reload(); // recarrega para que a sessão seja lida corretamente em toda a aplicação
+  location.reload();
 });
 
-// Mostrar/ocultar senha
 document.getElementById('togglePassword').addEventListener('click', () => {
   const field = document.getElementById('loginPassword');
   const button = document.getElementById('togglePassword');
@@ -325,27 +295,22 @@ document.getElementById('togglePassword').addEventListener('click', () => {
   button.textContent = isHidden ? 'Ocultar' : 'Mostrar';
 });
 
-// Esqueci minha senha
 document.getElementById('forgotPassword').addEventListener('click', () => {
   showToast('Entre em contato com o administrador da plataforma para redefinir sua senha.');
 });
 
-// Entrar com conta Microsoft (simulação — sem integração real com Entra ID neste ambiente)
 document.getElementById('microsoftLogin').addEventListener('click', () => {
   showToast('Integração com Microsoft Entra ID disponível apenas em ambiente de produção.');
 });
 
-// Modal "Solicitar acesso"
 document.getElementById('requestAccessButton').addEventListener('click', openRequestModal);
 document.getElementById('closeRequestButton').addEventListener('click', closeRequestModal);
 document.getElementById('cancelRequestButton').addEventListener('click', closeRequestModal);
 document.getElementById('accessRequestForm').addEventListener('submit', submitAccessRequest);
 
-// Modal "Como usar"
 document.getElementById('helpButton').addEventListener('click', () => { document.getElementById('helpModal').hidden = false; });
 document.getElementById('closeHelpButton').addEventListener('click', () => { document.getElementById('helpModal').hidden = true; });
 
-// Modal de rejeição de solicitação de acesso
 document.getElementById('cancelRejectButton').addEventListener('click', () => { document.getElementById('rejectRequestModal').hidden = true; });
 document.getElementById('closeRejectButton').addEventListener('click', () => { document.getElementById('rejectRequestModal').hidden = true; });
 document.getElementById('confirmRejectButton').addEventListener('click', rejectRequest);
@@ -353,6 +318,7 @@ document.getElementById('confirmRejectButton').addEventListener('click', rejectR
 window.addEventListener('hashchange', () => {
   const view = window.location.hash.slice(1);
   if (view === 'dashboard' || !view) navigate('dashboard');
+  if (view.startsWith('reuniao/')) navigate('workspace', view.split('/')[1]);
   if (view.startsWith('relatorio/')) { navigate('workspace', view.split('/')[1]); setMeetingTab('summary'); }
   if (view === 'nova-reuniao') navigate('form');
   if (view === 'biblioteca') navigate('library');
@@ -366,6 +332,7 @@ const initialRoute = window.location.hash.slice(1);
 if (!CURRENT_SESSION) {
   navigate('login');
 } else if (initialRoute.startsWith('relatorio/')) { navigate('workspace', initialRoute.split('/')[1]); setMeetingTab('summary'); }
+else if (initialRoute.startsWith('reuniao/')) navigate('workspace', initialRoute.split('/')[1]);
 else if (initialRoute === 'biblioteca') navigate('library');
 else if (initialRoute === 'checklists') navigate('checklists');
 else if (initialRoute === 'validacao-acessos') { if (isAdmin()) navigate('access'); else navigate('dashboard'); }
