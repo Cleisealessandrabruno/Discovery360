@@ -706,3 +706,102 @@ select:focus-visible,
   .global-nav { order: 3; width: 100%; padding-bottom: 3px; }
   .library-view .toolbar { padding: 12px; }
 }
+
+/* Refinamentos da área de reunião e identidade Accenture */
+:root { --lime: #ead7f7; }
+
+.header-accenture-logo {
+  width: 92px;
+  height: 36px;
+  object-fit: contain;
+  padding: 4px 6px;
+  border-radius: 7px;
+  background: #fff;
+}
+
+.topbar .brand { display: flex; gap: 10px; padding-left: 9px; }
+.topbar .brand > span { white-space: nowrap; }
+
+.notification-badge {
+  display: inline-grid;
+  min-width: 22px;
+  height: 22px;
+  margin-left: 5px;
+  padding: 0 6px;
+  place-items: center;
+  border: 2px solid #fff;
+  border-radius: 999px;
+  color: #fff;
+  background: #a100ff;
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1;
+  box-shadow: 0 3px 9px rgba(161, 0, 255, .35);
+}
+
+.meeting-tabs,
+.active-meeting-bar,
+.meeting-tab-pane {
+  width: calc(100% - 48px);
+  max-width: 1500px;
+}
+
+.meeting-tabs {
+  gap: 7px;
+  padding: 8px;
+  border: 1px solid #e2d4eb;
+  border-radius: 12px 12px 0 0;
+  background: #fff;
+  box-shadow: 0 5px 18px rgba(43, 18, 59, .06);
+}
+
+.meeting-tab {
+  padding: 10px 16px;
+  border: 0;
+  border-radius: 8px;
+  color: #5f5268;
+  font-weight: 700;
+}
+
+.meeting-tab:hover { border-bottom-color: transparent; color: #5b168b; background: #f5ecfa; }
+.meeting-tab.active { border-bottom-color: transparent; color: #fff; background: linear-gradient(135deg, #a100ff, #7500bd); box-shadow: 0 4px 10px rgba(161, 0, 255, .18); }
+.meeting-tab.active span { color: #fff; }
+
+.active-meeting-bar {
+  margin-top: 8px;
+  padding-block: 15px;
+  border: 1px solid #cda9e2;
+  border-radius: 0 0 12px 12px;
+  background: linear-gradient(100deg, #f2e6fa, #e6cff5);
+  box-shadow: 0 7px 20px rgba(43, 18, 59, .07);
+}
+
+.active-meeting-bar > div > span { color: #7500bd; }
+.active-meeting-bar .complete-button { border-radius: 8px; background: linear-gradient(135deg, #a100ff, #7500bd); }
+.active-meeting-bar .complete-button:hover { background: #5b168b; }
+.active-meeting-bar .next-step-field input { border-color: #bd8ed8; background: rgba(255, 255, 255, .72); }
+
+.discovery-play-actions select {
+  min-height: 44px;
+  max-width: 290px;
+  padding: 10px 38px 10px 13px;
+  border: 1px solid #a100ff;
+  border-radius: 8px;
+  color: #3a124e;
+  background-color: #f5ecfa;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(91, 22, 139, .08);
+}
+
+.discovery-play-actions select:hover,
+.discovery-play-actions select:focus { border-color: #7500bd; background-color: #ead7f7; }
+.discovery-play-actions select option { color: #2b123b; background: #f8f1fc; }
+
+@media (max-width: 700px) {
+  .header-accenture-logo { width: 76px; height: 32px; }
+  .meeting-tabs, .active-meeting-bar, .meeting-tab-pane { width: calc(100% - 24px); }
+  .meeting-tabs { overflow-x: auto; }
+  .meeting-tab { flex: 0 0 auto; }
+}
