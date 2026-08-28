@@ -1,0 +1,22 @@
+const OPPORTUNITY_MATRIX = [
+  { sinal: 'M365 + muitos usuários + pouco ou nenhum Copilot', abordagem: 'Expansão do Copilot', tipo: 'UPSELL / EXPANSION' },
+  { sinal: 'Business Basic/Standard + necessidades de segurança/dispositivos', abordagem: 'Business Premium', tipo: 'UPSELL' },
+  { sinal: 'M365 + lacunas de endpoint/segurança', abordagem: 'Defender / Intune / Entra', tipo: 'CROSS-SELL' },
+  { sinal: 'Dados confidenciais + necessidades de governança/conformidade', abordagem: 'Purview', tipo: 'CROSS-SELL' },
+  { sinal: 'Muitos fluxos de trabalho manuais', abordagem: 'Power Automate', tipo: 'CROSS-SELL' },
+  { sinal: 'Excel/relatórios manuais', abordagem: 'Power BI', tipo: 'CROSS-SELL' },
+  { sinal: 'Power BI + ambiente de dados complexo', abordagem: 'Fabric / Azure', tipo: 'CROSS-SELL / MODERNIZATION' },
+  { sinal: 'Amplo ambiente local + pressão por escalabilidade', abordagem: 'Azure', tipo: 'MODERNIZATION' },
+  { sinal: 'AWS + cargas de trabalho Microsoft / complexidade multicloud', abordagem: 'Azure', tipo: 'MODERNIZATION' },
+  { sinal: 'Iniciativa de IA + necessidade de agentes personalizados', abordagem: 'Copilot Studio / Agents / Azure', tipo: 'CROSS-SELL' },
+  { sinal: 'Copilot adotado por um pequeno grupo', abordagem: 'Expansão do Copilot', tipo: 'EXPANSION' },
+  { sinal: 'Muitos desenvolvedores / backlog / código legado', abordagem: 'GitHub Copilot', tipo: 'CROSS-SELL' },
+  { sinal: 'CRM fragmentado / pipeline no Excel', abordagem: 'Dynamics 365 Sales', tipo: 'MODERNIZATION' },
+  { sinal: 'Atendimento ao cliente de alto volume', abordagem: 'Dynamics 365 Customer Service', tipo: 'MODERNIZATION' },
+  { sinal: 'Servidores de arquivos / documentos dispersos', abordagem: 'SharePoint / OneDrive', tipo: 'MODERNIZATION' },
+  { sinal: 'Muitos dispositivos / força de trabalho híbrida', abordagem: 'Intune', tipo: 'CROSS-SELL' },
+  { sinal: 'Complexidade de identidade/acesso', abordagem: 'Entra', tipo: 'CROSS-SELL' },
+  { sinal: 'Vários consoles de segurança', abordagem: 'Defender', tipo: 'CONSOLIDATION' },
+  { sinal: 'Aplicativos legados', abordagem: 'GitHub Copilot + Azure', tipo: 'MODERNIZATION' },
+  { sinal: 'Teams usado principalmente para reuniões', abordagem: 'Teams + Copilot', tipo: 'ADOPTION / EXPANSION' }
+];

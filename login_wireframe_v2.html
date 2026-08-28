@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+2
+<html lang="pt-BR">
+3
+<head>
+4
+<meta charset="UTF-8">
+5
+<title>Discovery 360 — Wireframe Tela de Login v2</title>
+6
+<style>
+7
+:root{
+8
+--purple:#A100FF;
+9
+--purple-dark:#7B00CC;
+10
+--dark-bg:#0B0B12;
+11
+--dark-bg-2:#111018;
+12
+--white:#FFFFFF;
+13
+--text-muted:#94A3B8;
+14
+--input-bg:#EAF2FB;
+15
+}
+16
+*{box-sizing:border-box;}
+17
+body{ margin:0; font-family:'Segoe UI', Arial, sans-serif; }
+18
+.login-shell{ display:grid; grid-template-columns:1fr 1fr; min-height:100vh; }
+19
+@media (max-width: 900px){ .login-shell{ grid-template-columns:1fr; } }
+20
+ 
+21
+.left-panel{
+22
+position:relative;
+23
+background:radial-gradient(circle at 85% 60%, #1a0d2e 0%, var(--dark-bg) 55%);
+24
+color:#fff; padding:40px 56px; overflow:hidden; display:flex; flex-direction:column;
+25
+}
+26
+.glow-circle{
+27
+position:absolute; right:-120px; top:38%; width:340px; height:340px; border-radius:50%;
+28
+background:radial-gradient(circle, rgba(161,0,255,0.55) 0%, rgba(161,0,255,0.15) 45%, transparent 70%);
+29
+filter:blur(2px);
+30
+}
+31
+.glow-ring{ position:absolute; right:-40px; top:34%; width:420px; height:420px; border-radius:50%; border:1px solid rgba(161,0,255,0.25); }
+32
+.glow-ring.r2{ width:520px; height:520px; right:-90px; top:29%; border-color:rgba(161,0,255,0.14); }
+33
+ 
+34
+.brand-row{ display:flex; align-items:center; gap:12px; position:relative; z-index:2; }
+35
+.brand-mark{ width:38px; height:38px; display:flex; align-items:center; justify-content:center; color:var(--purple); font-size:26px; font-weight:900; transform:skewX(-6deg); }
+36
+.brand-row strong{ font-size:18px; font-weight:800; letter-spacing:.2px; }
+37
+ 
+38
+.left-content{ position:relative; z-index:2; margin-top:110px; max-width:520px; }
+39
+.eyebrow-purple{ font-size:12px; font-weight:800; letter-spacing:2px; color:var(--purple); text-transform:uppercase; margin:0 0 18px; }
+40
+.left-content h1{ font-size:48px; font-weight:800; line-height:1.08; margin:0 0 20px; color:#fff; }
+41
+.left-content .desc{ font-size:15.5px; color:var(--text-muted); margin:0; line-height:1.6; }
+42
+ 
+43
+.benefits-grid{ position:relative; z-index:2; margin-top:auto; padding-top:60px; display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+44
+.benefit-card{ background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:8px; padding:14px 16px; font-size:13px; font-weight:600; color:#e5e7eb; display:flex; align-items:center; gap:8px; }
+45
+.benefit-card .chevron{ color:var(--purple); font-weight:900; font-size:14px; }
+46
+ 
+47
+.right-panel{ background:#fff; display:flex; flex-direction:column; justify-content:center; padding:60px 90px; position:relative; }
+48
+.form-wrap{ max-width:390px; width:100%; margin:0 auto; }
+49
+.form-wrap h2{ font-size:26px; font-weight:800; color:#0B0B12; margin:0 0 6px; }
+50
+.form-wrap .sub{ font-size:13.5px; color:var(--text-muted); margin:0 0 28px; }
+51
+.field-group{ margin-bottom:18px; }
+52
+.field-label{ display:block; font-size:12.5px; font-weight:700; color:#0B0B12; margin-bottom:7px; }
+53
+.field-input{ width:100%; padding:12px 14px; border:1px solid #D7E3F3; border-radius:8px; font-size:13.5px; color:#0B0B12; background:var(--input-bg); }
+54
+.password-row{ position:relative; display:flex; align-items:center; }
+55
+.password-row .field-input{ padding-right:70px; }
+56
+.show-link{ position:absolute; right:14px; font-size:12px; font-weight:700; color:var(--purple); }
+57
+.row-between{ display:flex; align-items:center; justify-content:space-between; margin:4px 0 22px; font-size:12.5px; }
+58
+.checkbox-label{ display:flex; align-items:center; gap:7px; color:#475569; }
+59
+.checkbox-label input{ accent-color:var(--purple); }
+60
+.link-purple{ color:var(--purple); font-weight:700; text-decoration:none; }
+61
+.btn-primary{ width:100%; padding:13px; background:var(--purple); color:#fff; border:none; border-radius:8px; font-size:14.5px; font-weight:700; cursor:pointer; box-shadow:0 8px 20px rgba(161,0,255,0.25); }
+62
+.divider-row{ display:flex; align-items:center; gap:12px; margin:20px 0; color:var(--text-muted); font-size:12px; }
+63
+.divider-row::before, .divider-row::after{ content:""; flex:1; height:1px; background:#E2E8F0; }
+64
+.btn-secondary{ width:100%; padding:12px; background:#fff; color:#0B0B12; border:1px solid #D7E3F3; border-radius:8px; font-size:13.5px; font-weight:600; display:flex; align-items:center; justify-content:center; gap:9px; cursor:pointer; }
+65
+.ms-square-logo{ display:inline-grid; grid-template-columns:1fr 1fr; gap:1.5px; width:14px; height:14px; }
+66
+.ms-square-logo span{ display:block; }
+67
+.ms-square-logo span:nth-child(1){ background:#F35325; }
+68
+.ms-square-logo span:nth-child(2){ background:#81BC06; }
+69
+.ms-square-logo span:nth-child(3){ background:#05A6F0; }
+70
+.ms-square-logo span:nth-child(4){ background:#FFBA08; }
+71
+ 
+72
+.request-row{ text-align:center; font-size:12.5px; color:#475569; margin-top:24px; }
+73
+.footer-text{ position:absolute; bottom:28px; left:0; right:0; text-align:center; font-size:11px; color:#94A3B8; }
+74
+.footer-text .dot{ margin:0 6px; }
+75
+ 
+76
+.fab-help{
+77
+position:fixed; right:24px; bottom:24px; background:var(--purple); color:#fff; border:none; border-radius:24px;
+78
+padding:11px 18px 11px 14px; font-size:13px; font-weight:700; display:flex; align-items:center; gap:7px;
+79
+box-shadow:0 8px 20px rgba(161,0,255,0.35); cursor:pointer;
+80
+}
+81
+.fab-help .q{ width:18px; height:18px; border-radius:50%; background:rgba(255,255,255,0.25); display:flex; align-items:center; justify-content:center; font-size:11px; }
+82
+ 
+83
+.wf-badge{ position:fixed; top:10px; left:10px; background:#0B0B12; color:#fff; font-size:10px; padding:4px 10px; border-radius:20px; z-index:99; opacity:.85; }
+84
+</style>
+85
+</head>
+86
+<body>
+87
+<div class="wf-badge">WIREFRAME — não é UI final</div>
+88
+ 
+89
+<div class="login-shell">
+90
+<div class="left-panel">
+91
+<div class="glow-ring r2"></div>
+92
+<div class="glow-ring"></div>
+93
+<div class="glow-circle"></div>
+94
+ 
+95
+<div class="brand-row">
+96
+<span class="brand-mark">&gt;</span>
+97
+<strong>Discovery 360</strong>
+98
+</div>
+99
+ 
+100
+<div class="left-content">
+101
+<p class="eyebrow-purple">Discovery Comercial</p>
+102
+<h1>Conversas melhores.<br>Descobertas mais<br>claras.</h1>
+103
+<p class="desc">Conduza conversas, registre descobertas e organize oportunidades.</p>
+104
+</div>
+105
+ 
+106
+<div class="benefits-grid">
+107
+<div class="benefit-card"><span class="chevron">›</span> Roteiros de descoberta</div>
+108
+<div class="benefit-card"><span class="chevron">›</span> Registro estruturado</div>
+109
+<div class="benefit-card"><span class="chevron">›</span> Histórico de perguntas e respostas</div>
+110
+<div class="benefit-card"><span class="chevron">›</span> Relatórios para análise</div>
+111
+</div>
+112
+</div>
+113
+ 
+114
+<div class="right-panel">
+115
+<div class="form-wrap">
+116
+<h2>Entrar</h2>
+117
+<p class="sub">Use suas credenciais corporativas.</p>
+118
+ 
+119
+<div class="field-group">
+120
+<label class="field-label">E-mail corporativo</label>
+121
+<input class="field-input" type="text" value="cleise.alessandra@gmail.com">
+122
+</div>
+123
+ 
+124
+<div class="field-group">
+125
+<label class="field-label">Senha</label>
+126
+<div class="password-row">
+127
+<input class="field-input" type="text" value="••••••••">
+128
+<span class="show-link">Mostrar</span>
+129
+</div>
+130
+</div>
+131
+ 
+132
+<div class="row-between">
+133
+<label class="checkbox-label"><input type="checkbox"> Manter conectado</label>
+134
+<a class="link-purple" href="#">Esqueci minha senha</a>
+135
+</div>
+136
+ 
+137
+<button class="btn-primary">Entrar</button>
+138
+ 
+139
+<div class="divider-row">ou</div>
+140
+ 
+141
+<button class="btn-secondary">
+142
+<span class="ms-square-logo"><span></span><span></span><span></span><span></span></span>
+143
+Entrar com conta Microsoft
+144
+</button>
+145
+ 
+146
+<div class="request-row">
+147
+Ainda não tem acesso? <a class="link-purple" href="#">Solicitar acesso</a>
+148
+</div>
+149
+</div>
+150
+ 
+151
+<div class="footer-text">
+152
+Acesso restrito a usuários autorizados <span class="dot">·</span> Discovery 360
+153
+</div>
+154
+</div>
+155
+</div>
+156
+ 
+157
+<button class="fab-help"><span class="q">?</span> Como usar</button>
+158
+ 
+159
+</body>
+160
+</html>

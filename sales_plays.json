@@ -1,0 +1,916 @@
+{
+  "tipos_de_oportunidade": {
+    "CROSS-SELL": "Apresente uma carga de trabalho Microsoft complementar com base em uma necessidade validada.",
+    "UPSELL": "Migre o cliente para um plano de maior valor ou amplie uma carga de trabalho existente.",
+    "ADOPTION": "Aumente o uso, os usuários ativos ou o valor para o negócio de um investimento existente.",
+    "EXPANSION": "Estenda uma carga de trabalho bem-sucedida a outros usuários, equipes ou regiões geográficas.",
+    "MODERNIZATION": "Substitua ou transforme infraestrutura, aplicativos, dados ou processos legados."
+  },
+  "perguntas_obrigatorias_qualificacao": [
+    "Need: Qual é a necessidade principal?",
+    "Escopo: Qual é a quantidade ou escopo?",
+    "Time: Existe um prazo para decisão ou implementação?",
+    "Budget: Existe orçamento previsto ou aprovado?",
+    "Decisor: Quem participa da decisão?",
+    "Concorrente: Existe solução concorrente?",
+    "Parceiro: O cliente já possui parceiro Microsoft?",
+    "SAS: O cliente aceita reunião com especialista?",
+    "Proximo: Qual é o próximo passo?",
+    "Autorização: Existe autorização para compartilhar as informações?"
+  ],
+  "checklist_qualificacao": [
+    "Há um problema de negócio claro?",
+    "O problema pode ser quantificado?",
+    "Há uma implicação relevante para o negócio?",
+    "O cliente expressou um resultado desejado?",
+    "Há uma iniciativa estratégica ou um patrocinador executivo?",
+    "Há vários usuários, cargas de trabalho ou regiões envolvidos?",
+    "Há urgência ou um cronograma definido?",
+    "Há um caminho de expansão viável?",
+    "Há um possível parceiro ou uma arquitetura de solução envolvida?",
+    "Há uma próxima reunião ou ação clara com o cliente?"
+  ],
+  "sales_plays": [
+    {
+      "id": 1,
+      "titulo": "Microsoft 365 → Copilot",
+      "gatilho": "Grande população do Microsoft 365 com pouca ou nenhuma adoção do Copilot.",
+      "categoria": [
+        "UPSELL",
+        "EXPANSION"
+      ],
+      "solucao_potencial": "Microsoft 365 Copilot",
+      "situacao": [
+        "Como as equipes usam atualmente Word, Excel, PowerPoint, Outlook e Teams no trabalho diário?",
+        "Quais funções passam mais tempo criando, resumindo, analisando ou preparando informações?",
+        "Quantos usuários já possuem licenças elegíveis para o Copilot, mas ainda não o utilizam no dia a dia?",
+        "Existem políticas ou diretrizes internas sobre o uso de IA generativa nas ferramentas do Microsoft 365?"
+      ],
+      "problema": [
+        "Quais atividades repetitivas de trabalho intelectual geram mais atrito hoje?",
+        "Em quais áreas os funcionários gastam tempo que, na sua opinião, poderia ser reduzido com IA?",
+        "Quais tarefas de redação, análise ou preparação de reuniões costumam gerar retrabalho ou atrasos?",
+        "Há resistência ou insegurança das equipes em adotar assistentes de IA no fluxo de trabalho atual?"
+      ],
+      "implicacao": [
+        "Qual é hoje o impacto operacional ou financeiro desse tempo?",
+        "Se o volume de trabalho continuar crescendo, o que acontecerá com a produtividade ou a capacidade do quadro de pessoal?",
+        "Como esse tempo perdido em tarefas repetitivas afeta prazos de entrega ou a qualidade do trabalho final?",
+        "Se a adoção de IA não avançar, qual é o risco de ficar atrás de concorrentes que já aceleraram esses processos?"
+      ],
+      "need_payoff": [
+        "Se os funcionários pudessem acelerar essas atividades nas ferramentas que já usam, onde você esperaria o maior valor?",
+        "Como você mediria o sucesso de um investimento em produtividade com IA?",
+        "Quais equipes ou funções deveriam ser priorizadas em uma primeira onda de adoção do Copilot?",
+        "Que tipo de apoio (treinamento, governança, casos de uso) ajudaria a acelerar a adoção depois da implantação inicial?"
+      ],
+      "sinais_alto_potencial": "Centenas/milhares de usuários elegíveis; iniciativa de IA; tarefas demoradas mensuráveis; patrocínio executivo; interesse em transformação da produtividade.",
+      "orientacao_clm": "Valide as respostas do cliente antes de posicionar a solução. Não presuma uma lacuna de produto apenas pela ausência de um produto nos dados disponíveis."
+    },
+    {
+      "id": 2,
+      "titulo": "Microsoft 365 Copilot → Expansão",
+      "gatilho": "O Copilot existe, mas está implantado para uma pequena população de usuários.",
+      "categoria": [
+        "EXPANSION"
+      ],
+      "solucao_potencial": "Expansão do Microsoft 365 Copilot",
+      "situacao": [
+        "Como os usuários iniciais do Copilot foram selecionados?",
+        "Quais equipes apresentam a adoção ou o impacto nos negócios mais fortes?",
+        "Quantas licenças de Copilot estão atualmente ativas em relação ao total de usuários elegíveis do Microsoft 365?",
+        "Existe um processo formal para coletar feedback e casos de sucesso dos usuários atuais do Copilot?"
+      ],
+      "problema": [
+        "Quais equipes têm interesse, mas ainda não possuem licença?",
+        "Em quais áreas os usuários ainda fazem manualmente o que os atuais usuários do Copilot estão acelerando?",
+        "Há barreiras de orçamento, aprovação ou governança que travam a expansão para novas equipes?",
+        "As equipes fora do piloto sabem quais resultados os usuários atuais do Copilot já alcançaram?"
+      ],
+      "implicacao": [
+        "O que acontece se apenas uma pequena parte da organização capturar o benefício de produtividade?",
+        "A adoção limitada poderia reduzir o ROI geral da iniciativa de IA?",
+        "Quanto tempo a organização perde mantendo processos manuais em áreas que já poderiam se beneficiar do Copilot?",
+        "Qual é o risco de perder o momentum da mudança se a expansão demorar demais para acontecer?"
+      ],
+      "need_payoff": [
+        "Se identificássemos as funções com maior valor potencial, faria sentido expandir o Copilot para esses grupos?",
+        "Qual resultado de negócio justificaria a próxima onda de adoção?",
+        "Que critérios (função, volume de tarefas, impacto financeiro) deveriam guiar a priorização da próxima onda?",
+        "Como um plano de expansão faseado ajudaria a demonstrar ROI de forma contínua para a liderança?"
+      ],
+      "sinais_alto_potencial": "Baixa penetração em relação aos usuários elegíveis; resultados positivos do piloto; lista de espera; programa de transformação com IA; ganhos mensuráveis de produtividade.",
+      "orientacao_clm": "Valide as respostas do cliente antes de posicionar a solução. Não presuma uma lacuna de produto apenas pela ausência de um produto nos dados disponíveis."
+    },
+    {
+      "id": 3,
+      "titulo": "Microsoft 365 → Business Premium",
+      "gatilho": "Ambiente Business Basic/Standard com requisitos de dispositivo, identidade ou segurança.",
+      "categoria": [
+        "UPSELL"
+      ],
+      "solucao_potencial": "Microsoft 365 Business Premium",
+      "situacao": [
+        "Como os dispositivos corporativos são gerenciados e protegidos hoje?",
+        "Como você controla o acesso aos dados da empresa por dispositivos gerenciados e não gerenciados?",
+        "Qual é o tamanho da empresa e quantos dispositivos ou usuários precisam de gerenciamento centralizado?",
+        "Quais ferramentas de produtividade e segurança estão em uso hoje, e elas são integradas entre si?"
+      ],
+      "problema": [
+        "Há dispositivos ou usuários difíceis de gerenciar de forma centralizada?",
+        "Onde você identifica lacunas na proteção de endpoints, identidades ou acessos?",
+        "Existem múltiplas licenças ou ferramentas avulsas cobrindo produtividade, segurança e gerenciamento de dispositivos?",
+        "A equipe de TI tem visibilidade única sobre o status de segurança de todos os dispositivos corporativos?"
+      ],
+      "implicacao": [
+        "Qual seria o impacto de um dispositivo ou uma conta comprometida?",
+        "Quanto tempo a TI gasta gerenciando manualmente dispositivos e controles de segurança?",
+        "Que custo adicional representa manter múltiplas licenças e ferramentas separadas em vez de uma solução integrada?",
+        "Como a falta de padronização de segurança afeta a exposição a riscos regulatórios ou de conformidade?"
+      ],
+      "need_payoff": [
+        "Combinar produtividade, gerenciamento de dispositivos e segurança em um único ambiente Microsoft reduziria a complexidade?",
+        "Qual seria o valor de reduzir a exposição de segurança e, ao mesmo tempo, simplificar o gerenciamento de TI?",
+        "Que impacto teria simplificar o licenciamento em um único pacote para o orçamento de TI?",
+        "Quais funcionalidades de segurança seriam mais valiosas para reduzir o risco imediato da empresa?"
+      ],
+      "sinais_alto_potencial": "Amplo parque de dispositivos; trabalho híbrido; requisitos de segurança; restrições de recursos de TI; necessidade de gerenciamento integrado.",
+      "orientacao_clm": "Valide as respostas do cliente antes de posicionar a solução. Não presuma uma lacuna de produto apenas pela ausência de um produto nos dados disponíveis."
+    },
+    {
+      "id": 4,
+      "titulo": "Microsoft 365 → Defender",
+      "gatilho": "Cliente Microsoft 365 com necessidades de endpoint/segurança; valide primeiro os direitos existentes.",
+      "categoria": [
+        "CROSS-SELL"
+      ],
+      "solucao_potencial": "Microsoft Defender",
+      "situacao": [
+        "Como os endpoints são protegidos e monitorados hoje?",
+        "Como a equipe de segurança investiga atividades suspeitas?",
+        "Quantos endpoints, contas de email e identidades a equipe de segurança precisa monitorar hoje?",
+        "Qual é a composição atual da equipe de segurança e o nível de automação nas respostas a incidentes?"
+      ],
+      "problema": [
+        "Os analistas precisam trabalhar em vários consoles de segurança?",
+        "Há lacunas de visibilidade, detecção ou resposta?",
+        "Os alertas gerados pelas ferramentas atuais são priorizados de forma confiável ou geram fadiga de alertas?",
+        "Existe sobreposição de funcionalidades entre as soluções de segurança atualmente usadas?"
+      ],
+      "implicacao": [
+        "Quanto tempo leva para detectar e conter um incidente?",
+        "Qual seria o impacto operacional de um ransomware ou endpoint comprometido?",
+        "Qual seria o custo de uma investigação prolongada devido à falta de correlação entre ferramentas?",
+        "Como a equipe de segurança é afetada quando precisa alternar entre múltiplos consoles durante um incidente ativo?"
+      ],
+      "need_payoff": [
+        "A detecção e a resposta integradas reduziriam o esforço dos analistas e o risco?",
+        "Que valor uma visão consolidada de segurança proporcionaria?",
+        "Uma solução única de detecção e resposta estendida (XDR) ajudaria a equipe a agir com mais rapidez?",
+        "Que nível de automação na resposta a incidentes reduziria a carga da equipe de segurança?"
+      ],
+      "sinais_alto_potencial": "Preocupações com ransomware/phishing; várias ferramentas; investigação lenta; amplo parque de endpoints; carga de trabalho do SOC.",
+      "orientacao_clm": "Valide as respostas do cliente antes de posicionar a solução. Não presuma uma lacuna de produto apenas pela ausência de um produto nos dados disponíveis."
+    },
+    {
+      "id": 5,
+      "titulo": "Microsoft 365 → Intune",
+      "gatilho": "Parque de dispositivos amplo ou híbrido com gerenciamento descentralizado.",
+      "categoria": [
+        "CROSS-SELL"
+      ],
+      "solucao_potencial": "Microsoft Intune",
+      "situacao": [
+        "Como laptops, dispositivos móveis e aplicativos são gerenciados hoje?",
+        "Como as políticas são implantadas para funcionários remotos?",
+        "Qual é a proporção de dispositivos corporativos versus dispositivos pessoais (BYOD) na organização?",
+        "Como são aplicadas atualmente as atualizações de sistema operacional e os patches de segurança nos dispositivos?"
+      ],
+      "problema": [
+        "O provisionamento e a configuração de dispositivos ainda são manuais?",
+        "O que acontece quando um dispositivo é perdido, substituído ou fica fora de conformidade?",
+        "A equipe de TI enfrenta dificuldades para aplicar políticas consistentes em diferentes tipos de dispositivo?",
+        "Quanto tempo leva, em média, para configurar um dispositivo novo até um funcionário começar a trabalhar?"
+      ],
+      "implicacao": [
+        "Quanto tempo da TI é gasto configurando e solucionando problemas de dispositivos?",
+        "Qual é o impacto de segurança de dispositivos não gerenciados ou fora de conformidade?",
+        "Que impacto tem esse tempo de configuração sobre a produtividade de novos contratados?",
+        "Qual é o risco de dados corporativos ficarem expostos em dispositivos pessoais não gerenciados?"
+      ],
+      "need_payoff": [
+        "O provisionamento automatizado e o gerenciamento centralizado de políticas reduziriam o esforço da TI?",
+        "O que uma integração de dispositivos mais rápida e padronizada viabilizaria para o negócio?",
+        "Uma política de autoatendimento para provisionamento de dispositivos aceleraria a integração de novos funcionários?",
+        "Que ganho a TI teria ao aplicar políticas de conformidade automaticamente em todos os dispositivos?"
+      ],
+      "sinais_alto_potencial": "Grande quantidade de dispositivos; trabalho remoto; provisionamento manual; políticas inconsistentes; backlog de TI.",
+      "orientacao_clm": "Valide as respostas do cliente antes de posicionar a solução. Não presuma uma lacuna de produto apenas pela ausência de um produto nos dados disponíveis."
+    },
+    {
+      "id": 6,
+      "titulo": "Identidade → Microsoft Entra",
+      "gatilho": "Ambiente complexo de identidade, acesso ou aplicativos.",
+      "categoria": [
+        "CROSS-SELL"
+      ],
+      "solucao_potencial": "Microsoft Entra",
+      "situacao": [
+        "Como as identidades e os acessos são gerenciados entre os aplicativos?",
+        "Quantos aplicativos exigem credenciais ou processos de acesso separados?",
+        "Como funcionários, parceiros e prestadores de serviço externos acessam sistemas e aplicativos hoje?",
+        "Existe um provedor de identidade único ou as credenciais estão fragmentadas entre sistemas diferentes?"
+      ],
+      "problema": [
+        "Há solicitações de acesso frequentes, contas órfãs ou processos manuais de admissão, movimentação e desligamento?",
+        "Com que consistência a MFA e o acesso condicional são aplicados?",
+        "Quanto tempo o suporte de TI gasta atendendo chamados de redefinição de senha ou bloqueio de conta?",
+        "Há visibilidade sobre quais aplicativos SaaS os funcionários utilizam sem aprovação formal da TI?"
+      ],
+      "implicacao": [
+        "Qual é o risco de comprometimento de uma conta ou de atraso na remoção de acesso?",
+        "Quanto esforço de TI é dedicado à administração de acessos?",
+        "Qual seria o impacto de um ataque de phishing bem-sucedido nas condições atuais de autenticação?",
+        "Como a fragmentação de identidades afeta auditorias de segurança ou processos de certificação de acesso?"
+      ],
+      "need_payoff": [
+        "Controles centralizados de identidade e acesso baseado em risco reduziriam essa carga?",
+        "O que uma governança de identidades mais eficaz possibilitaria para a segurança e a produtividade?",
+        "Autenticação sem senha ou biometria reduziria o risco de comprometimento de credenciais?",
+        "Qual seria o valor de automatizar os processos de admissão, movimentação e desligamento de usuários?"
+      ],
+      "sinais_alto_potencial": "Muitos aplicativos SaaS; solicitações de acesso frequentes; lacunas de MFA; desligamento manual; incidentes de identidade.",
+      "orientacao_clm": "Valide as respostas do cliente antes de posicionar a solução. Não presuma uma lacuna de produto apenas pela ausência de um produto nos dados disponíveis."
+    },
+    {
+      "id": 7,
+      "titulo": "Governança de Dados → Microsoft Purview",
+      "gatilho": "Necessidades relacionadas a dados confidenciais, conformidade, privacidade ou governança da informação.",
+      "categoria": [
+        "CROSS-SELL"
+      ],
+      "solucao_potencial": "Microsoft Purview",
+      "situacao": [
+        "Onde as informações confidenciais ou regulamentadas são armazenadas?",
+        "Como vocês classificam, retêm e protegem informações confidenciais?",
+        "Quais tipos de dados regulamentados (financeiros, pessoais, de saúde) a organização precisa proteger?",
+        "Existe um inventário atualizado de onde os dados confidenciais residem entre nuvem e ambiente local?"
+      ],
+      "problema": [
+        "É fácil identificar onde dados confidenciais estão sendo compartilhados ou expostos?",
+        "Os processos de classificação e retenção são manuais?",
+        "A equipe de conformidade consegue demonstrar rapidamente onde e como os dados sensíveis são usados?",
+        "Há registros recentes de compartilhamento indevido de informações confidenciais internamente ou com terceiros?"
+      ],
+      "implicacao": [
+        "Qual seria o impacto de um vazamento de dados ou de uma auditoria malsucedida?",
+        "Quanto esforço é dedicado a análises de conformidade e à coleta de evidências?",
+        "Que multas ou sanções regulatórias a empresa poderia enfrentar em caso de não conformidade comprovada?",
+        "Como a falta de rótulos de sensibilidade consistentes afeta a confiança de clientes ou parceiros nos dados compartilhados?"
+      ],
+      "need_payoff": [
+        "A descoberta, a classificação e a proteção automatizadas reduziriam os riscos e o esforço manual?",
+        "O que uma visibilidade mais ampla dos dados confidenciais possibilitaria para a empresa?",
+        "Rótulos de sensibilidade aplicados automaticamente facilitariam auditorias e relatórios regulatórios?",
+        "Qual seria o valor de detectar e prevenir vazamentos de dados antes que eles ocorram?"
+      ],
+      "sinais_alto_potencial": "Requisitos de LGPD/conformidade; dados confidenciais; carga de auditoria; compartilhamento sem controle; vários repositórios.",
+      "orientacao_clm": "Valide as respostas do cliente antes de posicionar a solução. Não presuma uma lacuna de produto apenas pela ausência de um produto nos dados disponíveis."
+    },
+    {
+      "id": 8,
+      "titulo": "Ambiente local → Azure",
+      "gatilho": "Ambiente local robusto com pressões de escalabilidade, modernização ou infraestrutura.",
+      "categoria": [
+        "MODERNIZATION"
+      ],
+      "solucao_potencial": "Microsoft Azure",
+      "situacao": [
+        "Quais cargas de trabalho permanecem no ambiente local e por quê?",
+        "Como são tratados a capacidade, a recuperação de desastre e o provisionamento de novos ambientes?",
+        "Qual é a idade média dos servidores e equipamentos de data center atualmente em uso?",
+        "Como são feitos hoje os backups e os testes de recuperação de desastre?"
+      ],
+      "problema": [
+        "Onde vocês enfrentam desafios de escalabilidade, renovação de hardware ou gerenciamento de infraestrutura?",
+        "Quais cargas de trabalho são mais difíceis ou dispendiosas de manter?",
+        "Há contratos de suporte de hardware expirando ou equipamentos próximos do fim de vida útil?",
+        "A equipe de infraestrutura consegue atender picos sazonais de demanda sem investimento adicional em hardware?"
+      ],
+      "implicacao": [
+        "Como o prazo de disponibilização da infraestrutura afeta os projetos de negócios?",
+        "Qual é o custo ou o risco de manter e renovar o ambiente atual?",
+        "Qual seria o impacto financeiro de uma falha prolongada de data center sobre as operações do negócio?",
+        "Como os custos de capital com renovação de hardware se comparam a um modelo de nuvem sob demanda?"
+      ],
+      "need_payoff": [
+        "Se a capacidade pudesse acompanhar a demanda, quais projetos avançariam mais rapidamente?",
+        "Qual carga de trabalho seria a melhor candidata para um piloto de modernização na nuvem?",
+        "Migrar para a nuvem ajudaria a eliminar picos de investimento em hardware e reduzir riscos de continuidade?",
+        "Qual seria o impacto de ter recuperação de desastre automatizada e testada regularmente na nuvem?"
+      ],
+      "sinais_alto_potencial": "Grande data center; renovação de hardware; provisionamento lento; preocupações com recuperação de desastre; roteiro de modernização; crescimento.",
+      "orientacao_clm": "Valide as respostas do cliente antes de posicionar a solução. Não presuma uma lacuna de produto apenas pela ausência de um produto nos dados disponíveis."
+    },
+    {
+      "id": 9,
+      "titulo": "AWS → Azure",
+      "gatilho": "Ambiente AWS com cargas de trabalho Microsoft ou complexidade de governança multinuvem.",
+      "categoria": [
+        "MODERNIZATION"
+      ],
+      "solucao_potencial": "Azure",
+      "situacao": [
+        "Quais cargas de trabalho são executadas atualmente na AWS?",
+        "Como vocês gerenciam governança, identidade, segurança e custos entre nuvens?",
+        "Quantas contas ou assinaturas da AWS estão atualmente em uso e por quais equipes?",
+        "Existem cargas de trabalho Microsoft, como SQL Server ou .NET, hospedadas hoje na AWS?"
+      ],
+      "problema": [
+        "Onde há complexidade de integração ou gerenciamento?",
+        "Há cargas de trabalho Microsoft que poderiam se beneficiar de recursos nativos do Azure?",
+        "A equipe de TI precisa manter competências duplicadas para operar múltiplas plataformas de nuvem?",
+        "Há dificuldade em consolidar relatórios de custos e uso entre as diferentes nuvens?"
+      ],
+      "implicacao": [
+        "Qual é o custo de gerenciar várias plataformas de nuvem?",
+        "A complexidade multinuvem reduz a velocidade das entregas ou a visibilidade?",
+        "Como a fragmentação entre nuvens afeta a postura de segurança e a resposta a incidentes?",
+        "Qual é o impacto de créditos ou descontos não aproveitados por falta de consolidação de gastos?"
+      ],
+      "need_payoff": [
+        "Uma estratégia de nuvem integrada simplificaria cargas de trabalho específicas ou a governança?",
+        "Qual carga de trabalho valeria a pena avaliar para o Azure com base no valor de negócio?",
+        "Consolidar cargas de trabalho Microsoft no Azure simplificaria o suporte e o licenciamento?",
+        "Que economia a empresa poderia obter otimizando o uso de nuvem sob um único provedor estratégico?"
+      ],
+      "sinais_alto_potencial": "Ambiente com forte presença Microsoft; complexidade multinuvem; aderência aos serviços do Azure; pressão de custos/governança.",
+      "orientacao_clm": "Valide as respostas do cliente antes de posicionar a solução. Não presuma uma lacuna de produto apenas pela ausência de um produto nos dados disponíveis."
+    },
+    {
+      "id": 10,
+      "titulo": "Iniciativa de IA → Azure AI",
+      "gatilho": "O cliente deseja IA personalizada, mas precisa de plataforma, dados, governança ou escala.",
+      "categoria": [
+        "CROSS-SELL",
+        "MODERNIZATION"
+      ],
+      "solucao_potencial": "Azure AI / serviços do Azure",
+      "situacao": [
+        "Quais casos de uso de IA estão sendo avaliados ou desenvolvidos?",
+        "Onde estão os dados e aplicativos que dão suporte a esses casos de uso?",
+        "Quem lidera a iniciativa de IA hoje — uma equipe central, unidades de negócio ou ambas?",
+        "Que modelos de IA, proprietários, de código aberto ou de terceiros, já foram testados ou adotados?"
+      ],
+      "problema": [
+        "O que dificulta levar a IA do piloto para a produção?",
+        "Como são tratados a segurança, o acesso a dados e a governança?",
+        "Faltam competências internas de engenharia de dados ou MLOps para sustentar as iniciativas de IA?",
+        "Os experimentos de IA atuais têm métricas claras de sucesso ou ainda são exploratórios?"
+      ],
+      "implicacao": [
+        "O que acontece se as iniciativas de IA não puderem ganhar escala ou permanecerem fragmentadas?",
+        "A falta de governança poderia gerar riscos de segurança, privacidade ou operação?",
+        "Qual é o custo de continuar operando pilotos de IA isolados sem uma plataforma comum?",
+        "Que risco reputacional ou de conformidade existe se os modelos de IA operarem sem controles adequados?"
+      ],
+      "need_payoff": [
+        "Uma plataforma governada para criar e escalar IA aceleraria o roteiro?",
+        "Qual caso de uso de IA justificaria uma primeira carga de trabalho em produção?",
+        "Ferramentas de MLOps e governança integradas ajudariam a colocar mais modelos em produção com segurança?",
+        "Que resultado de negócio, como receita, eficiência ou experiência do cliente, validaria o investimento em uma plataforma de IA?"
+      ],
+      "sinais_alto_potencial": "Programa executivo de IA; IA personalizada; ambiente de dados; desafio de entrada em produção; necessidade de governança.",
+      "orientacao_clm": "Valide as respostas do cliente antes de posicionar a solução. Não presuma uma lacuna de produto apenas pela ausência de um produto nos dados disponíveis."
+    },
+    {
+      "id": 11,
+      "titulo": "Excel/Relatórios manuais → Power BI",
+      "gatilho": "Os relatórios dependem de planilhas e consolidação manual.",
+      "categoria": [
+        "CROSS-SELL"
+      ],
+      "solucao_potencial": "Power BI",
+      "situacao": [
+        "Como os relatórios gerenciais são criados e distribuídos atualmente?",
+        "Quantas fontes de dados são consolidadas para os principais KPIs?",
+        "Quantas pessoas dedicam parte do seu tempo a consolidar planilhas para gerar relatórios gerenciais?",
+        "Os relatórios atuais são compartilhados por email, arquivos estáticos ou algum tipo de portal?"
+      ],
+      "problema": [
+        "Onde ocorrem consolidação manual, conflitos de versão ou dados desatualizados?",
+        "Quais relatórios exigem mais esforço recorrente?",
+        "Diferentes áreas usam definições distintas para os mesmos indicadores, gerando divergências nos números?",
+        "Com que frequência erros de fórmula ou versões desatualizadas de planilhas geram decisões equivocadas?"
+      ],
+      "implicacao": [
+        "Quanto tempo é gasto preparando relatórios em vez de analisá-los?",
+        "Qual é o impacto de decisões baseadas em informações atrasadas ou inconsistentes?",
+        "Que oportunidades de negócio podem ter sido perdidas por decisões baseadas em dados atrasados?",
+        "Como a falta de padronização nos relatórios afeta a confiança da liderança nos números apresentados?"
+      ],
+      "need_payoff": [
+        "Se os principais KPIs fossem atualizados automaticamente, quais decisões poderiam ser tomadas mais rapidamente?",
+        "Qual relatório executivo seria o melhor candidato para um piloto?",
+        "Dashboards interativos e atualizados em tempo real mudariam a forma como as decisões são tomadas nas reuniões executivas?",
+        "Quais indicadores seriam prioritários para um primeiro painel de Power BI?"
+      ],
+      "sinais_alto_potencial": "Uso intenso do Excel; consolidação manual; relatórios executivos; KPIs inconsistentes; demanda por BI.",
+      "orientacao_clm": "Valide as respostas do cliente antes de posicionar a solução. Não presuma uma lacuna de produto apenas pela ausência de um produto nos dados disponíveis."
+    },
+    {
+      "id": 12,
+      "titulo": "Power BI → Modernização de dados com Microsoft Fabric",
+      "gatilho": "O Power BI existe, mas o ambiente de dados é fragmentado ou complexo.",
+      "categoria": [
+        "CROSS-SELL",
+        "MODERNIZATION"
+      ],
+      "solucao_potencial": "Microsoft Fabric / Azure",
+      "situacao": [
+        "Onde estão as fontes de dados que alimentam o Power BI?",
+        "Como são tratados a engenharia, a integração e a governança de dados?",
+        "Quantas equipes diferentes constroem e mantêm seus próprios pipelines de dados hoje?",
+        "Existe um catálogo de dados central ou cada área gerencia suas próprias fontes isoladamente?"
+      ],
+      "problema": [
+        "As equipes estão criando pipelines duplicados ou preparando dados manualmente?",
+        "Os silos de dados estão limitando projetos de análise ou IA?",
+        "Há atrito entre as equipes de dados e de negócio por causa de definições inconsistentes de métricas?",
+        "O tempo para disponibilizar um novo conjunto de dados para análise costuma ser longo?"
+      ],
+      "implicacao": [
+        "Como a complexidade dos dados afeta o prazo de entrega e a confiança nas análises?",
+        "Qual é o custo de manter pipelines de dados fragmentados?",
+        "Quanto esforço de engenharia é gasto apenas mantendo pipelines redundantes em funcionamento?",
+        "Como a fragmentação de dados atrasa iniciativas de IA que dependem de dados confiáveis e unificados?"
+      ],
+      "need_payoff": [
+        "Uma plataforma de dados integrada aceleraria iniciativas de análise e IA?",
+        "Qual domínio de dados demonstraria mais valor em um piloto?",
+        "Uma plataforma unificada de dados reduziria a duplicação de esforço entre as equipes de engenharia e análise?",
+        "Que ganho de velocidade a empresa teria ao lançar novos casos de uso de análise ou IA sobre uma base de dados unificada?"
+      ],
+      "sinais_alto_potencial": "Muitas fontes; pipelines duplicados; silos de dados; roteiro de IA; ciclos longos de entrega de BI.",
+      "orientacao_clm": "Valide as respostas do cliente antes de posicionar a solução. Não presuma uma lacuna de produto apenas pela ausência de um produto nos dados disponíveis."
+    },
+    {
+      "id": 13,
+      "titulo": "Processos manuais → Power Automate",
+      "gatilho": "Aprovações, planilhas, fluxos de trabalho por email ou processos repetitivos.",
+      "categoria": [
+        "CROSS-SELL"
+      ],
+      "solucao_potencial": "Power Automate",
+      "situacao": [
+        "Quais processos ainda dependem de email, planilhas ou aprovações manuais?",
+        "Quais fluxos de trabalho envolvem vários sistemas ou transferências?",
+        "Quais aprovações internas, como compras, despesas ou contratações, ainda dependem de assinatura manual ou papel?",
+        "Como as equipes acompanham hoje o status de uma solicitação em andamento?"
+      ],
+      "problema": [
+        "Onde as solicitações ficam paradas ou exigem retrabalho?",
+        "Quais etapas são mais sujeitas a erros ou repetitivas?",
+        "Solicitações se perdem ou ficam esquecidas por falta de um fluxo com notificações automáticas?",
+        "Quantas pessoas diferentes precisam ser envolvidas manualmente para concluir um processo simples?"
+      ],
+      "implicacao": [
+        "Quantas horas são gastas por mês nessas tarefas?",
+        "Qual é o impacto de atrasos ou erros sobre clientes e funcionários?",
+        "Qual é o custo de horas extras ou atrasos gerados por processos manuais em períodos de pico?",
+        "Como erros de digitação ou etapas puladas manualmente afetam a qualidade do resultado final?"
+      ],
+      "need_payoff": [
+        "Se esse processo fosse automatizado, onde a equipe reinvestiria o tempo economizado?",
+        "Qual fluxo de trabalho seria o melhor candidato inicial à automação?",
+        "Notificações e aprovações automáticas reduziriam o tempo de ciclo desses processos?",
+        "Que outros processos poderiam ser automatizados na sequência, uma vez comprovado o valor do primeiro?"
+      ],
+      "sinais_alto_potencial": "Alto volume de transações; aprovações manuais; tarefas repetitivas; horas de trabalho mensuráveis; problemas de SLA.",
+      "orientacao_clm": "Valide as respostas do cliente antes de posicionar a solução. Não presuma uma lacuna de produto apenas pela ausência de um produto nos dados disponíveis."
+    },
+    {
+      "id": 14,
+      "titulo": "Automação → Copilot Studio/Agentes",
+      "gatilho": "Há automações, mas as exceções ainda exigem interpretação humana.",
+      "categoria": [
+        "CROSS-SELL"
+      ],
+      "solucao_potencial": "Copilot Studio / Agentes + Power Automate",
+      "situacao": [
+        "Quais processos já estão automatizados?",
+        "Onde as pessoas ainda precisam interpretar solicitações ou tomar decisões repetitivas?",
+        "Quais ferramentas de automação, como RPA, fluxos ou scripts, já estão em uso na organização?",
+        "Existe um canal, como chat, portal ou email, onde funcionários ou clientes fazem perguntas recorrentes hoje?"
+      ],
+      "problema": [
+        "Quais tipos de exceção consomem mais tempo?",
+        "Os funcionários fazem repetidamente perguntas ou solicitações que poderiam ser tratadas por um agente?",
+        "As automações atuais conseguem lidar com solicitações fora do padrão ou exigem intervenção humana constante?",
+        "Quanto tempo a equipe de suporte interno gasta respondendo às mesmas dúvidas repetidamente?"
+      ],
+      "implicacao": [
+        "Quanta capacidade é consumida por essas exceções?",
+        "A intervenção manual limita a escala da automação atual?",
+        "Qual é o custo de manter pessoas dedicadas a triagem e exceções que poderiam ser tratadas por um agente?",
+        "Como a demora em resolver exceções afeta a satisfação de clientes ou funcionários?"
+      ],
+      "need_payoff": [
+        "Um agente que compreenda solicitações e acione fluxos de trabalho reduziria essas exceções?",
+        "Qual processo geraria o valor de negócio mais claro com um agente?",
+        "Um agente conversacional integrado aos sistemas atuais reduziria a necessidade de intervenção humana nessas exceções?",
+        "Que métrica, como tempo de resposta, volume atendido ou satisfação, validaria o sucesso de um piloto com agentes?"
+      ],
+      "sinais_alto_potencial": "Programa de automação existente; alta taxa de exceções; solicitações repetitivas de funcionários; iniciativa de agentes.",
+      "orientacao_clm": "Valide as respostas do cliente antes de posicionar a solução. Não presuma uma lacuna de produto apenas pela ausência de um produto nos dados disponíveis."
+    },
+    {
+      "id": 15,
+      "titulo": "Fragmentação do CRM → Dynamics 365 Sales",
+      "gatilho": "Os dados de vendas estão fragmentados entre CRM, Excel, email ou sistemas desconectados.",
+      "categoria": [
+        "MODERNIZATION"
+      ],
+      "solucao_potencial": "Dynamics 365 Sales",
+      "situacao": [
+        "Como contas, contatos e oportunidades são gerenciados atualmente?",
+        "Como as informações de previsão e pipeline são consolidadas?",
+        "Quantos sistemas ou planilhas diferentes são usados hoje para acompanhar oportunidades de venda?",
+        "Como os vendedores registram interações com clientes e o histórico de propostas?"
+      ],
+      "problema": [
+        "Onde os vendedores gastam tempo atualizando ou conciliando informações?",
+        "Há lacunas de visibilidade entre contas e oportunidades?",
+        "Gestores têm dificuldade para obter uma visão confiável do funil de vendas em tempo real?",
+        "Informações de clientes ficam presas com vendedores individuais em vez de centralizadas para a equipe?"
+      ],
+      "implicacao": [
+        "Como dados incompletos no CRM afetam a precisão das previsões ou a produtividade dos vendedores?",
+        "Qual é o impacto de informações inconsistentes sobre clientes?",
+        "Qual é o impacto na taxa de conversão quando oportunidades não recebem acompanhamento oportuno?",
+        "Como a saída de um vendedor afeta a continuidade do relacionamento com contas importantes?"
+      ],
+      "need_payoff": [
+        "Uma visão unificada de clientes e oportunidades melhoraria a execução de vendas?",
+        "Qual processo de vendas mais se beneficiaria de automação e inteligência?",
+        "Recomendações de próximas ações baseadas em IA ajudariam os vendedores a priorizar melhor seu tempo?",
+        "Qual seria o valor de ter previsões de vendas mais precisas para o planejamento do negócio?"
+      ],
+      "sinais_alto_potencial": "Pipeline no Excel; problemas de previsão; dados duplicados; carga administrativa dos vendedores; histórico fragmentado dos clientes.",
+      "orientacao_clm": "Valide as respostas do cliente antes de posicionar a solução. Não presuma uma lacuna de produto apenas pela ausência de um produto nos dados disponíveis."
+    },
+    {
+      "id": 16,
+      "titulo": "Atendimento de alto volume → Dynamics 365 Customer Service",
+      "gatilho": "Alto volume de chamados, solicitações repetitivas ou canais de atendimento fragmentados.",
+      "categoria": [
+        "MODERNIZATION"
+      ],
+      "solucao_potencial": "Dynamics 365 Customer Service + Copilot",
+      "situacao": [
+        "Quantas solicitações de atendimento chegam por mês e por quais canais?",
+        "Quais problemas são mais comuns?",
+        "Qual é o tamanho da equipe de atendimento e como ela está distribuída por canal ou turno?",
+        "Existe uma base de conhecimento central que os agentes consultam para responder aos clientes?"
+      ],
+      "problema": [
+        "Onde filas, transferências ou perguntas repetidas de clientes causam atrasos?",
+        "Os agentes precisam pesquisar em vários sistemas para encontrar respostas?",
+        "Os clientes precisam repetir informações ao serem transferidos entre agentes ou canais diferentes?",
+        "Há dificuldade em medir a satisfação do cliente ou identificar tendências nos motivos de contato?"
+      ],
+      "implicacao": [
+        "Como os atrasos afetam o SLA e a satisfação do cliente?",
+        "Qual é o custo de tratar solicitações repetitivas manualmente?",
+        "Que impacto tem a alta rotatividade de agentes sobre a qualidade e a consistência do atendimento?",
+        "Como o volume de solicitações repetitivas afeta a capacidade da equipe de tratar casos complexos?"
+      ],
+      "need_payoff": [
+        "Se a IA e a automação resolvessem solicitações simples, onde os agentes poderiam concentrar seu tempo?",
+        "Qual jornada de atendimento seria o melhor piloto?",
+        "Um roteamento inteligente de casos ajudaria a direcionar solicitações complexas para os agentes certos mais rápido?",
+        "Que ganho de satisfação do cliente a empresa esperaria ao reduzir o tempo médio de resolução?"
+      ],
+      "sinais_alto_potencial": "Alto volume de chamados; pressão de SLA; casos repetitivos; vários canais; conhecimento fragmentado.",
+      "orientacao_clm": "Valide as respostas do cliente antes de posicionar a solução. Não presuma uma lacuna de produto apenas pela ausência de um produto nos dados disponíveis."
+    },
+    {
+      "id": 17,
+      "titulo": "Desenvolvedores → GitHub Copilot",
+      "gatilho": "Grande população de desenvolvedores, backlog, codificação repetitiva ou necessidades de modernização.",
+      "categoria": [
+        "CROSS-SELL"
+      ],
+      "solucao_potencial": "GitHub Copilot",
+      "situacao": [
+        "Qual é o tamanho da organização de desenvolvimento e quais tecnologias são usadas?",
+        "Em que atividades fora do trabalho central de produto os desenvolvedores gastam mais tempo?",
+        "Quais linguagens de programação e frameworks predominam nos projetos atuais?",
+        "Como é hoje o processo de revisão de código e escrita de testes automatizados?"
+      ],
+      "problema": [
+        "Quais tarefas são repetitivas ou lentas?",
+        "A dívida técnica ou o backlog limita as entregas?",
+        "Desenvolvedores gastam tempo significativo escrevendo código repetitivo (boilerplate) ou testes unitários?",
+        "A documentação de código e APIs costuma ficar desatualizada por falta de tempo da equipe?"
+      ],
+      "implicacao": [
+        "Como esses gargalos afetam a velocidade de lançamento ou a capacidade?",
+        "Qual é o custo de oportunidade do tempo dos desenvolvedores gasto em trabalho repetitivo?",
+        "Como atrasos nas entregas afetam compromissos com clientes internos ou externos?",
+        "Qual é o risco de perda de conhecimento quando desenvolvedores seniores saem da equipe sem documentação adequada?"
+      ],
+      "need_payoff": [
+        "Se os desenvolvedores acelerassem a codificação, os testes ou a documentação de rotina, o que a equipe entregaria antes?",
+        "Qual equipe seria mais adequada para um piloto mensurável?",
+        "Sugestões de código em tempo real ajudariam a reduzir o tempo gasto em tarefas repetitivas de programação?",
+        "Que impacto teria acelerar em algumas semanas o ciclo de entrega dos próximos lançamentos?"
+      ],
+      "sinais_alto_potencial": "Grande equipe de desenvolvimento; backlog; tarefas repetitivas; código legado; pressão por lançamentos; programa de modernização.",
+      "orientacao_clm": "Valide as respostas do cliente antes de posicionar a solução. Não presuma uma lacuna de produto apenas pela ausência de um produto nos dados disponíveis."
+    },
+    {
+      "id": 18,
+      "titulo": "Aplicativos legados → GitHub Copilot + Azure",
+      "gatilho": "Aplicativos legados são dispendiosos ou difíceis de manter.",
+      "categoria": [
+        "MODERNIZATION"
+      ],
+      "solucao_potencial": "GitHub Copilot + Azure",
+      "situacao": [
+        "Quais aplicativos são considerados legados?",
+        "Quais linguagens, estruturas e infraestrutura eles utilizam?",
+        "Há quanto tempo esses aplicativos legados estão em produção sem grandes atualizações?",
+        "Quantos desenvolvedores da equipe atual têm conhecimento profundo dessas tecnologias legadas?"
+      ],
+      "problema": [
+        "Onde o código legado gera desafios de manutenção ou de competências?",
+        "Quais aplicativos estão bloqueando a modernização?",
+        "É difícil encontrar ou contratar profissionais com experiência nessas tecnologias legadas?",
+        "Esses aplicativos impedem a adoção de novas funcionalidades ou integrações modernas?"
+      ],
+      "implicacao": [
+        "Qual é o custo ou o risco de manter esses sistemas?",
+        "A dependência de competências escassas poderia gerar risco à continuidade dos negócios?",
+        "O que aconteceria ao negócio se um dos poucos especialistas nesses sistemas se desligasse da empresa?",
+        "Qual é o custo de oportunidade de manter esses sistemas em vez de investir em inovação?"
+      ],
+      "need_payoff": [
+        "Se as equipes pudessem compreender, refatorar e modernizar código legado mais rapidamente, qual aplicativo seria priorizado?",
+        "Qual resultado de negócio justificaria um programa de modernização?",
+        "Ferramentas de IA que ajudam a entender e documentar código legado acelerariam o processo de modernização?",
+        "Qual aplicativo legado, se modernizado primeiro, traria o maior alívio operacional imediato?"
+      ],
+      "sinais_alto_potencial": "Tecnologia em fim de vida; competências escassas; alto custo de manutenção; roteiro de modernização; migração para a nuvem.",
+      "orientacao_clm": "Valide as respostas do cliente antes de posicionar a solução. Não presuma uma lacuna de produto apenas pela ausência de um produto nos dados disponíveis."
+    },
+    {
+      "id": 19,
+      "titulo": "Servidores de arquivos/documentos dispersos → SharePoint",
+      "gatilho": "Documentos armazenados em servidores de arquivos, unidades locais ou repositórios fragmentados.",
+      "categoria": [
+        "MODERNIZATION"
+      ],
+      "solucao_potencial": "SharePoint / OneDrive",
+      "situacao": [
+        "Onde os documentos de negócios são armazenados e como são compartilhados?",
+        "Como os usuários encontram a versão mais recente de um documento?",
+        "Quantos servidores de arquivos ou repositórios distintos existem hoje na organização?",
+        "Como equipes de diferentes localidades ou filiais colaboram em documentos compartilhados?"
+      ],
+      "problema": [
+        "Os usuários encontram versões duplicadas ou têm dificuldade para localizar informações?",
+        "Como o compartilhamento externo é controlado?",
+        "Existem versões conflitantes de um mesmo documento circulando entre equipes diferentes?",
+        "A busca por documentos antigos ou de outras áreas costuma exigir contato direto com colegas?"
+      ],
+      "implicacao": [
+        "Quanto tempo é perdido procurando informações?",
+        "Qual é o risco de usar documentos desatualizados ou compartilhados incorretamente?",
+        "Que retrabalho é gerado quando informações desatualizadas são usadas em decisões ou propostas?",
+        "Qual é o risco de vazamento de informações por compartilhamento externo sem controle adequado?"
+      ],
+      "need_payoff": [
+        "Colaboração centralizada, controle de versões e controle de acesso melhorariam a produtividade?",
+        "Qual repositório de documentos seria o melhor candidato à migração?",
+        "Um único local confiável para todos os documentos aceleraria a colaboração entre equipes e filiais?",
+        "Que tipo de controle de acesso e retenção seria mais importante para essa migração?"
+      ],
+      "sinais_alto_potencial": "Servidores de arquivos; conflitos de versão; reclamações sobre pesquisa; colaboração remota; necessidades de governança.",
+      "orientacao_clm": "Valide as respostas do cliente antes de posicionar a solução. Não presuma uma lacuna de produto apenas pela ausência de um produto nos dados disponíveis."
+    },
+    {
+      "id": 20,
+      "titulo": "Teams usado principalmente para reuniões → Colaboração/Copilot",
+      "gatilho": "O Teams é principalmente uma ferramenta de reuniões, com adoção limitada de colaboração ou IA.",
+      "categoria": [
+        "ADOPTION",
+        "EXPANSION"
+      ],
+      "solucao_potencial": "Microsoft Teams + Microsoft 365 Copilot",
+      "situacao": [
+        "Como as equipes usam o Teams além das reuniões?",
+        "Onde ficam as anotações, os arquivos e os acompanhamentos das reuniões?",
+        "Quantas reuniões, em média, cada funcionário participa por semana?",
+        "As equipes utilizam canais do Teams para colaboração contínua ou apenas para chamadas pontuais?"
+      ],
+      "problema": [
+        "Os funcionários têm dificuldade para encontrar informações após as reuniões?",
+        "Quanto trabalho manual é dedicado a resumos, acompanhamentos e controle de ações?",
+        "Pessoas que faltam a uma reunião têm facilidade para se atualizar sobre o que foi decidido?",
+        "Itens de ação combinados em reuniões costumam ser perdidos ou esquecidos depois?"
+      ],
+      "implicacao": [
+        "Quanto tempo é perdido após as reuniões?",
+        "O conhecimento fragmentado das reuniões afeta a execução?",
+        "Como a falta de registro claro das decisões afeta a velocidade de execução dos projetos?",
+        "Qual é o custo de retrabalho quando decisões de reuniões anteriores precisam ser reconstruídas de memória?"
+      ],
+      "need_payoff": [
+        "Recursos de IA para resumo de reuniões, acompanhamento e recuperação de conhecimento melhorariam a produtividade?",
+        "Qual função com muitas reuniões seria o melhor piloto?",
+        "Resumos automáticos e itens de ação gerados por IA ajudariam a garantir que nada seja esquecido após as reuniões?",
+        "Que função ou departamento mais se beneficiaria de recursos de busca e resumo em reuniões passadas?"
+      ],
+      "sinais_alto_potencial": "Alto volume de reuniões; equipes distribuídas; carga de acompanhamento; conhecimento fragmentado; interesse no Copilot.",
+      "orientacao_clm": "Valide as respostas do cliente antes de posicionar a solução. Não presuma uma lacuna de produto apenas pela ausência de um produto nos dados disponíveis."
+    },
+    {
+      "id": 21,
+      "titulo": "Grande ambiente de dados/conformidade → Microsoft Purview",
+      "gatilho": "Informações confidenciais e requisitos de privacidade ou regulamentação.",
+      "categoria": [
+        "CROSS-SELL"
+      ],
+      "solucao_potencial": "Microsoft Purview",
+      "situacao": [
+        "Quais tipos de informação confidencial são mais importantes proteger?",
+        "Como vocês descobrem, classificam e governam essas informações atualmente?",
+        "Quais regulamentações setoriais, como LGPD, GDPR ou normas específicas do setor, se aplicam à operação atual?",
+        "Existe uma equipe dedicada de governança de dados ou a responsabilidade está distribuída informalmente?"
+      ],
+      "problema": [
+        "Onde há falta de visibilidade ou controles automatizados?",
+        "Quais tarefas de conformidade ainda são manuais?",
+        "Auditorias internas ou externas já identificaram lacunas na proteção de dados sensíveis?",
+        "As políticas de retenção e exclusão de dados são aplicadas de forma consistente em todos os sistemas?"
+      ],
+      "implicacao": [
+        "Qual seria o impacto de uma exposição de dados ou auditoria malsucedida?",
+        "Quanto tempo é gasto comprovando a conformidade?",
+        "Qual seria o impacto reputacional de uma violação de dados tornada pública?",
+        "Quanto tempo a equipe jurídica ou de compliance gasta reunindo evidências para auditorias regulatórias?"
+      ],
+      "need_payoff": [
+        "Classificação automatizada e aplicação de políticas reduziriam os riscos e o esforço?",
+        "Qual domínio de dados deve ser protegido primeiro?",
+        "Relatórios automatizados de conformidade reduziriam o tempo de preparação para auditorias?",
+        "Que nível de confiança adicional a liderança teria com controles de dados auditáveis e centralizados?"
+      ],
+      "sinais_alto_potencial": "LGPD; dados regulamentados; carga de auditoria; dados confidenciais de clientes/funcionários; preocupações com vazamento de dados.",
+      "orientacao_clm": "Valide as respostas do cliente antes de posicionar a solução. Não presuma uma lacuna de produto apenas pela ausência de um produto nos dados disponíveis."
+    },
+    {
+      "id": 22,
+      "titulo": "Vários fornecedores de segurança → Consolidação com Microsoft Defender",
+      "gatilho": "O cliente gerencia várias ferramentas e consoles de segurança.",
+      "categoria": [
+        "CONSOLIDATION"
+      ],
+      "solucao_potencial": "Microsoft Defender",
+      "situacao": [
+        "Quais produtos de segurança são usados em endpoints, identidade e email?",
+        "Como os alertas são correlacionados entre essas ferramentas?",
+        "Quantos fornecedores diferentes de segurança estão contratados atualmente e com que sobreposição de escopo?",
+        "Como é feita hoje a renovação e a gestão de contratos dessas diferentes ferramentas de segurança?"
+      ],
+      "problema": [
+        "Onde a equipe encontra funcionalidades duplicadas ou visibilidade fragmentada?",
+        "Quanto tempo é gasto alternando entre consoles?",
+        "A equipe de segurança enfrenta dificuldade para justificar o retorno sobre o investimento de cada ferramenta individualmente?",
+        "Há lacunas de cobertura entre as ferramentas que passam despercebidas até um incidente ocorrer?"
+      ],
+      "implicacao": [
+        "As ferramentas fragmentadas atrasam a investigação ou a resposta a incidentes?",
+        "Qual é o custo operacional de manter várias plataformas de segurança?",
+        "Qual é o impacto de renovar contratos de múltiplos fornecedores sem revisar sua real necessidade?",
+        "Como a equipe reduzida de segurança lida com o volume de alertas gerados por ferramentas não integradas?"
+      ],
+      "need_payoff": [
+        "Uma pilha de segurança mais integrada simplificaria as operações e melhoraria a visibilidade?",
+        "Qual carga de trabalho seria avaliada primeiro para consolidação?",
+        "Consolidar fornecedores em uma única plataforma simplificaria a gestão de contratos e renovações?",
+        "Qual seria a economia esperada ao eliminar sobreposições de licenciamento entre ferramentas de segurança?"
+      ],
+      "sinais_alto_potencial": "Vários fornecedores; fadiga de consoles; ferramentas duplicadas; capacidade do SOC; desafios de integração.",
+      "orientacao_clm": "Valide as respostas do cliente antes de posicionar a solução. Não presuma uma lacuna de produto apenas pela ausência de um produto nos dados disponíveis."
+    },
+    {
+      "id": 23,
+      "titulo": "Parque de dispositivos antigo → Windows/Intune/Defender",
+      "gatilho": "Parque de endpoints antigo ou postura de dispositivos inconsistente.",
+      "categoria": [
+        "MODERNIZATION"
+      ],
+      "solucao_potencial": "Windows 11 + Intune + Defender",
+      "situacao": [
+        "Qual é a idade e a composição do parque de dispositivos?",
+        "Como a integridade e a conformidade dos dispositivos são monitoradas?",
+        "Quantos dispositivos ainda rodam versões de sistema operacional próximas do fim do suporte?",
+        "Existe um ciclo definido de renovação de hardware ou as trocas acontecem de forma reativa?"
+      ],
+      "problema": [
+        "Quais dispositivos são difíceis de manter ou proteger?",
+        "Há problemas de compatibilidade de hardware ou software?",
+        "Aplicativos críticos de negócio dependem de versões antigas de sistema operacional para funcionar?",
+        "Os chamados de suporte de TI estão concentrados em um grupo específico de dispositivos mais antigos?"
+      ],
+      "implicacao": [
+        "Qual é o impacto dos dispositivos antigos sobre a produtividade e o suporte?",
+        "Qual exposição de segurança existe em endpoints sem suporte ou mal gerenciados?",
+        "Qual seria o custo de uma falha de segurança em dispositivos que não recebem mais atualizações?",
+        "Como dispositivos lentos ou instáveis afetam a percepção dos funcionários sobre as ferramentas de trabalho?"
+      ],
+      "need_payoff": [
+        "Um padrão moderno, gerenciado e protegido de endpoints reduziria o suporte e os riscos?",
+        "Qual grupo de usuários seria o melhor ponto de partida?",
+        "Um programa estruturado de renovação e gerenciamento reduziria os chamados de suporte relacionados a hardware antigo?",
+        "Que ganho de segurança a empresa teria ao padronizar todos os dispositivos em uma linha de base moderna?"
+      ],
+      "sinais_alto_potencial": "Hardware antigo; custo de suporte; preocupações com segurança; força de trabalho híbrida; programa de renovação de dispositivos.",
+      "orientacao_clm": "Valide as respostas do cliente antes de posicionar a solução. Não presuma uma lacuna de produto apenas pela ausência de um produto nos dados disponíveis."
+    },
+    {
+      "id": 24,
+      "titulo": "Copilot/IA → Agentes personalizados",
+      "gatilho": "O cliente deseja avançar da produtividade individual para a IA no nível dos processos.",
+      "categoria": [
+        "CROSS-SELL",
+        "EXPANSION"
+      ],
+      "solucao_potencial": "Copilot Studio / Agentes",
+      "situacao": [
+        "Quais processos de negócios são candidatos à IA?",
+        "Onde os funcionários pesquisam informações repetidamente ou iniciam ações padronizadas?",
+        "Quais sistemas internos, como RH, financeiro ou atendimento, concentram mais solicitações repetitivas de informação?",
+        "Já existe algum uso de chatbots ou assistentes virtuais na organização, mesmo que básico?"
+      ],
+      "problema": [
+        "Quais processos ainda exigem esforço manual significativo?",
+        "Onde a falta de automação cria gargalos?",
+        "Funcionários recorrem a colegas ou a áreas de suporte para obter respostas que poderiam ser automatizadas?",
+        "A falta de um agente integrado aos sistemas internos limita o autoatendimento dos funcionários?"
+      ],
+      "implicacao": [
+        "Quantas horas ou transações são afetadas?",
+        "O que acontece com a experiência de clientes ou funcionários quando esses processos atrasam?",
+        "Qual é o custo de manter pessoas respondendo perguntas repetitivas que um agente poderia resolver?",
+        "Como a demora nessas respostas afeta a produtividade de quem está esperando a informação?"
+      ],
+      "need_payoff": [
+        "Se um agente pudesse responder a perguntas e executar ações entre sistemas, qual resultado seria mais importante?",
+        "Qual processo justificaria um piloto de agente?",
+        "Um agente com acesso seguro aos dados corporativos relevantes aumentaria a autonomia dos funcionários?",
+        "Que área da empresa teria o maior ganho ao adotar um agente personalizado como primeiro piloto?"
+      ],
+      "sinais_alto_potencial": "Roteiro de transformação com IA; processos de atendimento repetitivos; pesquisa de conhecimento; patrocínio executivo; backlog de automação.",
+      "orientacao_clm": "Valide as respostas do cliente antes de posicionar a solução. Não presuma uma lacuna de produto apenas pela ausência de um produto nos dados disponíveis."
+    },
+    {
+      "id": 25,
+      "titulo": "Microsoft 365 + IA + Segurança → Transformação integrada",
+      "gatilho": "Ambiente Microsoft maduro com vários sinais de transformação.",
+      "categoria": [
+        "EXPANSION",
+        "MODERNIZATION"
+      ],
+      "solucao_potencial": "Microsoft 365 + Copilot + Segurança + Agentes/Dados/Azure, conforme validação",
+      "situacao": [
+        "Como as iniciativas de produtividade, IA, segurança e dados estão conectadas na estratégia atual?",
+        "Quais iniciativas de transformação têm maior prioridade para os próximos 12–24 meses?",
+        "Existe um comitê ou patrocinador executivo responsável por orientar a estratégia de transformação digital?",
+        "Como o orçamento de TI está distribuído hoje entre produtividade, segurança, dados e automação?"
+      ],
+      "problema": [
+        "As iniciativas de IA, segurança e automação são gerenciadas separadamente?",
+        "Onde há lacunas entre os recursos tecnológicos disponíveis e aquilo que os usuários realmente adotam?",
+        "Diferentes áreas de negócio conduzem suas próprias iniciativas de IA ou segurança sem coordenação central?",
+        "Falta um roteiro único que conecte as prioridades de curto e longo prazo entre essas iniciativas?"
+      ],
+      "implicacao": [
+        "Iniciativas fragmentadas poderiam retardar a transformação ou aumentar o risco de governança?",
+        "Qual é o impacto para o negócio de não escalar pilotos bem-sucedidos?",
+        "Qual é o risco de investimentos duplicados quando iniciativas semelhantes surgem em áreas diferentes?",
+        "Como a falta de um roteiro integrado afeta a velocidade com que a empresa responde a mudanças de mercado?"
+      ],
+      "need_payoff": [
+        "Se a Microsoft ajudasse a conectar produtividade, segurança, dados, IA e automação em um roteiro governado, qual resultado de negócio seria priorizado?",
+        "Qual carga de trabalho deve ser a primeira etapa mensurável desse roteiro?",
+        "Um roteiro conjunto entre TI e as áreas de negócio aumentaria a velocidade de adoção das iniciativas prioritárias?",
+        "Que marcos de curto prazo demonstrariam valor rápido enquanto a transformação de longo prazo avança?"
+      ],
+      "sinais_alto_potencial": "Várias cargas de trabalho Microsoft; patrocínio executivo; estratégia de IA; transformação de segurança; programas de automação/dados; expansão entre departamentos.",
+      "orientacao_clm": "Valide as respostas do cliente antes de posicionar a solução. Não presuma uma lacuna de produto apenas pela ausência de um produto nos dados disponíveis."
+    }
+  ]
+}
