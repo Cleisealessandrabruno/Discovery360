@@ -38,9 +38,7 @@ async function authenticate(email, password) {
 async function requestPasswordReset(email) {
   const language = window.DiscoveryI18n?.getLanguage?.() || 'pt';
   firebaseAuth.languageCode = ({ pt: 'pt-BR', en: 'en', es: 'es' })[language] || 'pt-BR';
-  await firebaseAuth.sendPasswordResetEmail(email.trim(), {
-    url: 'https://discovery360.vercel.app'
-  });
+  await firebaseAuth.sendPasswordResetEmail(email.trim());
 }
 
 async function createAccessRequest(data) {

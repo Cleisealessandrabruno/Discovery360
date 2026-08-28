@@ -329,7 +329,13 @@ document.getElementById('forgotPassword').addEventListener('click', async () => 
     showToast('Se o e-mail estiver cadastrado, você receberá o link para criar uma nova senha. Verifique também a caixa de spam.');
   } catch (error) {
     console.error(error);
-    errorEl.textContent = error.code === 'auth/invalid-email' ? 'Informe um e-mail válido.' : 'Não foi possível enviar o e-mail agora. Tente novamente.';
+    const resetErrors = {
+      'auth/invalid-email': 'Informe um e-mail válido.',
+      'auth/too-many-requests': 'Muitas tentativas foram realizadas. Aguarde alguns minutos e tente novamente.',
+      'auth/network-request-failed': 'Falha de conexão. Verifique a internet e tente novamente.',
+      'auth/operation-not-allowed': 'A redefinição de senha ainda não está habilitada no Firebase.'
+    };
+    errorEl.textContent = resetErrors[error.code] || `Não foi possível enviar o e-mail agora (${error.code || 'erro desconhecido'}).`;
   } finally {
     button.disabled = false;
   }
