@@ -1,6 +1,7 @@
 ensureDemoAdmin();
 const CURRENT_SESSION = getActiveSession();
-const USER_NAME = CURRENT_SESSION?.nome || 'Cleise';
+const sessionEmailPrefix = CURRENT_SESSION?.email?.split('@')[0] || '';
+const USER_NAME = CURRENT_SESSION?.nome && CURRENT_SESSION.nome !== sessionEmailPrefix ? CURRENT_SESSION.nome : (CURRENT_SESSION?.email ? friendlyNameFromEmail(CURRENT_SESSION.email) : 'Cleise');
 const USER_ROLE = CURRENT_SESSION?.perfil || '';
 const isAdmin = () => USER_ROLE === 'ADMIN' || USER_ROLE === 'Administrador';
 const QUALIFICATION_CHECKLISTS = typeof window.QUALIFICATION_CHECKLISTS !== 'undefined' ? window.QUALIFICATION_CHECKLISTS : [];

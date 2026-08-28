@@ -29,10 +29,16 @@ function saveSession(user, remember) { const session = JSON.stringify({ user_id:
 function clearSession() { localStorage.removeItem(SESSION_KEY); sessionStorage.removeItem(SESSION_KEY); }
 function ensureDemoAdmin() {}
 
+function friendlyNameFromEmail(email) {
+  const account = String(email || '').split('@')[0].replace(/^v[-_.]/i, '');
+  const firstName = account.split(/[._-]+/).filter(Boolean)[0] || 'Usuário';
+  return firstName.charAt(0).toLocaleUpperCase('pt-BR') + firstName.slice(1).toLocaleLowerCase('pt-BR');
+}
+
 async function authenticate(email, password) {
   const credential = await firebaseAuth.signInWithEmailAndPassword(email.trim(), password);
   const signedEmail = (credential.user.email || '').toLowerCase();
-  return { user_id: credential.user.uid, nome: signedEmail === FIREBASE_ADMIN_EMAIL ? 'Cleise' : (credential.user.displayName || signedEmail.split('@')[0]), perfil: signedEmail === FIREBASE_ADMIN_EMAIL ? 'Administrador' : 'CLM', email: signedEmail };
+  return { user_id: credential.user.uid, nome: signedEmail === FIREBASE_ADMIN_EMAIL ? 'Cleise' : (credential.user.displayName || friendlyNameFromEmail(signedEmail)), perfil: signedEmail === FIREBASE_ADMIN_EMAIL ? 'Administrador' : 'CLM', email: signedEmail };
 }
 
 async function requestPasswordReset(email) {
