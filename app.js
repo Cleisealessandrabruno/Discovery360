@@ -313,8 +313,26 @@ document.getElementById('togglePassword').addEventListener('click', () => {
   button.textContent = isHidden ? 'Ocultar' : 'Mostrar';
 });
 
-document.getElementById('forgotPassword').addEventListener('click', () => {
-  showToast('Entre em contato com o administrador da plataforma para redefinir sua senha.');
+document.getElementById('forgotPassword').addEventListener('click', async () => {
+  const email = document.getElementById('loginEmail').value.trim();
+  const errorEl = document.getElementById('loginError');
+  if (!email) {
+    errorEl.textContent = 'Informe seu e-mail corporativo antes de solicitar a troca de senha.';
+    document.getElementById('loginEmail').focus();
+    return;
+  }
+  errorEl.textContent = '';
+  const button = document.getElementById('forgotPassword');
+  button.disabled = true;
+  try {
+    await requestPasswordReset(email);
+    showToast('Se o e-mail estiver cadastrado, você receberá o link para criar uma nova senha. Verifique também a caixa de spam.');
+  } catch (error) {
+    console.error(error);
+    errorEl.textContent = error.code === 'auth/invalid-email' ? 'Informe um e-mail válido.' : 'Não foi possível enviar o e-mail agora. Tente novamente.';
+  } finally {
+    button.disabled = false;
+  }
 });
 
 document.getElementById('microsoftLogin').addEventListener('click', () => {

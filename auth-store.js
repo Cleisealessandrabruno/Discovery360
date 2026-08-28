@@ -35,6 +35,14 @@ async function authenticate(email, password) {
   return { user_id: credential.user.uid, nome: signedEmail === FIREBASE_ADMIN_EMAIL ? 'Cleise' : (credential.user.displayName || signedEmail.split('@')[0]), perfil: signedEmail === FIREBASE_ADMIN_EMAIL ? 'Administrador' : 'CLM', email: signedEmail };
 }
 
+async function requestPasswordReset(email) {
+  const language = window.DiscoveryI18n?.getLanguage?.() || 'pt';
+  firebaseAuth.languageCode = ({ pt: 'pt-BR', en: 'en', es: 'es' })[language] || 'pt-BR';
+  await firebaseAuth.sendPasswordResetEmail(email.trim(), {
+    url: 'https://discovery360.vercel.app'
+  });
+}
+
 async function createAccessRequest(data) {
   const request = { ...data, status: 'pendente', aprovado_por: null, aprovado_em: null, rejeitado_por: null, rejeitado_em: null, motivo_rejeicao: null, criado_em: new Date().toISOString() };
   const reference = await firestoreDb.collection('access_requests').add(request);
