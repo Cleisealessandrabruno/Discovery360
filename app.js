@@ -4,6 +4,8 @@ const sessionEmailPrefix = CURRENT_SESSION?.email?.split('@')[0] || '';
 const USER_NAME = CURRENT_SESSION?.nome && CURRENT_SESSION.nome !== sessionEmailPrefix ? CURRENT_SESSION.nome : (CURRENT_SESSION?.email ? friendlyNameFromEmail(CURRENT_SESSION.email) : 'Cleise');
 const USER_ROLE = CURRENT_SESSION?.perfil || '';
 const isAdmin = () => USER_ROLE === 'ADMIN' || USER_ROLE === 'Administrador';
+const tr = (text) => window.DiscoveryI18n?.translate?.(text) || text;
+const appLocale = () => window.DiscoveryI18n?.getLocale?.() || 'pt-BR';
 const QUALIFICATION_CHECKLISTS = typeof window.QUALIFICATION_CHECKLISTS !== 'undefined' ? window.QUALIFICATION_CHECKLISTS : [];
 const state = { plays: salesPlaysData.sales_plays, filter: 'TODOS', query: '', activeMeetingId: null, editingMeetingId: null, readOnly: false };
 const SPIN_STAGES = [
@@ -83,8 +85,8 @@ function renderDashboard() {
   document.querySelectorAll('.table-action').forEach((button) => button.addEventListener('click', () => openSavedMeeting(button.dataset.meetingId)));
 }
 
-function formatDate(value) { return value ? new Date(`${value}T12:00:00`).toLocaleDateString('pt-BR') : '-'; }
-function statusLabel(status) { return ({ rascunho: 'Rascunho', em_andamento: 'Em andamento', concluida: 'Concluída' })[status] || status; }
+function formatDate(value) { return value ? new Date(`${value}T12:00:00`).toLocaleDateString(appLocale()) : '-'; }
+function statusLabel(status) { return tr(({ rascunho: 'Rascunho', em_andamento: 'Em andamento', concluida: 'Concluída' })[status] || status); }
 function createMeeting() { const now = new Date().toISOString(); return { id: `m_${Date.now()}`, cliente: '', empresa: '', identificador_tipo: 'lead', identificador_numero: '', tpid: '', segmento: '', data: '', assunto: '', solucao_ms: '', contexto_previo: '', contextos_adicionais: [], observacoes_preparacao: '', status: 'rascunho', gerou_oportunidade: false, proximo_passo: '', sales_play_ativo: null, respostas: {}, created_at: now, updated_at: now }; }
 
 function openMeetingForm(id = null) {
@@ -103,9 +105,9 @@ function openMeetingForm(id = null) {
   document.querySelectorAll('#meetingForm input, #meetingForm textarea').forEach((field) => field.classList.remove('invalid'));
 }
 
-function updateMeetingIdentifierField() { const opportunity = document.getElementById('identifierTypeToggle').checked; const type = opportunity ? 'Oportunidade' : 'Lead'; document.getElementById('identifierTypeLabel').textContent = type; document.getElementById('identifierNumberLabel').textContent = `Número da ${type} *`; document.getElementById('identifierNumber').placeholder = `Informe o número da ${type}`; }
+function updateMeetingIdentifierField() { const opportunity = document.getElementById('identifierTypeToggle').checked; const type = opportunity ? 'Oportunidade' : 'Lead'; document.getElementById('identifierTypeLabel').textContent = tr(type); document.getElementById('identifierNumberLabel').textContent = tr(`Número da ${type} *`); document.getElementById('identifierNumber').placeholder = tr(`Informe o número da ${type}`); }
 
-function addContextField(value = '') { const container = document.getElementById('additionalContexts'); const number = container.children.length + 1; const label = document.createElement('label'); label.className = 'full-width'; label.innerHTML = `Contexto adicional ${number}<textarea name="contexto_adicional" rows="3" placeholder="Outro contexto relevante para a conversa."></textarea>`; label.querySelector('textarea').value = value; container.appendChild(label); }
+function addContextField(value = '') { const container = document.getElementById('additionalContexts'); const number = container.children.length + 1; const label = document.createElement('label'); label.className = 'full-width'; label.innerHTML = `${tr('Contexto adicional')} ${number}<textarea name="contexto_adicional" rows="3" placeholder="${tr('Outro contexto relevante para a conversa.')}"></textarea>`; label.querySelector('textarea').value = value; container.appendChild(label); }
 function collectMeetingForm() { const form = document.getElementById('meetingForm'); const meeting = state.editingMeetingId ? getMeetingById(state.editingMeetingId) : createMeeting(); meeting.cliente = form.elements.cliente.value.trim(); meeting.empresa = form.elements.empresa.value.trim(); meeting.identificador_tipo = document.getElementById('identifierTypeToggle').checked ? 'oportunidade' : 'lead'; meeting.identificador_numero = form.elements.identificador_numero.value.trim(); meeting.tpid = form.elements.tpid.value.trim(); meeting.segmento = form.elements.segmento.value.trim(); meeting.data = form.elements.data.value; meeting.assunto = form.elements.assunto.value.trim(); meeting.solucao_ms = form.elements.solucao_ms.value.trim(); meeting.contexto_previo = form.elements.contexto_previo.value.trim(); meeting.contextos_adicionais = [...document.querySelectorAll('[name="contexto_adicional"]')].map((field) => field.value.trim()).filter(Boolean); meeting.observacoes_preparacao = form.elements.observacoes_preparacao.value.trim(); return meeting; }
 function saveFromForm(status) { const meeting = collectMeetingForm(); const required = ['cliente', 'empresa', 'identificador_numero', 'data', 'assunto']; const missing = required.filter((field) => !meeting[field]); document.querySelectorAll('#meetingForm input, #meetingForm textarea').forEach((field) => field.classList.remove('invalid')); if (missing.length) { missing.forEach((field) => document.querySelector(`[name="${field}"]`).classList.add('invalid')); document.getElementById('formError').textContent = 'Preencha os campos obrigatórios destacados, incluindo o número da Lead ou Oportunidade.'; return; } const duplicate = getMeetings().find((item) => item.id !== meeting.id && item.identificador_tipo === meeting.identificador_tipo && item.identificador_numero === meeting.identificador_numero); if (duplicate) { document.getElementById('identifierNumber').classList.add('invalid'); document.getElementById('formError').textContent = 'Este número já está associado a outra reunião.'; return; } const wasNew = !state.editingMeetingId; meeting.status = status; const saved = saveMeeting(meeting); if (wasNew) registrarAuditoria(saved.id, `${meeting.identificador_tipo === 'oportunidade' ? 'Oportunidade' : 'Lead'} ${meeting.identificador_numero} · ${status === 'em_andamento' ? 'Reunião criada e iniciada.' : 'Reunião criada como rascunho.'}`); else if (status === 'em_andamento') registrarAuditoria(saved.id, 'Reunião iniciada.'); if (status === 'em_andamento') navigate('workspace', saved.id); else navigate('dashboard'); }
 function openSavedMeeting(id) { const meeting = getMeetingById(id); if (!meeting) return; if (meeting.status === 'rascunho') navigate('form', id); else { navigate('workspace', id); if (meeting.status === 'concluida') setMeetingTab('summary'); } }
@@ -272,7 +274,8 @@ document.getElementById('manualPartnerInput').addEventListener('input', (event) 
 document.addEventListener('click', (event) => { const manualOption = event.target.closest('#partnerSuggestions [data-manual="true"]'); if (manualOption) { partnerState.partner = null; partnerState.manual = ''; partnerState.manualMode = true; closePartnerSuggestions(); document.getElementById('manualPartnerField').hidden = false; document.getElementById('distributorField').hidden = false; document.getElementById('distributorError').hidden = false; document.getElementById('manualPartnerInput').value = ''; document.getElementById('manualPartnerInput').focus(); return; } if (!event.target.closest('#partnerSearch, #partnerSuggestions, #distributorSearch, #distributorSuggestions')) closePartnerSuggestions(); });
 document.getElementById('partnerSuggestions').addEventListener('click', (event) => { const manualOption = event.target.closest('[data-manual="true"]'); if (!manualOption) return; event.preventDefault(); event.stopImmediatePropagation(); partnerState.partner = null; partnerState.manual = ''; partnerState.manualMode = true; closePartnerSuggestions(); document.getElementById('manualPartnerField').hidden = false; document.getElementById('distributorField').hidden = false; document.getElementById('distributorError').hidden = false; document.getElementById('manualPartnerInput').value = ''; document.getElementById('manualPartnerInput').focus(); }, true);
 document.getElementById('salesPlayOptions').innerHTML = state.plays.map((play) => `<option value="${play.titulo}">`).join('');
-document.getElementById('matrixBody').innerHTML = OPPORTUNITY_MATRIX.map((row) => `<tr><td>${row.sinal}</td><td>${row.abordagem}</td><td>${row.tipo}</td></tr>`).join('');
+function renderOpportunityMatrix() { const language = window.DiscoveryI18n?.getLanguage?.() || 'pt'; const rows = window.getOpportunityMatrix?.(language) || OPPORTUNITY_MATRIX; document.getElementById('matrixBody').innerHTML = rows.map((row) => `<tr><td>${row.sinal}</td><td>${row.abordagem}</td><td>${row.tipo}</td></tr>`).join(''); }
+renderOpportunityMatrix();
 document.getElementById('matrixSearch').addEventListener('input', (event) => { const query = event.target.value.toLocaleLowerCase('pt-BR'); document.querySelectorAll('#matrixBody tr').forEach((row) => { row.hidden = !row.textContent.toLocaleLowerCase('pt-BR').includes(query); }); });
 document.getElementById('libraryFilterGroup').innerHTML = ['TODOS', 'CROSS-SELL', 'UPSELL', 'ADOPTION', 'EXPANSION', 'MODERNIZATION', 'CONSOLIDATION'].map((filter) => `<button class="filter ${filter === 'TODOS' ? 'active' : ''}" data-filter="${filter}">${filter === 'TODOS' ? 'Todos' : filter}</button>`).join('');
 document.getElementById('libraryFilterGroup').addEventListener('click', (event) => { const button = event.target.closest('.filter'); if (!button) return; document.querySelectorAll('#libraryFilterGroup .filter').forEach((item) => item.classList.toggle('active', item === button)); renderLibrary(); });
@@ -368,6 +371,21 @@ window.addEventListener('hashchange', () => {
   if (view === 'checklists') navigate('checklists');
   if (view === 'auditoria-ligacao') navigate('callAudit');
   if (view === 'validacao-acessos') { if (isAdmin()) navigate('access'); else { navigate('dashboard'); showToast('Você não tem permissão para acessar esta página.'); } }
+});
+
+window.addEventListener('discovery:language-changed', () => {
+  renderOpportunityMatrix();
+  render();
+  const route = window.location.hash.slice(1);
+  if (!CURRENT_SESSION || route === 'login') return;
+  if (!route || route === 'dashboard') renderDashboard();
+  else if (route === 'nova-reuniao') openMeetingForm(state.editingMeetingId);
+  else if (route === 'biblioteca') { renderLibrary(); if (typeof renderVisualLibrary === 'function') renderVisualLibrary(); }
+  else if (route === 'checklists') renderChecklists();
+  else if (route === 'auditoria-ligacao') initializeCallAudit();
+  else if (route === 'validacao-acessos' && isAdmin()) renderAccessView();
+  else if (route.startsWith('reuniao/')) openWorkspace(route.split('/')[1]);
+  else if (route.startsWith('relatorio/')) renderReport(route.split('/')[1]);
 });
 
 elements.focusCount.textContent = state.plays.length;

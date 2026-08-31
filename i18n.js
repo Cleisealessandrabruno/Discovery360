@@ -34,7 +34,7 @@
     'Nenhuma reunião cadastrada ainda.': ['No meetings registered yet.', 'Aún no hay reuniones registradas.'],
     'Guia de Descoberta do CLM': ['CLM Discovery Guide', 'Guía de Descubrimiento del CLM'],
     '📖 Guia de Descoberta do CLM': ['📖 CLM Discovery Guide', '📖 Guía de Descubrimiento del CLM'],
-    'Descobertas mais': ['Clearer', 'Descubrimientos más'], 'claras.': ['discoveries.', 'claros.'],
+    'DISCOVERY COMERCIAL': ['SALES DISCOVERY', 'DISCOVERY COMERCIAL'], 'Descobertas mais': ['Clearer', 'Descubrimientos más'], 'claras.': ['discoveries.', 'claros.'],
     'Conversas melhores.': ['Better conversations.', 'Mejores conversaciones.'],
     'Conduza conversas, registre descobertas e organize oportunidades.': ['Lead conversations, capture discoveries and organize opportunities.', 'Conduzca conversaciones, registre descubrimientos y organice oportunidades.'],
     'Roteiros de descoberta': ['Discovery scripts', 'Guiones de descubrimiento'], 'Registro estruturado': ['Structured records', 'Registro estructurado'],
@@ -70,6 +70,10 @@
     'Etapa obrigatória': ['Required step', 'Paso obligatorio'], 'SOLUÇÃO POTENCIAL': ['POTENTIAL SOLUTION', 'SOLUCIÓN POTENCIAL'],
     'SINAIS DE ALTO POTENCIAL': ['HIGH-POTENTIAL SIGNALS', 'SEÑALES DE ALTO POTENCIAL'], 'Usar este Play em uma reunião': ['Use this Play in a meeting', 'Usar este Play en una reunión'],
     'Estrutura de decisão do CLM — Do sinal à oportunidade': ['CLM decision framework — From signal to opportunity', 'Marco de decisión del CLM — De la señal a la oportunidad'],
+    'OBSERVE': ['OBSERVE', 'OBSERVE'], 'FORMULE UMA HIPÓTESE': ['FORMULATE A HYPOTHESIS', 'FORMULE UNA HIPÓTESIS'],
+    'DESCUBRA': ['DISCOVER', 'DESCUBRA'], 'QUANTIFIQUE': ['QUANTIFY', 'CUANTIFIQUE'],
+    'DESENVOLVA A NECESSIDADE': ['DEVELOP THE NEED', 'DESARROLLE LA NECESIDAD'], 'CONECTE': ['CONNECT', 'CONECTE'],
+    'VALIDE': ['VALIDATE', 'VALIDE'], 'QUALIFIQUE': ['QUALIFY', 'CALIFIQUE'],
     'Use dados da conta, licenciamento, atividades, setor e contexto do cliente.': ['Use account data, licensing, activities, industry and customer context.', 'Use datos de la cuenta, licencias, actividades, sector y contexto del cliente.'],
     'Selecione o problema de negócio mais plausível. Trate-o como hipótese, não como fato.': ['Select the most plausible business problem. Treat it as a hypothesis, not a fact.', 'Seleccione el problema de negocio más plausible. Trátelo como hipótesis, no como hecho.'],
     'Faça de duas a quatro perguntas de alto valor sobre Situação e Problema.': ['Ask two to four high-value questions about Situation and Problem.', 'Haga de dos a cuatro preguntas de alto valor sobre Situación y Problema.'],
@@ -78,9 +82,11 @@
     'Relacione a necessidade validada à carga de trabalho Microsoft pertinente.': ['Connect the validated need to the relevant Microsoft workload.', 'Relacione la necesidad validada con la carga de trabajo Microsoft pertinente.'],
     'Confirme adequação, partes interessadas, prazo, orçamento e próxima etapa.': ['Confirm fit, stakeholders, timeline, budget and next step.', 'Confirme adecuación, partes interesadas, plazo, presupuesto y próximo paso.'],
     'Avalie o potencial e determine se deve se tornar uma oportunidade.': ['Assess the potential and determine whether it should become an opportunity.', 'Evalúe el potencial y determine si debe convertirse en una oportunidad.'],
-    'Entrar': ['Sign in', 'Iniciar sesión'], 'Use suas credenciais corporativas.': ['Use your corporate credentials.', 'Use sus credenciales corporativas.'],
+    'Idioma': ['Language', 'Idioma'], 'Entrar': ['Sign in', 'Iniciar sesión'], 'Use suas credenciais corporativas.': ['Use your corporate credentials.', 'Use sus credenciales corporativas.'],
     'E-mail corporativo': ['Corporate email', 'Correo corporativo'], 'Senha': ['Password', 'Contraseña'], 'Mostrar': ['Show', 'Mostrar'], 'Ocultar': ['Hide', 'Ocultar'],
     'Manter conectado': ['Keep me signed in', 'Mantener la sesión iniciada'], 'Esqueci minha senha': ['Forgot my password', 'Olvidé mi contraseña'],
+    'ou': ['or', 'o'], 'Entrar com conta Microsoft': ['Sign in with Microsoft', 'Iniciar sesión con Microsoft'],
+    'Desenvolvido por': ['Developed by', 'Desarrollado por'],
     'Ainda não tem acesso?': ["Don't have access yet?", '¿Aún no tiene acceso?'], 'Solicitar acesso': ['Request access', 'Solicitar acceso'],
     'Dashboard': ['Dashboard', 'Panel'], 'Nova reunião': ['New meeting', 'Nueva reunión'], 'Biblioteca 360': ['360 Library', 'Biblioteca 360'],
     'Checklists': ['Checklists', 'Listas de verificación'], 'Auditoria de ligação': ['Call audit', 'Auditoría de llamada'],
@@ -98,18 +104,57 @@
     'Resposta do cliente': ['Customer response', 'Respuesta del cliente'], 'Salvar resposta': ['Save response', 'Guardar respuesta'], 'Cancelar': ['Cancel', 'Cancelar'],
     'Marcar sem resposta': ['Mark unanswered', 'Marcar sin respuesta'], 'Cliente não soube': ["Customer didn't know", 'El cliente no supo'],
     'Não se aplica': ['Not applicable', 'No aplica'], 'Responder depois': ['Answer later', 'Responder después'],
-    'Todos': ['All', 'Todos'], 'Pendentes': ['Pending', 'Pendientes'], 'Aprovados': ['Approved', 'Aprobados'], 'Rejeitados': ['Rejected', 'Rechazados'],
+    'Todos': ['All', 'Todos'], 'Pendentes': ['Pending', 'Pendientes'], 'pendentes': ['pending', 'pendientes'], 'Aprovados': ['Approved', 'Aprobados'], 'Rejeitados': ['Rejected', 'Rechazados'],
     'Solicitações de acesso': ['Access requests', 'Solicitudes de acceso'], 'E-mails simulados': ['Simulated emails', 'Correos simulados'],
     'Visão operacional': ['Operational overview', 'Visión operativa'], 'Nome': ['Name', 'Nombre'], 'E-mail': ['Email', 'Correo'], 'Cargo': ['Role', 'Cargo'],
-    'Administração': ['Administration', 'Administración'], 'Visão consolidada da operação e auditoria.': ['Consolidated operation and audit overview.', 'Visión consolidada de la operación y auditoría.'],
+    'Administração': ['Administration', 'Administración'], 'SOLICITAÇÕES': ['REQUESTS', 'SOLICITUDES'], 'Visão consolidada da operação e auditoria.': ['Consolidated operation and audit overview.', 'Visión consolidada de la operación y auditoría.'],
     'Nome completo *': ['Full name *', 'Nombre completo *'], 'E-mail corporativo *': ['Corporate email *', 'Correo corporativo *'], 'Empresa *': ['Company *', 'Empresa *'],
     'Cargo *': ['Role *', 'Cargo *'], 'Gestor direto': ['Direct manager', 'Gerente directo'], 'País/Região': ['Country/Region', 'País/Región'],
     'Como pretende utilizar a plataforma? *': ['How do you intend to use the platform? *', '¿Cómo pretende utilizar la plataforma? *'],
     'Enviar solicitação': ['Send request', 'Enviar solicitud'], 'Preencha seus dados para análise do administrador.': ['Enter your information for administrator review.', 'Complete sus datos para la revisión del administrador.'],
+    'Reunião': ['Meeting', 'Reunión'], 'Criar': ['Create', 'Crear'], 'de 5': ['out of 5', 'de 5'],
     'Nova auditoria': ['New audit', 'Nueva auditoría'], 'Análise da Ligação': ['Call Analysis', 'Análisis de la llamada'],
     'Gerar análise da ligação': ['Generate call analysis', 'Generar análisis de la llamada'], 'Exportar para Word': ['Export to Word', 'Exportar a Word'],
     'Overall Call Score': ['Overall Call Score', 'Puntuación general de la llamada'], 'Sim': ['Yes', 'Sí'], 'Não': ['No', 'No'],
-    'Biblioteca de conversas': ['Conversation library', 'Biblioteca de conversaciones'], 'Todos os plays': ['All plays', 'Todos los plays'],
+    'EM FOCO': ['IN FOCUS', 'EN FOCO'], 'Biblioteca de conversas': ['Conversation library', 'Biblioteca de conversaciones'], 'Todos os plays': ['All plays', 'Todos los plays'],
+    'Um guia prático para transformar sinais do cliente em perguntas que abrem espaço para valor.': ['A practical guide to turn customer signals into questions that create space for value.', 'Una guía práctica para convertir señales del cliente en preguntas que abren espacio para el valor.'],
+    'Modernização': ['Modernization', 'Modernización'], 'Registro da oportunidade': ['Opportunity record', 'Registro de la oportunidad'], 'Salvo': ['Saved', 'Guardado'],
+    'Distribuidora *': ['Distributor *', 'Distribuidor *'], 'Selecione a Distribuidora responsável, pois o parceiro informado não está na lista.': ['Select the responsible distributor because the specified partner is not on the list.', 'Seleccione el distribuidor responsable porque el socio informado no está en la lista.'],
+    'Engajamento': ['Engagement', 'Interacción'], 'Acesso à plataforma': ['Platform access', 'Acceso a la plataforma'],
+    'Entre com seu acesso, crie uma reunião e use os Sales Plays para registrar perguntas, respostas e próximos passos. Os dados são salvos localmente neste navegador.': ['Sign in, create a meeting and use Sales Plays to record questions, answers and next steps. Data is saved locally in this browser.', 'Inicie sesión, cree una reunión y use Sales Plays para registrar preguntas, respuestas y próximos pasos. Los datos se guardan localmente en este navegador.'],
+    'Solicitação de acesso': ['Access request', 'Solicitud de acceso'],
+    'Referência rápida': ['Quick reference', 'Referencia rápida'], 'Biblioteca visual Microsoft': ['Microsoft visual library', 'Biblioteca visual Microsoft'],
+    'Compare ofertas e identifique oportunidades durante a conversa.': ['Compare offers and identify opportunities during the conversation.', 'Compare ofertas e identifique oportunidades durante la conversación.'],
+    'Conteúdo interativo': ['Interactive content', 'Contenido interactivo'],
+    'Material de apoio comercial. Confirme licenciamento, disponibilidade regional e condições atuais antes de apresentar uma proposta.': ['Sales support material. Confirm licensing, regional availability and current terms before presenting a proposal.', 'Material de apoyo comercial. Confirme licencias, disponibilidad regional y condiciones actuales antes de presentar una propuesta.'],
+    'Comparativo de licenças': ['License comparison', 'Comparación de licencias'], 'Evolução de segurança e conformidade': ['Security and compliance evolution', 'Evolución de seguridad y cumplimiento'],
+    'Mapa de Segurança Microsoft': ['Microsoft Security Map', 'Mapa de Seguridad Microsoft'], 'Solução por domínio': ['Solution by domain', 'Solución por dominio'],
+    'Chat, Microsoft 365 e agentes': ['Chat, Microsoft 365 and agents', 'Chat, Microsoft 365 y agentes'], 'Quando vender cada produto': ['When to sell each product', 'Cuándo vender cada producto'],
+    'Sinal do cliente e solução': ['Customer signal and solution', 'Señal del cliente y solución'], 'Princípios e pilares': ['Principles and pillars', 'Principios y pilares'],
+    'Jornada de adoção Copilot': ['Copilot adoption journey', 'Jornada de adopción de Copilot'], 'Do preparo à expansão': ['From preparation to expansion', 'De la preparación a la expansión'],
+    'Matriz Power Platform': ['Power Platform matrix', 'Matriz de Power Platform'], 'Produto por necessidade': ['Product by need', 'Producto por necesidad'],
+    'Comparativo rápido': ['Quick comparison', 'Comparación rápida'], 'Recurso': ['Feature', 'Recurso'],
+    'Use os filtros visuais para identificar a distância entre a necessidade atual e a oferta recomendada.': ['Use the visual comparison to identify the gap between the current need and the recommended offer.', 'Use la comparación visual para identificar la distancia entre la necesidad actual y la oferta recomendada.'],
+    'Capacidade': ['Capability', 'Capacidad'], 'Conversa comercial': ['Sales conversation', 'Conversación comercial'],
+    'O E5 amplia os recursos avançados de identidade, proteção, conformidade e análise.': ['E5 expands advanced identity, protection, compliance and analytics capabilities.', 'E5 amplía las capacidades avanzadas de identidad, protección, cumplimiento y análisis.'],
+    'Mapa de soluções': ['Solution map', 'Mapa de soluciones'], 'Segurança Microsoft': ['Microsoft Security', 'Seguridad de Microsoft'],
+    'Selecione o domínio do problema e conduza a conversa para a solução correspondente.': ['Select the problem domain and guide the conversation to the corresponding solution.', 'Seleccione el dominio del problema y conduzca la conversación hacia la solución correspondiente.'],
+    'Identidade': ['Identity', 'Identidad'], 'Dispositivos': ['Devices', 'Dispositivos'], 'E-mail e colaboração': ['Email and collaboration', 'Correo y colaboración'],
+    'Endpoints': ['Endpoints', 'Endpoints'], 'Dados': ['Data', 'Datos'], 'IA para segurança': ['AI for security', 'IA para seguridad'],
+    'Inteligência artificial': ['Artificial intelligence', 'Inteligencia artificial'],
+    'Posicione a solução conforme a necessidade de produtividade, contexto corporativo ou automação.': ['Position the solution according to the need for productivity, organizational context or automation.', 'Posicione la solución según la necesidad de productividad, contexto corporativo o automatización.'],
+    'Conversas assistidas por IA para produtividade individual.': ['AI-assisted conversations for individual productivity.', 'Conversaciones asistidas por IA para productividad individual.'],
+    'Experiência integrada aos aplicativos e ao contexto de trabalho autorizado.': ['An experience integrated with applications and authorized work context.', 'Experiencia integrada con las aplicaciones y el contexto de trabajo autorizado.'],
+    'Agentes': ['Agents', 'Agentes'], 'Assistentes especializados com conhecimento, instruções e ações do negócio.': ['Specialized assistants with business knowledge, instructions and actions.', 'Asistentes especializados con conocimientos, instrucciones y acciones del negocio.'],
+    'Sinais de oportunidade': ['Opportunity signals', 'Señales de oportunidad'], 'Transforme a fala do cliente em uma próxima pergunta comercial.': ["Turn the customer's statement into the next sales question.", 'Convierta la declaración del cliente en la siguiente pregunta comercial.'],
+    'Cliente fala': ['Customer says', 'El cliente dice'], 'Produto recomendado': ['Recommended product', 'Producto recomendado'],
+    'Três princípios orientam a estratégia em todos os pilares de segurança.': ['Three principles guide the strategy across all security pillars.', 'Tres principios orientan la estrategia en todos los pilares de seguridad.'],
+    'Verificar explicitamente': ['Verify explicitly', 'Verificar explícitamente'], 'Usar privilégio mínimo': ['Use least privilege', 'Usar privilegio mínimo'], 'Assumir violação': ['Assume breach', 'Asumir una vulneración'],
+    'Identidades': ['Identities', 'Identidades'], 'Aplicativos': ['Applications', 'Aplicaciones'], 'Infraestrutura': ['Infrastructure', 'Infraestructura'], 'Rede': ['Network', 'Red'],
+    'Uma evolução estruturada reduz riscos e acelera a geração de valor.': ['A structured evolution reduces risk and accelerates value creation.', 'Una evolución estructurada reduce riesgos y acelera la generación de valor.'],
+    'Preparar': ['Prepare', 'Preparar'], 'Pilotar': ['Pilot', 'Pilotar'], 'Capacitar': ['Enable', 'Capacitar'], 'Medir': ['Measure', 'Medir'], 'Expandir': ['Expand', 'Expandir'],
+    'Comece pela necessidade e valide conectores, capacidade, ambiente e direitos de uso.': ['Start with the need and validate connectors, capacity, environment and usage rights.', 'Comience por la necesidad y valide conectores, capacidad, entorno y derechos de uso.'],
+    'Produto': ['Product', 'Producto'], 'Melhor para': ['Best for', 'Ideal para'], 'Validar antes da proposta': ['Validate before proposing', 'Validar antes de la propuesta'],
     'Encontre a': ['Find the', 'Encuentre la'], 'próxima': ['next', 'próxima'], 'conversa.': ['conversation.', 'conversación.'],
     'Copiar como texto': ['Copy as text', 'Copiar como texto'], 'Baixar como Word': ['Download as Word', 'Descargar como Word'],
     'Editar materiais': ['Edit materials', 'Editar materiales'], 'Rejeitar acesso': ['Reject access', 'Rechazar acceso'],
@@ -137,7 +182,33 @@
     'As objeções foram tratadas utilizando soluções Microsoft e histórias de sucesso relevantes?': ['Were objections addressed using Microsoft solutions and relevant success stories?', '¿Las objeciones se abordaron usando soluciones Microsoft y casos de éxito relevantes?'],
     'O representante resumiu os pontos principais e confirmou o entendimento mútuo?': ['Did the representative summarize key points and confirm mutual understanding?', '¿El representante resumió los puntos principales y confirmó el entendimiento mutuo?'],
     'Um próximo passo claro foi proposto e acordado?': ['Was a clear next step proposed and agreed upon?', '¿Se propuso y acordó un próximo paso claro?'],
-    'O representante agradeceu o tempo do cliente e encerrou a conversa de maneira profissional?': ["Did the representative thank the customer and close professionally?", '¿El representante agradeció el tiempo del cliente y cerró profesionalmente?']
+    'O representante agradeceu o tempo do cliente e encerrou a conversa de maneira profissional?': ["Did the representative thank the customer and close professionally?", '¿El representante agradeció el tiempo del cliente y cerró profesionalmente?'],
+    'Oportunidade': ['Opportunity', 'Oportunidad'], 'Número da Oportunidade *': ['Opportunity number *', 'Número de la Oportunidad *'],
+    'Informe o número da Oportunidade': ['Enter the Opportunity number', 'Ingrese el número de la Oportunidad'],
+    'Editar reunião': ['Edit meeting', 'Editar reunión'], 'Continuar': ['Continue', 'Continuar'], 'Abrir': ['Open', 'Abrir'],
+    'Rascunho': ['Draft', 'Borrador'], 'Em andamento': ['In progress', 'En curso'], 'Concluída': ['Completed', 'Completada'],
+    'resultados': ['results', 'resultados'], 'resultado': ['result', 'resultado'],
+    'Contexto adicional': ['Additional context', 'Contexto adicional'], 'Outro contexto relevante para a conversa.': ['Other relevant context for the conversation.', 'Otro contexto relevante para la conversación.'],
+    'Preencha os campos obrigatórios destacados, incluindo o número da Lead ou Oportunidade.': ['Complete the highlighted required fields, including the Lead or Opportunity number.', 'Complete los campos obligatorios resaltados, incluido el número de Lead u Oportunidad.'],
+    'Este número já está associado a outra reunião.': ['This number is already associated with another meeting.', 'Este número ya está asociado a otra reunión.'],
+    'SITUAÇÃO': ['SITUATION', 'SITUACIÓN'], 'PROBLEMA': ['PROBLEM', 'PROBLEMA'], 'IMPLICAÇÃO': ['IMPLICATION', 'IMPLICACIÓN'],
+    'Situação': ['Situation', 'Situación'], 'Problema': ['Problem', 'Problema'], 'Implicação': ['Implication', 'Implicación'],
+    'Qualificação': ['Qualification', 'Calificación'], 'Selecionar': ['Select', 'Seleccionar'], 'Não confirmado': ['Not confirmed', 'No confirmado'],
+    'Observação': ['Note', 'Observación'], 'Próxima melhor ação': ['Next best action', 'Próxima mejor acción'], 'Responsável': ['Owner', 'Responsable'],
+    'Data / prazo': ['Date / deadline', 'Fecha / plazo'], 'Cliente / stakeholder envolvido': ['Customer / stakeholder involved', 'Cliente / parte interesada involucrada'],
+    'Parceiro envolvido': ['Partner involved', 'Socio involucrado'], 'Reunião necessária': ['Meeting required', 'Reunión necesaria'],
+    'Dados pendentes': ['Pending data', 'Datos pendientes'], 'Observações': ['Notes', 'Observaciones'],
+    'Pergunta personalizada': ['Custom question', 'Pregunta personalizada'], 'Planilha 360': ['360 Workbook', 'Planilla 360'],
+    'Editar resposta': ['Edit answer', 'Editar respuesta'], 'Fazer esta pergunta': ['Ask this question', 'Hacer esta pregunta'],
+    'Informe o número da Lead ou Oportunidade.': ['Enter the Lead or Opportunity number.', 'Ingrese el número de Lead u Oportunidad.'],
+    'Não foi encontrada uma reunião com esse número de Lead ou Oportunidade.': ['No meeting was found with that Lead or Opportunity number.', 'No se encontró una reunión con ese número de Lead u Oportunidad.'],
+    'Auditoria salva e análise gerada com sucesso.': ['Audit saved and analysis generated successfully.', 'Auditoría guardada y análisis generado correctamente.'],
+    'Gere a análise antes de exportar.': ['Generate the analysis before exporting.', 'Genere el análisis antes de exportar.'],
+    'Pontos fortes': ['Strengths', 'Puntos fuertes'], 'Oportunidades de melhoria': ['Improvement opportunities', 'Oportunidades de mejora'],
+    'Feedback estruturado para o representante': ['Structured feedback for the representative', 'Comentarios estructurados para el representante'],
+    'Aderência ao processo Microsoft': ['Microsoft process adherence', 'Adherencia al proceso Microsoft'],
+    'Qualidade da descoberta': ['Discovery quality', 'Calidad del descubrimiento'], 'Entrega de valor': ['Value delivery', 'Entrega de valor'],
+    'Tratamento de objeções': ['Objection handling', 'Manejo de objeciones'], 'Recomendações práticas': ['Practical recommendations', 'Recomendaciones prácticas']
   };
 
   const placeholders = {
@@ -146,6 +217,9 @@
     'Buscar na Biblioteca 360...': ['Search the 360 Library...', 'Buscar en la Biblioteca 360...'],
     'Buscar na matriz...': ['Search the matrix...', 'Buscar en la matriz...'], 'Nome do contato': ['Contact name', 'Nombre del contacto'],
     'Empresa do cliente': ["Customer's company", 'Empresa del cliente'], 'Informe o número da Lead': ['Enter the Lead number', 'Ingrese el número del Lead'],
+    'Informe o número da Oportunidade': ['Enter the Opportunity number', 'Ingrese el número de la Oportunidad'],
+    'Outro contexto relevante para a conversa.': ['Other relevant context for the conversation.', 'Otro contexto relevante para la conversación.'],
+    'Observação': ['Note', 'Observación'],
     'Opcional': ['Optional', 'Opcional'], 'Ex.: Varejo, Finanças...': ['E.g.: Retail, Finance...', 'Ej.: Retail, Finanzas...'],
     'O foco desta conversa': ['The focus of this conversation', 'El foco de esta conversación'],
     'Digite ou selecione uma solução': ['Type or select a solution', 'Escriba o seleccione una solución']
@@ -170,8 +244,14 @@
       node.nodeValue = original.replace(trimmed, t(count === 1 ? 'dashboard.meetingCount.one' : 'dashboard.meetingCount.many', { count: String(count) }));
       return;
     }
-    if (!trimmed || !translations[trimmed]) return;
-    node.nodeValue = original.replace(trimmed, translated(trimmed, currentLanguage));
+    if (!trimmed) return;
+    if (translations[trimmed]) { node.nodeValue = original.replace(trimmed, translated(trimmed, currentLanguage)); return; }
+    if (currentLanguage === 'pt') { node.nodeValue = original; return; }
+    let value = original;
+    Object.keys(translations).sort((a, b) => b.length - a.length).forEach((source) => {
+      if (source.length >= 3 && value.includes(source)) value = value.replaceAll(source, translated(source, currentLanguage));
+    });
+    node.nodeValue = value;
   }
 
   function translateElement(element) {
@@ -229,6 +309,6 @@
     const template = item ? (item[currentLanguage] || item.pt) : translated(key, currentLanguage);
     return Object.entries(variables).reduce((value, [name, replacement]) => value.replaceAll(`{${name}}`, replacement), template);
   }
-  window.DiscoveryI18n = { setLanguage: applyLanguage, getLanguage: () => currentLanguage, getLocale: () => languages[currentLanguage].locale, t };
+  window.DiscoveryI18n = { setLanguage: applyLanguage, getLanguage: () => currentLanguage, getLocale: () => languages[currentLanguage].locale, t, translate: (source) => translated(source, currentLanguage) };
   window.t = t;
 }());
