@@ -149,8 +149,9 @@
   <div id="accessRequestModal" class="modal-backdrop" hidden><section class="qualification-modal access-request-modal"><button id="closeRequestButton" class="close-button">×</button><p class="eyebrow">Acesso à plataforma</p><h2>Solicitar acesso</h2><p>Preencha seus dados para análise do administrador.</p><form id="accessRequestForm" class="request-form"><label>Nome completo *<input name="nome" required></label><label>E-mail corporativo *<input name="email" type="email" required></label><label>Empresa *<input name="empresa" required></label><label>Cargo *<input name="cargo" required></label><label>Gestor direto<input name="gestor_direto"></label><label>País/Região<input name="pais_regiao"></label><label>Como pretende utilizar a plataforma? *<textarea name="descricao_uso" required rows="4"></textarea></label><p id="requestError" class="form-error"></p><div class="form-actions"><button type="button" id="cancelRequestButton" class="secondary-button">Cancelar</button><button type="submit" class="primary-button">Enviar solicitação</button></div></form></section></div>
   <div id="helpModal" class="modal-backdrop" hidden><section class="qualification-modal help-modal"><button id="closeHelpButton" class="close-button">×</button><p class="eyebrow">Discovery 360</p><h2>Como usar</h2><p>Entre com seu acesso, crie uma reunião e use os Sales Plays para registrar perguntas, respostas e próximos passos. Os dados são salvos localmente neste navegador.</p></section></div>
   <div id="rejectRequestModal" class="modal-backdrop" hidden><section class="qualification-modal"><button id="closeRejectButton" class="close-button">×</button><p class="eyebrow">Solicitação de acesso</p><h2>Rejeitar acesso</h2><label>Motivo da rejeição<textarea id="rejectReason" rows="4" required></textarea></label><p id="rejectError" class="form-error"></p><div class="modal-actions"><button id="cancelRejectButton" class="secondary-button">Cancelar</button><button id="confirmRejectButton" class="primary-button">Rejeitar acesso</button></div></section></div>
-  <script src="sales_plays_data.js"></script>
-  <script src="opportunity_matrix_data.js"></script>
+  <script src="sales_plays_data.js?v=2"></script>
+  <script src="sales_plays_en.js?v=1"></script>
+  <script src="opportunity_matrix_data.js?v=2"></script>
   <script src="meetings-store.js"></script>
   <script src="checklists-store.js"></script>
   <script src="qualification_checklists_data.js"></script>
@@ -162,9 +163,9 @@
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
   <script src="auth-store.js?v=2"></script>
-  <script src="i18n.js?v=5"></script>
+  <script src="i18n.js?v=6"></script>
   <script src="call-audit.js?v=3"></script>
-  <script src="visual-library.js?v=1"></script>
-  <script src="app.js?v=6"></script>
+  <script src="visual-library.js?v=2"></script>
+  <script src="app.js?v=7"></script>
 </body>
 </html>

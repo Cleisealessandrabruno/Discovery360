@@ -7,7 +7,14 @@ const isAdmin = () => USER_ROLE === 'ADMIN' || USER_ROLE === 'Administrador';
 const tr = (text) => window.DiscoveryI18n?.translate?.(text) || text;
 const appLocale = () => window.DiscoveryI18n?.getLocale?.() || 'pt-BR';
 const QUALIFICATION_CHECKLISTS = typeof window.QUALIFICATION_CHECKLISTS !== 'undefined' ? window.QUALIFICATION_CHECKLISTS : [];
-const state = { plays: salesPlaysData.sales_plays, filter: 'TODOS', query: '', activeMeetingId: null, editingMeetingId: null, readOnly: false };
+function getLocalizedSalesPlaysData() {
+  const language = window.DiscoveryI18n?.getLanguage?.() || localStorage.getItem('discovery_language') || 'pt';
+  if (language === 'en' && window.salesPlaysEnglishData) return window.salesPlaysEnglishData;
+  if (language === 'es' && window.salesPlaysSpanishData) return window.salesPlaysSpanishData;
+  return salesPlaysData;
+}
+const initialSalesPlaysData = getLocalizedSalesPlaysData();
+const state = { plays: initialSalesPlaysData.sales_plays, filter: 'TODOS', query: '', activeMeetingId: null, editingMeetingId: null, readOnly: false };
 const SPIN_STAGES = [
   { id: 'situacao', label: 'Situação', source: 'situacao' },
   { id: 'problema', label: 'Problema', source: 'problema' },
@@ -16,7 +23,7 @@ const SPIN_STAGES = [
   { id: 'qualificacao', label: 'Qualificação' },
   { id: 'proximo_passo', label: 'Próximo passo' }
 ];
-const QUALIFICATION_ITEMS = salesPlaysData.checklist_qualificacao;
+let QUALIFICATION_ITEMS = initialSalesPlaysData.checklist_qualificacao;
 let activePlayId = state.plays[0]?.id;
 let activeDiscoveryStage = 'situacao';
 let selectedQuestion = null;
@@ -374,6 +381,9 @@ window.addEventListener('hashchange', () => {
 });
 
 window.addEventListener('discovery:language-changed', () => {
+  const localizedSalesPlaysData = getLocalizedSalesPlaysData();
+  state.plays = localizedSalesPlaysData.sales_plays;
+  QUALIFICATION_ITEMS = localizedSalesPlaysData.checklist_qualificacao;
   renderOpportunityMatrix();
   render();
   const route = window.location.hash.slice(1);
