@@ -981,3 +981,33 @@ select:focus-visible,
 .login-language-control select{border-color:#d9c5e7;background:#fff}
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 @media(max-width:1050px){.language-control select{min-width:88px;max-width:105px}.language-control{font-size:12px}}
+
+/* Mandatory consultative opening */
+.spin-tab.locked { cursor: not-allowed; opacity: .55; }
+.consultative-opening { margin-top: 22px; border: 1px solid #d9c5ea; border-radius: 18px; padding: clamp(22px, 3vw, 36px); background: linear-gradient(145deg, #fff 0%, #fbf7ff 100%); box-shadow: 0 12px 35px rgba(80, 20, 120, .08); }
+.consultative-opening.is-complete { border-color: #94c9b0; background: linear-gradient(145deg, #fff 0%, #f2fbf6 100%); }
+.opening-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; padding-bottom: 22px; border-bottom: 1px solid var(--line); }
+.opening-heading h3 { margin: 5px 0 9px; color: var(--ink); font: 600 clamp(27px, 3vw, 38px)/1.1 'Space Grotesk'; letter-spacing: -.035em; }
+.opening-heading > div > p:last-child { max-width: 760px; margin: 0; color: #526664; font-size: 16px; line-height: 1.6; }
+.opening-status { flex: none; border-radius: 999px; padding: 10px 15px; color: #64149a; background: #efdffd; font-size: 14px; font-weight: 700; }
+.is-complete .opening-status { color: #155e46; background: #dff5e9; }
+.opening-script { position: relative; margin: 24px 0; border-left: 5px solid #a100ff; border-radius: 0 12px 12px 0; padding: 25px 25px 62px; background: #fff; box-shadow: 0 4px 18px rgba(45, 25, 60, .06); }
+.opening-script pre { margin: 0; white-space: pre-wrap; color: #27202c; font: 400 17px/1.72 'DM Sans'; }
+.opening-script .secondary-button { position: absolute; right: 20px; bottom: 17px; font-size: 14px; }
+.opening-checklist { margin: 0 0 24px; border: 0; padding: 0; }
+.opening-checklist legend { margin-bottom: 13px; color: var(--ink); font: 600 19px 'Space Grotesk'; }
+.opening-checklist label { display: flex; align-items: center; gap: 12px; min-height: 50px; border-bottom: 1px solid var(--line); color: #344845; cursor: pointer; font-size: 16px; }
+.opening-checklist input { width: 20px; height: 20px; accent-color: #7b16ad; }
+.opening-checklist label span { display: none; color: #177251; font-weight: 800; }
+.opening-checklist input:checked + span { display: inline; }
+.opening-complete-button, #continueAfterOpeningButton { min-height: 50px; padding: 13px 22px; font-size: 16px; }
+.opening-complete-button:disabled { cursor: not-allowed; opacity: .45; }
+.opening-help { margin: 11px 0 0; color: #697a78; font-size: 14px; }
+.opening-complete-note { display: flex; flex-direction: column; gap: 4px; margin: 0 0 20px; border-left: 4px solid #1c9b6b; padding: 13px 17px; color: #245548; background: #e7f7ef; font-size: 15px; line-height: 1.45; }
+@media (max-width: 700px) {
+  .opening-heading { flex-direction: column; }
+  .opening-status { align-self: flex-start; }
+  .opening-script { padding: 20px 18px 70px; }
+  .opening-script pre { font-size: 16px; line-height: 1.65; }
+  .opening-checklist label { font-size: 15px; }
+}

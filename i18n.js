@@ -67,7 +67,7 @@
     'Checklist de oportunidade com alto potencial de pipeline': ['High-potential pipeline opportunity checklist', 'Lista de oportunidad con alto potencial de pipeline'],
     'Confirme cada indicador antes de finalizar a reunião.': ['Confirm each indicator before finishing the meeting.', 'Confirme cada indicador antes de finalizar la reunión.'],
     'Voltar e buscar mais informações': ['Go back and gather more information', 'Volver y buscar más información'],
-    'Etapa obrigatória': ['Required step', 'Paso obligatorio'], 'SOLUÇÃO POTENCIAL': ['POTENTIAL SOLUTION', 'SOLUCIÓN POTENCIAL'],
+    'Etapa obrigatória': ['Required step', 'Paso obligatorio'], 'Abertura consultiva': ['Consultative opening', 'Apertura consultiva'], 'SOLUÇÃO POTENCIAL': ['POTENTIAL SOLUTION', 'SOLUCIÓN POTENCIAL'],
     'SINAIS DE ALTO POTENCIAL': ['HIGH-POTENTIAL SIGNALS', 'SEÑALES DE ALTO POTENCIAL'], 'Usar este Play em uma reunião': ['Use this Play in a meeting', 'Usar este Play en una reunión'],
     'Estrutura de decisão do CLM — Do sinal à oportunidade': ['CLM decision framework — From signal to opportunity', 'Marco de decisión del CLM — De la señal a la oportunidad'],
     'OBSERVE': ['OBSERVE', 'OBSERVE'], 'FORMULE UMA HIPÓTESE': ['FORMULATE A HYPOTHESIS', 'FORMULE UNA HIPÓTESIS'],
