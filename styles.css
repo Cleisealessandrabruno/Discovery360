@@ -1011,3 +1011,55 @@ select:focus-visible,
   .opening-script pre { font-size: 16px; line-height: 1.65; }
   .opening-checklist label { font-size: 15px; }
 }
+
+/* Prominent Discovery stage buttons */
+.spin-tabs {
+  display: flex;
+  gap: 9px;
+  overflow-x: auto;
+  border: 0;
+  padding: 7px 4px 12px;
+  scrollbar-width: thin;
+}
+.spin-tab {
+  min-height: 44px;
+  border: 1px solid #d6b6eb;
+  border-radius: 10px;
+  padding: 11px 16px;
+  color: #5b168b;
+  background: #f0e2fa;
+  box-shadow: 0 2px 0 rgba(91, 22, 139, .08);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 700;
+  white-space: nowrap;
+  transition: background .18s ease, color .18s ease, border-color .18s ease, transform .18s ease, box-shadow .18s ease;
+}
+.spin-tab:hover:not(:disabled) {
+  border-color: #8d35c2;
+  color: #421060;
+  background: #e4c8f5;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(91, 22, 139, .13);
+}
+.spin-tab.active,
+.spin-tab.active:hover {
+  border-color: #421060;
+  color: #fff;
+  background: #5b168b;
+  box-shadow: 0 5px 13px rgba(66, 16, 96, .26);
+  transform: none;
+}
+.spin-tab.locked,
+.spin-tab:disabled {
+  border-color: #e5d7ed;
+  color: #887792;
+  background: #f7f1fa;
+  box-shadow: none;
+  cursor: not-allowed;
+  opacity: 1;
+}
+@media (max-width: 700px) {
+  .spin-tabs { gap: 7px; padding-bottom: 10px; }
+  .spin-tab { min-height: 42px; padding: 10px 13px; font-size: 13px; }
+}
