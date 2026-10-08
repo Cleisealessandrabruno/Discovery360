@@ -1,84 +1,63 @@
-/**
- * partners_data.js
- * Fonte: planilha "Lista de parceiro FY27.xlsx" (3 abas / motions):
- *   - AI Business Solutions (com coluna "Type" por parceiro)
- *   - Security
- *   - Consumpt (nome da aba na planilha original — provável erro de digitação de
- *     "Consumption"; NÃO usar esse texto na interface em nenhuma hipótese)
- *
- * ⚠️ PADRONIZAÇÃO OBRIGATÓRIA: o texto exibido ao usuário para este motion deve
- * ser sempre "Consumo" (português), em qualquer lugar da interface — botões,
- * seletor de Opportunity Intent, labels, relatório final, filtros, etc.
- * Nunca usar "Consumption", "Consumpt" ou qualquer variação em inglês na tela.
- * O identificador interno (chave técnica, nunca exibida) é "consumo".
- *
- * Estrutura unificada: uma lista mestre de parceiros (mesmos 47 em todas as abas),
- * cada um com seu "tipo" (classificação, vindo da aba AI Business Solutions,
- * único lugar onde essa coluna existe) e o responsável (DAS/CIA) POR MOTION.
- *
- * IMPORTANTE:
- * - "tipo" é usado para identificar quem é "Distributor" (distribuidora),
- *   independente do motion escolhido.
- * - "responsaveis" tem uma chave por motion: ai_business_solutions, security, consumo.
- *   Na aba Security e na aba Consumpt o responsável é o MESMO para todos os parceiros
- *   (fixo), mas ainda assim modelado por parceiro para manter a estrutura consistente
- *   e à prova de mudanças futuras na planilha.
- */
+/** Parceiros, tipos e responsáveis por motion conforme a lista FY27 atualizada. */
 
 const OPPORTUNITY_MOTIONS = [
-  { id: "ai_business_solutions", label: "AI Business Solutions" },
+  { id: "ai_business_solutions", label: "AI Workforce" },
+  { id: "ai_business_process", label: "AI Business Process" },
   { id: "security", label: "Security" },
   { id: "consumo", label: "Consumo" }
 ];
 
 const PARTNERS_LIST = [
-  { nome: "Advanced Informatica Ltda.", tipo: "Direct Partner", responsaveis: { ai_business_solutions: "Luciano Oliveira", security: "Willian Manciopi", consumo: "Diego Bastos / Gisele Alves" } },
-  { nome: "Alfapeople ApS", tipo: "Direct Partner", responsaveis: { ai_business_solutions: "Fabio da Silva Cruz", security: "Willian Manciopi", consumo: "Diego Bastos / Gisele Alves" } },
-  { nome: "Buysoft", tipo: "Direct Partner", responsaveis: { ai_business_solutions: "Willian Manciopi", security: "Willian Manciopi", consumo: "Diego Bastos / Gisele Alves" } },
-  { nome: "Cloud Target", tipo: "Direct Partner", responsaveis: { ai_business_solutions: "Erika Peres", security: "Willian Manciopi", consumo: "Diego Bastos / Gisele Alves" } },
-  { nome: "DATAEX SERVICOS E SOLUCOES LTDA", tipo: "Direct Partner", responsaveis: { ai_business_solutions: "Erika Peres", security: "Willian Manciopi", consumo: "Diego Bastos / Gisele Alves" } },
-  { nome: "Dataside Solucoes em Dados LTDA", tipo: "Direct Partner", responsaveis: { ai_business_solutions: "Agtor Silva", security: "Willian Manciopi", consumo: "Diego Bastos / Gisele Alves" } },
-  { nome: "Fênix", tipo: "Direct Partner", responsaveis: { ai_business_solutions: "Fabio da Silva Cruz", security: "Willian Manciopi", consumo: "Diego Bastos / Gisele Alves" } },
-  { nome: "GSW", tipo: "Direct Partner", responsaveis: { ai_business_solutions: "Fabio da Silva Cruz", security: "Willian Manciopi", consumo: "Diego Bastos / Gisele Alves" } },
-  { nome: "Innovent", tipo: "Direct Partner", responsaveis: { ai_business_solutions: "Agtor Silva", security: "Willian Manciopi", consumo: "Diego Bastos / Gisele Alves" } },
-  { nome: "Kinix", tipo: "Direct Partner", responsaveis: { ai_business_solutions: "Fabio da Silva Cruz", security: "Willian Manciopi", consumo: "Diego Bastos / Gisele Alves" } },
-  { nome: "Lattine", tipo: "Direct Partner", responsaveis: { ai_business_solutions: "Erika Peres", security: "Willian Manciopi", consumo: "Diego Bastos / Gisele Alves" } },
-  { nome: "MAPDATA TECNOLOGIA INFORMATICA E COM LT", tipo: "Direct Partner", responsaveis: { ai_business_solutions: "Erika Peres", security: "Willian Manciopi", consumo: "Diego Bastos / Gisele Alves" } },
-  { nome: "Nexer", tipo: "Direct Partner", responsaveis: { ai_business_solutions: "Fabio da Silva Cruz", security: "Willian Manciopi", consumo: "Diego Bastos / Gisele Alves" } },
-  { nome: "Pentare Consultoria em Tecnologia Ltda", tipo: "Direct Partner", responsaveis: { ai_business_solutions: "Fabio da Silva Cruz", security: "Willian Manciopi", consumo: "Diego Bastos / Gisele Alves" } },
-  { nome: "SLMIT Innovation Technology", tipo: "Direct Partner", responsaveis: { ai_business_solutions: "Agtor Silva", security: "Willian Manciopi", consumo: "Diego Bastos / Gisele Alves" } },
-  { nome: "SOU Cloud", tipo: "Direct Partner", responsaveis: { ai_business_solutions: "Luciano Oliveira", security: "Willian Manciopi", consumo: "Diego Bastos / Gisele Alves" } },
-  { nome: "KUMULUS SERVIÇOS EM CLOUD COMPUTING E DATABASE LTDA (faz parte do grupo Logicalis)", tipo: "Direct Partner", responsaveis: { ai_business_solutions: "Erika Peres", security: "Willian Manciopi", consumo: "Diego Bastos / Gisele Alves" } },
-  { nome: "Ingram Micro", tipo: "Distributor", responsaveis: { ai_business_solutions: "Agtor Silva", security: "Willian Manciopi", consumo: "Diego Bastos / Gisele Alves" } },
-  { nome: "Scansource", tipo: "Distributor", responsaveis: { ai_business_solutions: "Willian Manciopi", security: "Willian Manciopi", consumo: "Diego Bastos / Gisele Alves" } },
-  { nome: "SDN Distribuição", tipo: "Distributor", responsaveis: { ai_business_solutions: "Erika Peres", security: "Willian Manciopi", consumo: "Diego Bastos / Gisele Alves" } },
-  { nome: "TD Synnex", tipo: "Distributor", responsaveis: { ai_business_solutions: "Luciano Oliveira", security: "Willian Manciopi", consumo: "Diego Bastos / Gisele Alves" } },
-  { nome: "7IT Tecnologia", tipo: "Indirect Partner", responsaveis: { ai_business_solutions: "Luciano Oliveira", security: "Willian Manciopi", consumo: "Diego Bastos / Gisele Alves" } },
-  { nome: "C&A TECNOLOGIA DA INFORMACAO DO BRASIL LTDA", tipo: "Indirect Partner", responsaveis: { ai_business_solutions: "Erika Peres", security: "Willian Manciopi", consumo: "Diego Bastos / Gisele Alves" } },
-  { nome: "IAS TECNOLOGIA LTDA", tipo: "Indirect Partner", responsaveis: { ai_business_solutions: "Luciano Oliveira", security: "Willian Manciopi", consumo: "Diego Bastos / Gisele Alves" } },
-  { nome: "Infobusiness", tipo: "Indirect Partner", responsaveis: { ai_business_solutions: "Luciano Oliveira", security: "Willian Manciopi", consumo: "Diego Bastos / Gisele Alves" } },
-  { nome: "Maximiza", tipo: "Indirect Partner", responsaveis: { ai_business_solutions: "Luciano Oliveira", security: "Willian Manciopi", consumo: "Diego Bastos / Gisele Alves" } },
-  { nome: "Mundo 365", tipo: "Indirect Partner", responsaveis: { ai_business_solutions: "Erika Peres", security: "Willian Manciopi", consumo: "Diego Bastos / Gisele Alves" } },
-  { nome: "Tecnetworking Serviços e Soluções em TI LTDA", tipo: "Indirect Partner", responsaveis: { ai_business_solutions: "Agtor Silva", security: "Willian Manciopi", consumo: "Diego Bastos / Gisele Alves" } },
-  { nome: "Avanade", tipo: "SI", responsaveis: { ai_business_solutions: "Fabio da Silva Cruz", security: "Willian Manciopi", consumo: "Diego Bastos / Gisele Alves" } },
-  { nome: "FCamara Consultoria e Formação", tipo: "SI", responsaveis: { ai_business_solutions: "Luciano Oliveira", security: "Willian Manciopi", consumo: "Diego Bastos / Gisele Alves" } },
-  { nome: "Brasoftware", tipo: "SSP", responsaveis: { ai_business_solutions: "Alan Mendes", security: "Willian Manciopi", consumo: "Diego Bastos / Gisele Alves" } },
-  { nome: "Dedalus Prime", tipo: "SSP", responsaveis: { ai_business_solutions: "Erika Peres", security: "Willian Manciopi", consumo: "Diego Bastos / Gisele Alves" } },
-  { nome: "Dell", tipo: "SSP", responsaveis: { ai_business_solutions: "Agtor Silva", security: "Willian Manciopi", consumo: "Diego Bastos / Gisele Alves" } },
-  { nome: "DXC Tecnology", tipo: "SSP", responsaveis: { ai_business_solutions: "Agtor Silva", security: "Willian Manciopi", consumo: "Diego Bastos / Gisele Alves" } },
-  { nome: "Kyndryl", tipo: "SSP", responsaveis: { ai_business_solutions: "Erika Peres", security: "Willian Manciopi", consumo: "Diego Bastos / Gisele Alves" } },
-  { nome: "Lanlink", tipo: "SSP", responsaveis: { ai_business_solutions: "Alan Mendes", security: "Willian Manciopi", consumo: "Diego Bastos / Gisele Alves" } },
-  { nome: "Logicalis", tipo: "SSP", responsaveis: { ai_business_solutions: "Erika Peres", security: "Willian Manciopi", consumo: "Diego Bastos / Gisele Alves" } },
-  { nome: "Noventiq", tipo: "SSP", responsaveis: { ai_business_solutions: "Agtor Silva", security: "Willian Manciopi", consumo: "Diego Bastos / Gisele Alves" } },
-  { nome: "Processor", tipo: "SSP", responsaveis: { ai_business_solutions: "Luciano Oliveira", security: "Willian Manciopi", consumo: "Diego Bastos / Gisele Alves" } },
-  { nome: "SoftwareOne", tipo: "SSP", responsaveis: { ai_business_solutions: "Erika Peres", security: "Willian Manciopi", consumo: "Diego Bastos / Gisele Alves" } },
-  { nome: "SoloNetwork", tipo: "SSP", responsaveis: { ai_business_solutions: "Alan Mendes", security: "Willian Manciopi", consumo: "Diego Bastos / Gisele Alves" } },
-  { nome: "Sonda SA", tipo: "SSP", responsaveis: { ai_business_solutions: "Willian Manciopi", security: "Willian Manciopi", consumo: "Diego Bastos / Gisele Alves" } },
-  { nome: "Teltec Solution", tipo: "SSP", responsaveis: { ai_business_solutions: "Agtor Silva", security: "Willian Manciopi", consumo: "Diego Bastos / Gisele Alves" } },
-  { nome: "Tivit", tipo: "SSP", responsaveis: { ai_business_solutions: "Erika Peres", security: "Willian Manciopi", consumo: "Diego Bastos / Gisele Alves" } },
-  { nome: "Algar Multimedia", tipo: "Telco", responsaveis: { ai_business_solutions: "Agtor Silva", security: "Willian Manciopi", consumo: "Diego Bastos / Gisele Alves" } },
-  { nome: "Grupo Triara", tipo: "Telco", responsaveis: { ai_business_solutions: "Luciano Oliveira", security: "Willian Manciopi", consumo: "Diego Bastos / Gisele Alves" } },
-  { nome: "Telefonica", tipo: "Telco", responsaveis: { ai_business_solutions: "Luciano Oliveira", security: "Willian Manciopi", consumo: "Diego Bastos / Gisele Alves" } }
+  { nome: "Buysoft", tipo: "Direct Partner", partner_one_id: "2910839", responsaveis: { ai_business_solutions: "Willian Santiago Manciopi", ai_business_process: "Fabio Da Silva Cruz", security: "Willian Santiago Manciopi", consumo: "Diego Bastos de Jesus" } },
+  { nome: "Scansource", tipo: "Distributor", partner_one_id: "3947863", responsaveis: { ai_business_solutions: "Willian Santiago Manciopi", ai_business_process: "Fabio Da Silva Cruz", security: "Willian Santiago Manciopi", consumo: "Diego Bastos de Jesus" } },
+  { nome: "Sonda SA", tipo: "SSP", partner_one_id: "1164169", responsaveis: { ai_business_solutions: "Willian Santiago Manciopi", ai_business_process: "Fabio Da Silva Cruz", security: "Willian Santiago Manciopi", consumo: "Diego Bastos de Jesus" } },
+  { nome: "BHS AXTER SOLUCOES DIGITAIS LTDA", tipo: "Indirect Partner", partner_one_id: "2968298", responsaveis: { ai_business_solutions: "Willian Santiago Manciopi", ai_business_process: "Fabio Da Silva Cruz", security: "Willian Santiago Manciopi", consumo: "Gisele Martins Alves" } },
+  { nome: "FCamara Consultoria e Formação", tipo: "SI", partner_one_id: "3089507", responsaveis: { ai_business_solutions: "Willian Santiago Manciopi", ai_business_process: "Fabio Da Silva Cruz", security: "Willian Santiago Manciopi", consumo: "Gisele Martins Alves" } },
+  { nome: "Grupo Triara", tipo: "Telco", partner_one_id: "4580002", responsaveis: { ai_business_solutions: "Willian Santiago Manciopi", ai_business_process: "Fabio Da Silva Cruz", security: "Willian Santiago Manciopi", consumo: "Diego Bastos de Jesus" } },
+  { nome: "7IT Tecnologia", tipo: "Indirect Partner", partner_one_id: "2826040", responsaveis: { ai_business_solutions: "Willian Santiago Manciopi", ai_business_process: "Fabio Da Silva Cruz", security: "Willian Santiago Manciopi", consumo: "Diego Bastos de Jesus" } },
+  { nome: "Produtivit", tipo: "Indirect Partner", partner_one_id: "4377935", responsaveis: { ai_business_solutions: "Willian Santiago Manciopi", ai_business_process: "Fabio Da Silva Cruz", security: "Willian Santiago Manciopi", consumo: "Gisele Martins Alves" } },
+  { nome: "Dedalus Prime", tipo: "SSP", partner_one_id: "4396799", responsaveis: { ai_business_solutions: "Guilherme Gomes De Sousa", ai_business_process: "Fabio Da Silva Cruz", security: "Guilherme Gomes De Sousa", consumo: "Diego Bastos de Jesus" } },
+  { nome: "Kyndryl", tipo: "SSP", partner_one_id: "6452033", responsaveis: { ai_business_solutions: "Guilherme Gomes De Sousa", ai_business_process: "Fabio Da Silva Cruz", security: "Guilherme Gomes De Sousa", consumo: "Gisele Martins Alves" } },
+  { nome: "Logicalis", tipo: "SSP", partner_one_id: "1072660", responsaveis: { ai_business_solutions: "Guilherme Gomes De Sousa", ai_business_process: "Fabio Da Silva Cruz", security: "Guilherme Gomes De Sousa", consumo: "Gisele Martins Alves" } },
+  { nome: "SLMIT Innovation Technology", tipo: "Direct Partner", partner_one_id: "5125214", responsaveis: { ai_business_solutions: "Guilherme Gomes De Sousa", ai_business_process: "Fabio Da Silva Cruz", security: "Guilherme Gomes De Sousa", consumo: "Diego Bastos de Jesus" } },
+  { nome: "Teltec Solution", tipo: "SSP", partner_one_id: "2689462", responsaveis: { ai_business_solutions: "Guilherme Gomes De Sousa", ai_business_process: "Fabio Da Silva Cruz", security: "Guilherme Gomes De Sousa", consumo: "Diego Bastos de Jesus" } },
+  { nome: "Dell", tipo: "SSP", partner_one_id: "1254342", responsaveis: { ai_business_solutions: "Guilherme Gomes De Sousa", ai_business_process: "Fabio Da Silva Cruz", security: "Guilherme Gomes De Sousa", consumo: "Gisele Martins Alves" } },
+  { nome: "Tivit", tipo: "SSP", partner_one_id: "5429287", responsaveis: { ai_business_solutions: "Guilherme Gomes De Sousa", ai_business_process: "Fabio Da Silva Cruz", security: "Guilherme Gomes De Sousa", consumo: "Gisele Martins Alves" } },
+  { nome: "Algar Multimedia", tipo: "Telco", partner_one_id: "6040659", responsaveis: { ai_business_solutions: "Guilherme Gomes De Sousa", ai_business_process: "Fabio Da Silva Cruz", security: "Guilherme Gomes De Sousa", consumo: "Gisele Martins Alves" } },
+  { nome: "Brasoftware", tipo: "SSP", partner_one_id: "1021661", responsaveis: { ai_business_solutions: "Alan Araujo Mendes", ai_business_process: "Fabio Da Silva Cruz", security: "Alan Araujo Mendes", consumo: "Diego Bastos de Jesus" } },
+  { nome: "Lanlink", tipo: "SSP", partner_one_id: "1014644", responsaveis: { ai_business_solutions: "Alan Araujo Mendes", ai_business_process: "Fabio Da Silva Cruz", security: "Alan Araujo Mendes", consumo: "Diego Bastos de Jesus" } },
+  { nome: "SoloNetwork", tipo: "SSP", partner_one_id: "1031450", responsaveis: { ai_business_solutions: "Alan Araujo Mendes", ai_business_process: "Fabio Da Silva Cruz", security: "Alan Araujo Mendes", consumo: "Diego Bastos de Jesus" } },
+  { nome: "Dataside Solucoes em Dados LTDA", tipo: "Direct Partner", partner_one_id: "4518049", responsaveis: { ai_business_solutions: "Agtor Tiburcio da Silva", ai_business_process: "Fabio Da Silva Cruz", security: "Agtor Tiburcio da Silva", consumo: "Gisele Martins Alves" } },
+  { nome: "Innovent", tipo: "Direct Partner", partner_one_id: "6010821", responsaveis: { ai_business_solutions: "Agtor Tiburcio da Silva", ai_business_process: "Fabio Da Silva Cruz", security: "Agtor Tiburcio da Silva", consumo: "Diego Bastos de Jesus" } },
+  { nome: "Ingram Micro", tipo: "Distributor", partner_one_id: "1166415", responsaveis: { ai_business_solutions: "Agtor Tiburcio da Silva", ai_business_process: "Fabio Da Silva Cruz", security: "Agtor Tiburcio da Silva", consumo: "Gisele Martins Alves" } },
+  { nome: "Tecnetworking Serviços e Soluções em TI LTDA", tipo: "Indirect Partner", partner_one_id: "6753964", responsaveis: { ai_business_solutions: "Agtor Tiburcio da Silva", ai_business_process: "Fabio Da Silva Cruz", security: "Agtor Tiburcio da Silva", consumo: "Gisele Martins Alves" } },
+  { nome: "Noventiq", tipo: "SSP", partner_one_id: "1020282", responsaveis: { ai_business_solutions: "Agtor Tiburcio da Silva", ai_business_process: "Fabio Da Silva Cruz", security: "Agtor Tiburcio da Silva", consumo: "Diego Bastos de Jesus" } },
+  { nome: "DXC Tecnology", tipo: "SSP", partner_one_id: "1164205", responsaveis: { ai_business_solutions: "Agtor Tiburcio da Silva", ai_business_process: "Fabio Da Silva Cruz", security: "Agtor Tiburcio da Silva", consumo: "Gisele Martins Alves" } },
+  { nome: "Digytec Tecnologia", tipo: "Indirect Partner", partner_one_id: "6160043", responsaveis: { ai_business_solutions: "Agtor Tiburcio da Silva", ai_business_process: "Fabio Da Silva Cruz", security: "Agtor Tiburcio da Silva", consumo: "Gisele Martins Alves" } },
+  { nome: "Cloud Target", tipo: "Direct Partner", partner_one_id: "4863664", responsaveis: { ai_business_solutions: "Erika Franca Santana Peres", ai_business_process: "Fabio Da Silva Cruz", security: "Erika Franca Santana Peres", consumo: "Diego Bastos de Jesus" } },
+  { nome: "DATAEX SERVICOS E SOLUCOES LTDA", tipo: "Direct Partner", partner_one_id: "4277459", responsaveis: { ai_business_solutions: "Erika Franca Santana Peres", ai_business_process: "Fabio Da Silva Cruz", security: "Erika Franca Santana Peres", consumo: "Gisele Martins Alves" } },
+  { nome: "KUMULUS SERVIÇOS EM CLOUD COMPUTING E DATABASE LTDA (faz parte do grupo Logicalis)", tipo: "Direct Partner", partner_one_id: "1072660", responsaveis: { ai_business_solutions: "Erika Franca Santana Peres", ai_business_process: "Fabio Da Silva Cruz", security: "Erika Franca Santana Peres", consumo: "Gisele Martins Alves" } },
+  { nome: "MAPDATA TECNOLOGIA INFORMATICA E COM LT", tipo: "Direct Partner", partner_one_id: "3201369", responsaveis: { ai_business_solutions: "Erika Franca Santana Peres", ai_business_process: "Fabio Da Silva Cruz", security: "Erika Franca Santana Peres", consumo: "Diego Bastos de Jesus" } },
+  { nome: "SDN Distribuição", tipo: "Distributor", partner_one_id: "1226727", responsaveis: { ai_business_solutions: "Erika Franca Santana Peres", ai_business_process: "Fabio Da Silva Cruz", security: "Erika Franca Santana Peres", consumo: "Gisele Martins Alves" } },
+  { nome: "C&A TECNOLOGIA DA INFORMACAO DO BRASIL LTDA", tipo: "Indirect Partner", partner_one_id: "4711516", responsaveis: { ai_business_solutions: "Erika Franca Santana Peres", ai_business_process: "Fabio Da Silva Cruz", security: "Erika Franca Santana Peres", consumo: "Gisele Martins Alves" } },
+  { nome: "Lattine", tipo: "Direct Partner", partner_one_id: "4049471", responsaveis: { ai_business_solutions: "Erika Franca Santana Peres", ai_business_process: "Fabio Da Silva Cruz", security: "Erika Franca Santana Peres", consumo: "Diego Bastos de Jesus" } },
+  { nome: "Mundo 365", tipo: "Indirect Partner", partner_one_id: "4710906", responsaveis: { ai_business_solutions: "Erika Franca Santana Peres", ai_business_process: "Fabio Da Silva Cruz", security: "Erika Franca Santana Peres", consumo: "Gisele Martins Alves" } },
+  { nome: "SoftwareOne", tipo: "SSP", partner_one_id: "1018747", responsaveis: { ai_business_solutions: "Erika Franca Santana Peres", ai_business_process: "Fabio Da Silva Cruz", security: "Erika Franca Santana Peres", consumo: "Gisele Martins Alves" } },
+  { nome: "Advanced Informatica Ltda.", tipo: "Direct Partner", partner_one_id: "1178703", responsaveis: { ai_business_solutions: "Luciano Narciso De Oliveira", ai_business_process: "Fabio Da Silva Cruz", security: "Luciano Narciso De Oliveira", consumo: "Diego Bastos de Jesus" } },
+  { nome: "SOU Cloud", tipo: "Direct Partner", partner_one_id: "6269604", responsaveis: { ai_business_solutions: "Luciano Narciso De Oliveira", ai_business_process: "Fabio Da Silva Cruz", security: "Luciano Narciso De Oliveira", consumo: "Diego Bastos de Jesus" } },
+  { nome: "TD Synnex", tipo: "Distributor", partner_one_id: "1202533", responsaveis: { ai_business_solutions: "Luciano Narciso De Oliveira", ai_business_process: "Fabio Da Silva Cruz", security: "Luciano Narciso De Oliveira", consumo: "Diego Bastos de Jesus" } },
+  { nome: "Maximiza", tipo: "Indirect Partner", partner_one_id: "4741114", responsaveis: { ai_business_solutions: "Luciano Narciso De Oliveira", ai_business_process: "Fabio Da Silva Cruz", security: "Luciano Narciso De Oliveira", consumo: "Gisele Martins Alves" } },
+  { nome: "IAS TECNOLOGIA LTDA", tipo: "Indirect Partner", partner_one_id: "6225925", responsaveis: { ai_business_solutions: "Luciano Narciso De Oliveira", ai_business_process: "Fabio Da Silva Cruz", security: "Luciano Narciso De Oliveira", consumo: "Diego Bastos de Jesus" } },
+  { nome: "Infobusiness", tipo: "Indirect Partner", partner_one_id: "1971806", responsaveis: { ai_business_solutions: "Luciano Narciso De Oliveira", ai_business_process: "Fabio Da Silva Cruz", security: "Luciano Narciso De Oliveira", consumo: "Gisele Martins Alves" } },
+  { nome: "Processor", tipo: "SSP", partner_one_id: "1019458", responsaveis: { ai_business_solutions: "Luciano Narciso De Oliveira", ai_business_process: "Fabio Da Silva Cruz", security: "Luciano Narciso De Oliveira", consumo: "Diego Bastos de Jesus" } },
+  { nome: "Telefonica", tipo: "Telco", partner_one_id: "1352966", responsaveis: { ai_business_solutions: "Luciano Narciso De Oliveira", ai_business_process: "Fabio Da Silva Cruz", security: "Luciano Narciso De Oliveira", consumo: "Gisele Martins Alves" } },
+  { nome: "Alfapeople ApS", tipo: "Direct Partner", partner_one_id: "3121937", responsaveis: { ai_business_solutions: "Fabio Da Silva Cruz", ai_business_process: "Fabio Da Silva Cruz", security: "Fabio Da Silva Cruz", consumo: "Diego Bastos de Jesus" } },
+  { nome: "Fênix", tipo: "Direct Partner", partner_one_id: "1227192", responsaveis: { ai_business_solutions: "Fabio Da Silva Cruz", ai_business_process: "Fabio Da Silva Cruz", security: "Fabio Da Silva Cruz", consumo: "Gisele Martins Alves" } },
+  { nome: "GSW", tipo: "Direct Partner", partner_one_id: "4084410", responsaveis: { ai_business_solutions: "Fabio Da Silva Cruz", ai_business_process: "Fabio Da Silva Cruz", security: "Fabio Da Silva Cruz", consumo: "Diego Bastos de Jesus" } },
+  { nome: "Kinix", tipo: "Direct Partner", partner_one_id: "6257988", responsaveis: { ai_business_solutions: "Fabio Da Silva Cruz", ai_business_process: "Fabio Da Silva Cruz", security: "Fabio Da Silva Cruz", consumo: "Gisele Martins Alves" } },
+  { nome: "Nexer", tipo: "Direct Partner", partner_one_id: "1423082", responsaveis: { ai_business_solutions: "Fabio Da Silva Cruz", ai_business_process: "Fabio Da Silva Cruz", security: "Fabio Da Silva Cruz", consumo: "Diego Bastos de Jesus" } },
+  { nome: "Pentare Consultoria em Tecnologia Ltda", tipo: "Direct Partner", partner_one_id: "1303042", responsaveis: { ai_business_solutions: "Fabio Da Silva Cruz", ai_business_process: "Fabio Da Silva Cruz", security: "Fabio Da Silva Cruz", consumo: "Gisele Martins Alves" } },
+  { nome: "Avanade", tipo: "SI", partner_one_id: "2013137", responsaveis: { ai_business_solutions: "Fabio Da Silva Cruz", ai_business_process: "Fabio Da Silva Cruz", security: "Fabio Da Silva Cruz", consumo: "Diego Bastos de Jesus" } }
 ];
 
 /**
