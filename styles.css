@@ -963,7 +963,24 @@ select:focus-visible,
 .report-identifier { padding: 11px 13px; border-left: 4px solid #a100ff; color: #2b123b; background: #f0e2fa; font-size: 15px; }
 .audit-lead-card label small { display: block; margin-top: 6px; color: #6d5d76; font-size: 12px; font-weight: 500; }
 
+.price-list-view { width: calc(100% - 48px); max-width: 1500px; margin: 0 auto; padding: 52px 0 80px; }
+.price-list-view .form-heading { padding-bottom: 28px; }
+.price-list-toolbar { display: flex; align-items: end; gap: 16px; padding-bottom: 20px; }
+.price-search { display: flex; flex: 1; flex-direction: column; gap: 6px; max-width: 560px; color: var(--muted); font-size: 14px; font-weight: 700; }
+.price-search input { width: 100%; min-height: 46px; border: 1px solid var(--line); padding: 10px 12px; color: var(--ink); background: #fff; font: inherit; font-weight: 400; }
+.price-search input:focus { border-color: var(--teal); outline: 2px solid rgba(91, 22, 139, .15); }
+.price-import-button { display: inline-flex; align-items: center; min-height: 46px; cursor: pointer; }
+.price-list-view .meetings-table th:last-child, .price-list-view .meetings-table td:last-child { text-align: right; }
+.price-list-view .meetings-table td:first-child { font-variant-numeric: tabular-nums; }
+
 @media (max-width: 700px) { .meeting-identifier-field { grid-template-columns: 1fr; } }
+
+@media (max-width: 700px) {
+  .price-list-view { width: calc(100% - 24px); padding-top: 38px; }
+  .price-list-toolbar { align-items: stretch; flex-direction: column; }
+  .price-search { max-width: none; }
+  .price-import-button { align-self: flex-start; }
+}
 
 /* Alerta de novas solicitações ao lado do perfil administrador */
 .topbar-meta { display: flex; align-items: center; }
@@ -981,85 +998,3 @@ select:focus-visible,
 .login-language-control select{border-color:#d9c5e7;background:#fff}
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 @media(max-width:1050px){.language-control select{min-width:88px;max-width:105px}.language-control{font-size:12px}}
-
-/* Mandatory consultative opening */
-.spin-tab.locked { cursor: not-allowed; opacity: .55; }
-.consultative-opening { margin-top: 22px; border: 1px solid #d9c5ea; border-radius: 18px; padding: clamp(22px, 3vw, 36px); background: linear-gradient(145deg, #fff 0%, #fbf7ff 100%); box-shadow: 0 12px 35px rgba(80, 20, 120, .08); }
-.consultative-opening.is-complete { border-color: #94c9b0; background: linear-gradient(145deg, #fff 0%, #f2fbf6 100%); }
-.opening-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; padding-bottom: 22px; border-bottom: 1px solid var(--line); }
-.opening-heading h3 { margin: 5px 0 9px; color: var(--ink); font: 600 clamp(27px, 3vw, 38px)/1.1 'Space Grotesk'; letter-spacing: -.035em; }
-.opening-heading > div > p:last-child { max-width: 760px; margin: 0; color: #526664; font-size: 16px; line-height: 1.6; }
-.opening-status { flex: none; border-radius: 999px; padding: 10px 15px; color: #64149a; background: #efdffd; font-size: 14px; font-weight: 700; }
-.is-complete .opening-status { color: #155e46; background: #dff5e9; }
-.opening-script { position: relative; margin: 24px 0; border-left: 5px solid #a100ff; border-radius: 0 12px 12px 0; padding: 25px 25px 62px; background: #fff; box-shadow: 0 4px 18px rgba(45, 25, 60, .06); }
-.opening-script pre { margin: 0; white-space: pre-wrap; color: #27202c; font: 400 17px/1.72 'DM Sans'; }
-.opening-script .secondary-button { position: absolute; right: 20px; bottom: 17px; font-size: 14px; }
-.opening-checklist { margin: 0 0 24px; border: 0; padding: 0; }
-.opening-checklist legend { margin-bottom: 13px; color: var(--ink); font: 600 19px 'Space Grotesk'; }
-.opening-checklist label { display: flex; align-items: center; gap: 12px; min-height: 50px; border-bottom: 1px solid var(--line); color: #344845; cursor: pointer; font-size: 16px; }
-.opening-checklist input { width: 20px; height: 20px; accent-color: #7b16ad; }
-.opening-checklist label span { display: none; color: #177251; font-weight: 800; }
-.opening-checklist input:checked + span { display: inline; }
-.opening-complete-button, #continueAfterOpeningButton { min-height: 50px; padding: 13px 22px; font-size: 16px; }
-.opening-complete-button:disabled { cursor: not-allowed; opacity: .45; }
-.opening-help { margin: 11px 0 0; color: #697a78; font-size: 14px; }
-.opening-complete-note { display: flex; flex-direction: column; gap: 4px; margin: 0 0 20px; border-left: 4px solid #1c9b6b; padding: 13px 17px; color: #245548; background: #e7f7ef; font-size: 15px; line-height: 1.45; }
-@media (max-width: 700px) {
-  .opening-heading { flex-direction: column; }
-  .opening-status { align-self: flex-start; }
-  .opening-script { padding: 20px 18px 70px; }
-  .opening-script pre { font-size: 16px; line-height: 1.65; }
-  .opening-checklist label { font-size: 15px; }
-}
-
-/* Prominent Discovery stage buttons */
-.spin-tabs {
-  display: flex;
-  gap: 9px;
-  overflow-x: auto;
-  border: 0;
-  padding: 7px 4px 12px;
-  scrollbar-width: thin;
-}
-.spin-tab {
-  min-height: 44px;
-  border: 1px solid #d6b6eb;
-  border-radius: 10px;
-  padding: 11px 16px;
-  color: #5b168b;
-  background: #f0e2fa;
-  box-shadow: 0 2px 0 rgba(91, 22, 139, .08);
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 700;
-  white-space: nowrap;
-  transition: background .18s ease, color .18s ease, border-color .18s ease, transform .18s ease, box-shadow .18s ease;
-}
-.spin-tab:hover:not(:disabled) {
-  border-color: #8d35c2;
-  color: #421060;
-  background: #e4c8f5;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 10px rgba(91, 22, 139, .13);
-}
-.spin-tab.active,
-.spin-tab.active:hover {
-  border-color: #421060;
-  color: #fff;
-  background: #5b168b;
-  box-shadow: 0 5px 13px rgba(66, 16, 96, .26);
-  transform: none;
-}
-.spin-tab.locked,
-.spin-tab:disabled {
-  border-color: #e5d7ed;
-  color: #887792;
-  background: #f7f1fa;
-  box-shadow: none;
-  cursor: not-allowed;
-  opacity: 1;
-}
-@media (max-width: 700px) {
-  .spin-tabs { gap: 7px; padding-bottom: 10px; }
-  .spin-tab { min-height: 42px; padding: 10px 13px; font-size: 13px; }
-}
