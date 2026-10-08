@@ -975,6 +975,8 @@ select:focus-visible,
 .price-list-view .price-group-heading th { padding: 12px 14px; border-top: 1px solid var(--line); color: var(--ink); background: #ead7f7; font-weight: 800; text-align: left; }
 .price-list-view .price-group-empty td { color: var(--muted); background: #fff; text-align: left !important; }
 .price-product-license { display: block; color: var(--muted); font-size: 12px; font-weight: 400; }
+.question-context { display: block; margin-bottom: 5px; color: var(--teal); font-size: 11px; font-weight: 700; }
+.question-objective { display: block; margin-top: 5px; color: var(--muted); font-size: 11px; }
 
 @media (max-width: 700px) { .meeting-identifier-field { grid-template-columns: 1fr; } }
 
