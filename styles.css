@@ -972,6 +972,9 @@ select:focus-visible,
 .price-import-button { display: inline-flex; align-items: center; min-height: 46px; cursor: pointer; }
 .price-list-view .meetings-table th:last-child, .price-list-view .meetings-table td:last-child { text-align: right; }
 .price-list-view .meetings-table td:first-child { font-variant-numeric: tabular-nums; }
+.price-list-view .price-group-heading th { padding: 12px 14px; border-top: 1px solid var(--line); color: var(--ink); background: #ead7f7; font-weight: 800; text-align: left; }
+.price-list-view .price-group-empty td { color: var(--muted); background: #fff; text-align: left !important; }
+.price-product-license { display: block; color: var(--muted); font-size: 12px; font-weight: 400; }
 
 @media (max-width: 700px) { .meeting-identifier-field { grid-template-columns: 1fr; } }
 

@@ -2,7 +2,6 @@ const SESSION_KEY = 'discovery_session';
 const USERS_KEY = 'discovery_users';
 const ACCESS_REQUESTS_KEY = 'discovery_access_requests';
 const SIMULATED_EMAILS_KEY = 'discovery_simulated_emails';
-const PRICE_LIST_KEY = 'discovery_price_list';
 const FIREBASE_ADMIN_EMAIL = 'v-cleand@microsoft.com';
 
 firebase.initializeApp({
@@ -17,8 +16,6 @@ const firebaseAuth = firebase.auth();
 const firestoreDb = firebase.firestore();
 let accessRequestsCache = JSON.parse(localStorage.getItem(ACCESS_REQUESTS_KEY) || '[]');
 let stopAccessRequestsListener = null;
-let priceListCache = JSON.parse(localStorage.getItem(PRICE_LIST_KEY) || '[]');
-let stopPriceListListener = null;
 
 function simpleHash(value) { let hash = 2166136261; for (let index = 0; index < value.length; index += 1) hash = Math.imul(hash ^ value.charCodeAt(index), 16777619); return `simulada_${(hash >>> 0).toString(16)}`; }
 function getUsers() { return JSON.parse(localStorage.getItem(USERS_KEY) || '[]'); }
@@ -70,21 +67,9 @@ function startAccessRequestsSync() {
   }, (error) => console.error('Não foi possível carregar as solicitações:', error));
 }
 
-function getPriceList() { return priceListCache; }
-async function savePriceList(items) { await firestoreDb.collection('price_list').doc('catalog').set({ items, updated_at: new Date().toISOString() }); }
-function startPriceListSync() {
-  if (stopPriceListListener) stopPriceListListener();
-  stopPriceListListener = firestoreDb.collection('price_list').doc('catalog').onSnapshot((snapshot) => {
-    priceListCache = snapshot.exists ? (snapshot.data().items || []) : [];
-    localStorage.setItem(PRICE_LIST_KEY, JSON.stringify(priceListCache));
-    window.dispatchEvent(new CustomEvent('discovery:price-list-updated'));
-  }, (error) => console.error('Não foi possível carregar a lista de preços:', error));
-}
-
 firebaseAuth.onAuthStateChanged((user) => {
   const session = getActiveSession();
   if (user && session) {
-    startPriceListSync();
     if (user.email?.toLowerCase() === FIREBASE_ADMIN_EMAIL) startAccessRequestsSync();
   }
 });
