@@ -977,6 +977,13 @@ select:focus-visible,
 .price-product-license { display: block; color: var(--muted); font-size: 12px; font-weight: 400; }
 .question-context { display: block; margin-bottom: 5px; color: var(--teal); font-size: 11px; font-weight: 700; }
 .question-objective { display: block; margin-top: 5px; color: var(--muted); font-size: 11px; }
+.detail-question-group { margin-bottom: 10px; list-style: none; }
+.detail-question-group > ul { margin: 5px 0 0; padding-left: 18px; }
+.detail-question-group > ul > li { margin-bottom: 7px; }
+.discovery-question-group { margin-top: 14px; }
+.discovery-question-group:first-child { margin-top: 0; }
+.discovery-question-group-heading { margin: 0; padding: 10px 0 0; border-top: 1px solid var(--line); color: var(--teal); font: 600 14px 'Space Grotesk'; }
+.discovery-question-group .discovery-question-row:first-of-type { border-top: 0; }
 
 @media (max-width: 700px) { .meeting-identifier-field { grid-template-columns: 1fr; } }
 
