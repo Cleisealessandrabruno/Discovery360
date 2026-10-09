@@ -987,8 +987,11 @@ select:focus-visible,
 .opening-script { margin: 0 0 18px; padding: 15px 18px; border-left: 4px solid var(--coral); background: #fff0e7; }
 .opening-script .eyebrow { margin: 0 0 7px; color: var(--coral); }
 .opening-script > p:not(.eyebrow) { margin: 0; color: var(--ink); font-size: 13px; line-height: 1.5; }
+.opening-script > p + p { margin-top: 10px !important; }
+.opening-script strong, .detail-opening-script strong { color: var(--ink); font-weight: 800; }
 .opening-script .opening-transition { margin-top: 10px !important; padding-top: 9px; border-top: 1px solid var(--line); }
 .detail-opening-script { margin: 8px 0; color: var(--muted); font-size: 12px; line-height: 1.5; }
+.detail-opening-script p { margin: 0 0 8px; }
 
 @media (max-width: 700px) { .meeting-identifier-field { grid-template-columns: 1fr; } }
 
