@@ -44,11 +44,15 @@ window.additionalSalesPlays = [
     solucao_potencial: 'Sales Plays Microsoft alinhados às necessidades do cliente',
     sinais_alto_potencial: 'M365 sem Copilot; arquivos dispersos; lacunas de segurança, identidade, dados ou conformidade; infraestrutura local sob pressão; relatórios manuais; processos dependentes de planilhas; backlog de desenvolvimento.',
     orientacao_clm: 'Comece pela planta da casa: entenda as prioridades do negócio antes de entrar nos ambientes. Transição sugerida: “Para eu entender o cenário completo, posso passar rapidamente por algumas áreas da operação? Assim a gente vê onde estão os maiores ganhos.” Explore somente os ambientes pertinentes e encerre priorizando uma próxima conversa. Sinais podem direcionar para: M365 → Copilot; Copilot → Expansão; arquivos → SharePoint; Teams → Colaboração/Copilot; Business Premium; Defender / Intune; Entra; Consolidação Defender; Windows; Purview; Azure; AWS → Azure; GitHub Copilot + Azure; Power BI; Fabric; Azure AI; Agentes personalizados; Power Automate; Copilot Studio; Dynamics 365 Sales ou Customer Service.',
+    abertura_fala: 'Olá, {cliente}. Eu sou {clm}, do time Microsoft. Obrigado por reservar este tempo. Quero entender as prioridades da {empresa} e o papel da tecnologia nelas. Sugiro começarmos pelo contexto do negócio e, depois, passarmos pelas áreas que fizerem sentido. Ao final, priorizamos um tema e combinamos o próximo passo. Tudo bem?',
+    abertura_transicao: 'Para eu entender o cenário completo, posso passar rapidamente por algumas áreas da operação? Assim a gente vê onde estão os maiores ganhos.',
+    abertura: [
+      { id: 'rooms-open-1', text: 'Quais são as três prioridades da empresa para os próximos 12 meses?', ambiente: 'A planta da casa' },
+      { id: 'rooms-open-2', text: 'Existe alguma iniciativa estratégica que esteja ocupando mais a liderança agora: crescimento, expansão, eficiência, aquisição?', ambiente: 'A planta da casa' },
+      { id: 'rooms-open-3', text: 'Se a tecnologia pudesse destravar uma dessas prioridades amanhã, qual seria?', ambiente: 'A planta da casa' },
+      { id: 'rooms-open-4', text: 'Como as decisões de tecnologia são tomadas aqui? Quem participa?', ambiente: 'A planta da casa' }
+    ],
     situacao: [
-      { id: 'rooms-open-1', text: 'Quais são as três prioridades da empresa para os próximos 12 meses?', ambiente: 'Abertura · a planta da casa' },
-      { id: 'rooms-open-2', text: 'Existe alguma iniciativa estratégica que esteja ocupando mais a liderança agora: crescimento, expansão, eficiência, aquisição?', ambiente: 'Abertura · a planta da casa' },
-      { id: 'rooms-open-3', text: 'Se a tecnologia pudesse destravar uma dessas prioridades amanhã, qual seria?', ambiente: 'Abertura · a planta da casa' },
-      { id: 'rooms-open-4', text: 'Como as decisões de tecnologia são tomadas aqui? Quem participa?', ambiente: 'Abertura · a planta da casa' },
       { id: 'rooms-mw-sit-1', text: 'Como as equipes colaboram no dia a dia: e-mail, Teams, arquivos compartilhados?', ambiente: 'Ambiente 1 · Produtividade e colaboração' },
       { id: 'rooms-mw-sit-2', text: 'Onde ficam hoje os documentos da empresa: servidor de arquivos, SharePoint, outra ferramenta?', ambiente: 'Ambiente 1 · Produtividade e colaboração' },
       { id: 'rooms-security-sit-1', text: 'Como vocês controlam hoje o acesso de usuários, terceiros e trabalho remoto?', ambiente: 'Ambiente 2 · Segurança e identidade' },
