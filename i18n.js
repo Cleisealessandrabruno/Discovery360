@@ -23,7 +23,12 @@
     'dashboard.empty': { pt: 'Nenhuma reunião cadastrada ainda.', en: 'No meetings registered yet.', es: 'Aún no hay reuniones registradas.' },
     'dashboard.guide': { pt: '📖 Guia de Descoberta do CLM', en: '📖 CLM Discovery Guide', es: '📖 Guía de Descubrimiento del CLM' },
     'dashboard.meetingCount.one': { pt: '1 reunião', en: '1 meeting', es: '1 reunión' },
-    'dashboard.meetingCount.many': { pt: '{count} reuniões', en: '{count} meetings', es: '{count} reuniones' }
+    'dashboard.meetingCount.many': { pt: '{count} reuniões', en: '{count} meetings', es: '{count} reuniones' },
+    'Rascunho salvo às {time}': { pt: 'Rascunho salvo às {time}', en: 'Draft saved at {time}', es: 'Borrador guardado a las {time}' },
+    'Etapa concluída. Seguindo para {stage}.': { pt: 'Etapa concluída. Seguindo para {stage}.', en: 'Stage complete. Moving on to {stage}.', es: 'Etapa completada. Pasando a {stage}.' },
+    '{done} de {total} perguntas respondidas': { pt: '{done} de {total} perguntas respondidas', en: '{done} of {total} questions answered', es: '{done} de {total} preguntas respondidas' },
+    '{percent}% da descoberta': { pt: '{percent}% da descoberta', en: '{percent}% of discovery', es: '{percent}% del descubrimiento' },
+    'Aderência à qualificação: {percent}% ({yes}/{total} confirmados · meta 80%)': { pt: 'Aderência à qualificação: {percent}% ({yes}/{total} confirmados · meta 80%)', en: 'Qualification adherence: {percent}% ({yes}/{total} confirmed · target 80%)', es: 'Adherencia a la calificación: {percent}% ({yes}/{total} confirmados · meta 80%)' }
   };
 
   const translations = {
@@ -137,7 +142,29 @@
     'As objeções foram tratadas utilizando soluções Microsoft e histórias de sucesso relevantes?': ['Were objections addressed using Microsoft solutions and relevant success stories?', '¿Las objeciones se abordaron usando soluciones Microsoft y casos de éxito relevantes?'],
     'O representante resumiu os pontos principais e confirmou o entendimento mútuo?': ['Did the representative summarize key points and confirm mutual understanding?', '¿El representante resumió los puntos principales y confirmó el entendimiento mutuo?'],
     'Um próximo passo claro foi proposto e acordado?': ['Was a clear next step proposed and agreed upon?', '¿Se propuso y acordó un próximo paso claro?'],
-    'O representante agradeceu o tempo do cliente e encerrou a conversa de maneira profissional?': ["Did the representative thank the customer and close professionally?", '¿El representante agradeció el tiempo del cliente y cerró profesionalmente?']
+    'O representante agradeceu o tempo do cliente e encerrou a conversa de maneira profissional?': ["Did the representative thank the customer and close professionally?", '¿El representante agradeció el tiempo del cliente y cerró profesionalmente?'],
+    'Salvar e próxima pergunta': ['Save and next question', 'Guardar y siguiente pregunta'],
+    'Digitando…': ['Typing…', 'Escribiendo…'],
+    'Última pergunta registrada.': ['Last question recorded.', 'Última pregunta registrada.'],
+    'Respondida': ['Answered', 'Respondida'],
+    'Editar resposta': ['Edit response', 'Editar respuesta'],
+    'Fazer esta pergunta': ['Ask this question', 'Hacer esta pregunta'],
+    'Aderência à qualificação: preencha a aba Qualificação para acompanhar.': ['Qualification adherence: fill in the Qualification tab to track it.', 'Adherencia a la calificación: complete la pestaña Calificación para darle seguimiento.'],
+    'Sinais de alto potencial': ['High-potential signals', 'Señales de alto potencial'],
+    'Marque os sinais que o cliente confirmar durante a conversa.': ['Check the signals the customer confirms during the conversation.', 'Marque las señales que el cliente confirme durante la conversación.'],
+    'Marcar resposta como': ['Tag response as', 'Marcar respuesta como'],
+    'Dor': ['Pain', 'Dolor'],
+    'Impacto': ['Impact', 'Impacto'],
+    'Oportunidade': ['Opportunity', 'Oportunidad'],
+    'Esta resposta lembra outros plays:': ['This answer is related to other plays:', 'Esta respuesta se relaciona con otros plays:'],
+    'Pausar': ['Pause', 'Pausar'],
+    'Retomar': ['Resume', 'Reanudar'],
+    'Fala copiada.': ['Script copied.', 'Guion copiado.'],
+    'Não foi possível copiar a fala.': ['Could not copy the script.', 'No fue posible copiar el guion.'],
+    'Copiar fala': ['Copy script', 'Copiar guion'],
+    'Abertura concluída — ir para Situação': ['Opening done — go to Situation', 'Apertura concluida — ir a Situación'],
+    '✓ Abertura concluída — ir para Situação': ['✓ Opening done — go to Situation', '✓ Apertura concluida — ir a Situación'],
+    'Salvar e próxima pergunta ↵': ['Save and next question ↵', 'Guardar y siguiente pregunta ↵']
   };
 
   const placeholders = {

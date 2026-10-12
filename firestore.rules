@@ -4,13 +4,30 @@ service cloud.firestore {
     function isAdmin() {
       return request.auth != null && request.auth.token.email == 'v-cleand@microsoft.com';
     }
+
     match /access_requests/{requestId} {
       allow create: if request.resource.data.status == 'pendente'
-        && request.resource.data.nome is string
-        && request.resource.data.email is string
-        && request.resource.data.empresa is string
-        && request.resource.data.cargo is string;
+        && request.resource.data.nome is string && request.resource.data.nome.size() <= 120
+        && request.resource.data.email is string && request.resource.data.email.size() <= 160
+        && request.resource.data.empresa is string && request.resource.data.empresa.size() <= 160
+        && request.resource.data.cargo is string && request.resource.data.cargo.size() <= 120
+        && (!('descricao_uso' in request.resource.data) || (request.resource.data.descricao_uso is string && request.resource.data.descricao_uso.size() <= 1000));
       allow read, update: if isAdmin();
+      allow delete: if false;
+    }
+
+    // Reuniões do Discovery 360: cada CLM acessa apenas as suas; o administrador lê todas.
+    match /meetings/{docId} {
+      allow create: if request.auth != null
+        && request.resource.data.owner_uid == request.auth.uid
+        && request.resource.data.payload is string
+        && request.resource.data.payload.size() < 900000;
+      allow update: if request.auth != null
+        && resource.data.owner_uid == request.auth.uid
+        && request.resource.data.owner_uid == request.auth.uid
+        && request.resource.data.payload is string
+        && request.resource.data.payload.size() < 900000;
+      allow read: if request.auth != null && (resource.data.owner_uid == request.auth.uid || isAdmin());
       allow delete: if false;
     }
   }

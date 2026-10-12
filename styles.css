@@ -1066,3 +1066,45 @@ select:focus-visible,
 .login-language-control select{border-color:#d9c5e7;background:#fff}
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 @media(max-width:1050px){.language-control select{min-width:88px;max-width:105px}.language-control{font-size:12px}}
+
+
+/* ===================================================================
+   MELHORIAS DO WORKSPACE — progresso, aderência, tags, sinais, cronômetro
+   =================================================================== */
+.discovery-question-row.active-question { outline: 2px solid var(--coral); outline-offset: 2px; background: rgba(161, 0, 255, .05); border-radius: 8px; }
+.discovery-question-row .q-state { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; margin-right: 8px; border-radius: 50%; font-size: 11px; font-weight: 700; vertical-align: middle; }
+.discovery-question-row .q-done { background: #107c10; color: #fff; }
+.discovery-question-row .q-skip { background: #ffb900; color: #323130; }
+.discovery-question-row > div { align-items: start; }
+.spin-tab .tab-count { margin-left: 6px; font-size: 10px; font-weight: 700; color: var(--muted); }
+.spin-tab .tab-count.complete { color: #107c10; }
+#meetingProgress { margin: 14px 0 6px; font-size: 12px; color: var(--ink); }
+#meetingProgress .bar { height: 7px; margin-top: 7px; overflow: hidden; border-radius: 999px; background: var(--line); }
+#meetingProgress .bar span { display: block; height: 100%; background: var(--coral); transition: width .25s ease; }
+#meetingProgress.done .bar span { background: #107c10; }
+#meetingProgress .adherence { margin-top: 9px; padding: 8px 10px; border-left: 3px solid var(--line); background: #fff; color: var(--muted); font-size: 11px; }
+#meetingProgress .adherence.warning { border-left-color: #d2634e; background: #fff0e7; color: #b8503f; }
+#meetingProgress .adherence.positive { border-left-color: #107c10; background: #e8f4e8; color: #0b5a0b; }
+.signals-panel { margin: 0 0 14px; padding: 10px 12px; border: 1px solid var(--line); background: #fff; }
+.signals-panel summary { cursor: pointer; color: var(--teal); font-size: 11px; font-weight: 700; letter-spacing: .04em; }
+.signals-panel summary b { margin-left: 6px; color: var(--coral); }
+.signals-hint { margin: 8px 0 6px; color: var(--muted); font-size: 11px; }
+.signals-list { display: grid; gap: 5px; }
+.signal-item { display: flex; gap: 8px; align-items: flex-start; color: var(--ink); font-size: 12px; line-height: 1.35; cursor: pointer; }
+.signal-item input { margin-top: 2px; accent-color: var(--coral); }
+.answer-extras { display: grid; gap: 10px; margin-top: 10px; }
+.answer-tags { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.answer-tags-label { color: var(--muted); font-size: 10px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+.answer-tag { border: 1px solid var(--line); padding: 5px 9px; border-radius: 999px; color: var(--muted); background: #fff; cursor: pointer; font-size: 11px; }
+.answer-tag:hover:not(:disabled) { border-color: var(--teal); color: var(--ink); }
+.answer-tag.active { border-color: var(--coral); background: var(--coral); color: #fff; }
+.answer-tag:disabled { opacity: .5; cursor: not-allowed; }
+.related-plays { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; padding: 8px 10px; border-left: 3px solid var(--coral); background: #faf3ff; color: var(--muted); font-size: 11px; }
+.related-plays[hidden] { display: none; }
+.related-play { border: 1px solid var(--coral); padding: 4px 8px; color: var(--coral); background: #fff; cursor: pointer; font-size: 11px; font-weight: 700; }
+.answer-autosave { min-height: 16px; color: var(--muted); font-size: 11px; }
+.save-next-button { background: var(--teal); border-color: var(--teal); }
+.opening-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.meeting-timer { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.meeting-timer.paused .timer-value { opacity: .55; }
+.meeting-timer .timer-toggle { border: 1px solid rgba(24, 43, 47, .3); padding: 4px 8px; border-radius: 6px; background: rgba(255, 255, 255, .7); color: var(--ink); cursor: pointer; font-size: 11px; }

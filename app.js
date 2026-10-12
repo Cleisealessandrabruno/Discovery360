@@ -46,6 +46,8 @@ const views = {
 };
 
 function navigate(view, meetingId = null) {
+  flushAutosave();
+  if (view !== 'workspace') leaveWorkspaceTimer();
   const routeByView = { form: 'nova-reuniao', library: 'biblioteca', access: 'validacao-acessos', callAudit: 'auditoria-ligacao', priceList: 'lista-precos' };
   const hash = view === 'report' ? `relatorio/${meetingId}` : view === 'workspace' ? `reuniao/${meetingId}` : (routeByView[view] || view);
   window.location.hash = hash;
@@ -82,7 +84,7 @@ function renderDashboard() {
   const meetings = getMeetings().sort((first, second) => new Date(second.data || second.updated_at) - new Date(first.data || first.updated_at));
   document.getElementById('dashboardMeetingCount').textContent = `${meetings.length} ${meetings.length === 1 ? 'reunião' : 'reuniões'}`;
   document.getElementById('dashboardEmpty').hidden = meetings.length > 0;
-  document.getElementById('meetingsTableBody').innerHTML = meetings.map((meeting) => `<tr><td><strong>${meeting.cliente}</strong><small>${meeting.empresa}</small></td><td>${meeting.assunto}</td><td>${formatDate(meeting.data)}</td><td><span class="status-pill ${meeting.status}">${statusLabel(meeting.status)}</span></td><td><button class="table-action" data-meeting-id="${meeting.id}">${meeting.status === 'em_andamento' ? 'Continuar' : 'Abrir'} <span>↗</span></button></td></tr>`).join('');
+  document.getElementById('meetingsTableBody').innerHTML = meetings.map((meeting) => `<tr><td><strong>${escapeHtml(meeting.cliente)}</strong><small>${escapeHtml(meeting.empresa)}</small></td><td>${escapeHtml(meeting.assunto)}</td><td>${formatDate(meeting.data)}</td><td><span class="status-pill ${escapeHtml(meeting.status)}">${statusLabel(meeting.status)}</span></td><td><button class="table-action" data-meeting-id="${escapeHtml(meeting.id)}">${meeting.status === 'em_andamento' ? 'Continuar' : 'Abrir'} <span>↗</span></button></td></tr>`).join('');
   document.querySelectorAll('.table-action').forEach((button) => button.addEventListener('click', () => openSavedMeeting(button.dataset.meetingId)));
 }
 
@@ -115,19 +117,19 @@ function openSavedMeeting(id) { const meeting = getMeetingById(id); if (!meeting
 function updateActiveMeeting() { if (!state.activeMeetingId || state.readOnly) return; const meeting = getMeetingById(state.activeMeetingId); if (!meeting) return; meeting.gerou_oportunidade = document.getElementById('opportunityInput').checked; meeting.proximo_passo = document.getElementById('nextStepInput').value.trim(); saveMeeting(meeting); }
 function renderMeetingTabs() { const meeting = state.activeMeetingId ? getMeetingById(state.activeMeetingId) : null; document.getElementById('meetingTabs').hidden = !meeting; if (!meeting) return; document.getElementById('historyCount').textContent = allSavedResponses(meeting).length; document.getElementById('workspaceTranscript').textContent = gerarTranscricaoCompleta(meeting.id); document.getElementById('workspaceSummary').innerHTML = `<p class="partial-summary">${meeting.status === 'concluida' ? '' : 'Este é um resumo parcial, gerado com as respostas registradas até o momento. Finalize a reunião para gerar o relatório completo.'}</p>${document.getElementById('reportCards')?.innerHTML || ''}`; }
 function setMeetingTab(tab) { document.querySelectorAll('.meeting-tab').forEach((button) => button.classList.toggle('active', button.dataset.meetingTab === tab)); document.getElementById('questionsPane').hidden = tab !== 'questions'; document.getElementById('historyPane').hidden = tab !== 'history'; document.getElementById('partnerPane').hidden = tab !== 'partner'; document.getElementById('summaryPane').hidden = tab !== 'summary'; if (tab === 'history') { const meeting = getMeetingById(state.activeMeetingId); document.getElementById('historyCount').textContent = allSavedResponses(meeting).length; document.getElementById('workspaceTranscript').textContent = gerarTranscricaoCompleta(state.activeMeetingId); } if (tab === 'partner') renderPartnerPane(); if (tab === 'summary') { renderReport(state.activeMeetingId); const complete = getMeetingById(state.activeMeetingId)?.status === 'concluida'; document.getElementById('workspaceSummary').innerHTML = `<div class="summary-actions"><button id="workspaceWordButton" class="primary-button">▣ Baixar como Word</button><button id="workspaceEditButton" class="secondary-button">Editar materiais</button></div>${!complete ? '<p class="partial-summary">Este é um resumo parcial, gerado com as respostas registradas até o momento. Finalize a reunião para gerar o relatório completo.</p>' : ''}${document.getElementById('reportCards').innerHTML}`; document.getElementById('workspaceWordButton').addEventListener('click', () => { baixarRelatorioComoWord(state.activeMeetingId); setMeetingTab('summary'); }); document.getElementById('workspaceEditButton').addEventListener('click', () => toggleMaterialEditing(state.activeMeetingId)); } }
-function renderLibrary() { const query = (document.getElementById('librarySearchInput')?.value || '').toLocaleLowerCase('pt-BR'); const filter = document.querySelector('#libraryFilterGroup .active')?.dataset.filter || 'TODOS'; const plays = state.plays.filter((play) => (filter === 'TODOS' || play.categoria.includes(filter)) && [play.titulo, play.gatilho, play.solucao_potencial, ...play.categoria].join(' ').toLocaleLowerCase('pt-BR').includes(query)); document.getElementById('libraryResultCount').textContent = `${plays.length} resultados`; document.getElementById('libraryGrid').innerHTML = plays.map((play) => `<article class="play-card" data-library-id="${play.id}"><div class="card-top"><span class="play-number">${String(play.id).padStart(2, '0')}</span><div class="chips">${play.categoria.map((category) => `<span class="chip">${category}</span>`).join('')}</div></div><h3>${play.titulo}</h3><p class="trigger">${play.gatilho}</p><div class="card-footer"><span>${play.solucao_potencial}</span><span class="arrow">↗</span></div></article>`).join(''); document.querySelectorAll('[data-library-id]').forEach((card) => card.addEventListener('click', () => openDetail(Number(card.dataset.libraryId)))); }
-function renderPriceList() { const query = document.getElementById('priceSearchInput').value.trim().toLocaleLowerCase('pt-BR'); const products = window.priceListData || []; const filtered = products.filter((product) => `${product.sku} ${product.nome}`.toLocaleLowerCase('pt-BR').includes(query)); const currency = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'USD' }); document.getElementById('priceProductOptions').innerHTML = products.map((product) => `<option value="${escapeHtml(product.nome)}" label="${escapeHtml(product.sku)}"></option>`).join(''); document.getElementById('priceResultCount').textContent = `${filtered.length} ${filtered.length === 1 ? 'produto' : 'produtos'}`; if (!filtered.length) { document.getElementById('priceListBody').innerHTML = '<tr><td colspan="3">Nenhum produto encontrado.</td></tr>'; return; } const groups = ['Cloud', 'On-premises']; document.getElementById('priceListBody').innerHTML = groups.map((group) => { const items = filtered.filter((product) => product.grupo === group).sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR', { sensitivity: 'base' })); if (!items.length) return ''; const label = group === 'Cloud' ? 'Cloud · preço mensal' : 'On-premises · valor total'; const heading = `<tr class="price-group-heading"><th colspan="3">${label}</th></tr>`; return `${heading}${items.map((product) => `<tr><td>${escapeHtml(product.sku)}</td><td>${escapeHtml(product.nome)}${product.licenciamento ? `<small class="price-product-license">${escapeHtml(product.licenciamento)}</small>` : ''}</td><td>${product.valor === null ? '—' : currency.format(product.valor)}</td></tr>`).join('')}`; }).join(''); }
-function renderAccessView() { if (!isAdmin()) { navigate('dashboard'); showToast('Você não tem permissão para acessar esta página.'); return; } renderAccessRequests(); renderSimulatedEmails(); const meetings = getMeetings(); const people = {}; meetings.forEach((meeting) => { const person = meeting.usuario_responsavel || USER_NAME; people[person] = people[person] || []; people[person].push(meeting); }); document.getElementById('accessPeopleBody').innerHTML = Object.entries(people).map(([person, items]) => `<tr><td>${person}</td><td>${items.length}</td><td>${items.filter((item) => item.status === 'rascunho').length}</td><td>${items.filter((item) => item.status === 'em_andamento').length}</td><td>${items.filter((item) => item.status === 'concluida').length}</td><td>${formatDate(items.sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at))[0].data)}</td></tr>`).join('') || '<tr><td colspan="6">Nenhum dado disponível.</td></tr>'; const events = meetings.flatMap((meeting) => getAudit(meeting.id).map((event) => ({ ...event, meeting }))).sort((a, b) => new Date(b.data_hora) - new Date(a.data_hora)); document.getElementById('accessAuditBody').innerHTML = events.map((event) => `<tr><td>${new Date(event.data_hora).toLocaleString('pt-BR')}</td><td>${event.descricao}</td><td>${event.meeting.empresa}</td></tr>`).join('') || '<tr><td colspan="3">Nenhum evento registrado.</td></tr>'; }
+function renderLibrary() { const query = (document.getElementById('librarySearchInput')?.value || '').toLocaleLowerCase('pt-BR'); const filter = document.querySelector('#libraryFilterGroup .active')?.dataset.filter || 'TODOS'; const plays = state.plays.filter((play) => (filter === 'TODOS' || play.categoria.includes(filter)) && [play.titulo, play.gatilho, play.solucao_potencial, ...play.categoria].join(' ').toLocaleLowerCase('pt-BR').includes(query)); document.getElementById('libraryResultCount').textContent = `${plays.length} resultados`; document.getElementById('libraryGrid').innerHTML = plays.map((play) => `<article class="play-card" data-library-id="${play.id}"><div class="card-top"><span class="play-number">${String(play.id).padStart(2, '0')}</span><div class="chips">${play.categoria.map((category) => `<span class="chip">${escapeHtml(category)}</span>`).join('')}</div></div><h3>${escapeHtml(play.titulo)}</h3><p class="trigger">${escapeHtml(play.gatilho)}</p><div class="card-footer"><span>${escapeHtml(play.solucao_potencial)}</span><span class="arrow">↗</span></div></article>`).join(''); document.querySelectorAll('[data-library-id]').forEach((card) => card.addEventListener('click', () => openDetail(Number(card.dataset.libraryId)))); }
+function renderPriceList() { const query = document.getElementById('priceSearchInput').value.trim().toLocaleLowerCase('pt-BR'); const products = window.priceListData || []; const filtered = products.filter((product) => `${product.sku} ${(product.sku_alternativos || []).join(' ')} ${product.nome}`.toLocaleLowerCase('pt-BR').includes(query)); const currency = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'USD' }); document.getElementById('priceProductOptions').innerHTML = products.map((product) => `<option value="${escapeHtml(product.nome)}" label="${escapeHtml(product.sku)}"></option>`).join(''); document.getElementById('priceResultCount').textContent = `${filtered.length} ${filtered.length === 1 ? 'produto' : 'produtos'}`; if (!filtered.length) { document.getElementById('priceListBody').innerHTML = '<tr><td colspan="3">Nenhum produto encontrado.</td></tr>'; return; } const groups = ['Cloud', 'On-premises']; document.getElementById('priceListBody').innerHTML = groups.map((group) => { const items = filtered.filter((product) => product.grupo === group).sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR', { sensitivity: 'base' })); if (!items.length) return ''; const label = group === 'Cloud' ? 'Cloud · preço mensal' : 'On-premises · valor total'; const heading = `<tr class="price-group-heading"><th colspan="3">${label}</th></tr>`; return `${heading}${items.map((product) => `<tr><td>${escapeHtml(product.sku)}</td><td>${escapeHtml(product.nome)}${product.licenciamento ? `<small class="price-product-license">${escapeHtml(product.licenciamento)}</small>` : ''}${product.sku_alternativos?.length ? `<small class="price-product-license">Também: ${escapeHtml(product.sku_alternativos.join(', '))}</small>` : ''}</td><td>${product.valor === null ? '—' : currency.format(product.valor)}</td></tr>`).join('')}`; }).join(''); }
+function renderAccessView() { if (!isAdmin()) { navigate('dashboard'); showToast('Você não tem permissão para acessar esta página.'); return; } renderAccessRequests(); renderSimulatedEmails(); const meetings = getMeetings(); const people = {}; meetings.forEach((meeting) => { const person = meeting.usuario_responsavel || USER_NAME; people[person] = people[person] || []; people[person].push(meeting); }); document.getElementById('accessPeopleBody').innerHTML = Object.entries(people).map(([person, items]) => `<tr><td>${escapeHtml(person)}</td><td>${items.length}</td><td>${items.filter((item) => item.status === 'rascunho').length}</td><td>${items.filter((item) => item.status === 'em_andamento').length}</td><td>${items.filter((item) => item.status === 'concluida').length}</td><td>${formatDate(items.sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at))[0].data)}</td></tr>`).join('') || '<tr><td colspan="6">Nenhum dado disponível.</td></tr>'; const events = meetings.flatMap((meeting) => getAudit(meeting.id).map((event) => ({ ...event, meeting }))).sort((a, b) => new Date(b.data_hora) - new Date(a.data_hora)); renderAdminRemoteOverview(); document.getElementById('accessAuditBody').innerHTML = events.map((event) => `<tr><td>${new Date(event.data_hora).toLocaleString('pt-BR')}</td><td>${escapeHtml(event.descricao)}</td><td>${escapeHtml(event.meeting.empresa)}</td></tr>`).join('') || '<tr><td colspan="3">Nenhum evento registrado.</td></tr>'; }
 let requestFilter = 'todos'; let selectedRequestId = null;
 function updateAccessNotification() { const count = getAccessRequests().filter((request) => request.status === 'pendente').length; const visible = isAdmin() && count > 0; const badge = document.getElementById('accessNotificationBadge'); if (badge) { badge.textContent = count; badge.hidden = !visible; } const alertButton = document.getElementById('accessAlertButton'); const alertCount = document.getElementById('accessAlertCount'); if (alertButton) alertButton.hidden = !visible; if (alertCount) alertCount.textContent = count; const nav = document.getElementById('accessNav'); if (nav) nav.setAttribute('aria-label', count ? `Validação de acessos: ${count} solicitação${count === 1 ? '' : 'ões'} pendente${count === 1 ? '' : 's'}` : 'Validação de acessos'); return count; }
 
 function openPendingAccessRequests() { requestFilter = 'pendente'; document.querySelectorAll('.access-filters .filter').forEach((button) => button.classList.toggle('active', button.dataset.requestFilter === 'pendente')); document.querySelectorAll('.access-tab').forEach((button) => button.classList.toggle('active', button.dataset.accessTab === 'requests')); document.getElementById('accessRequestsPane').hidden = false; document.getElementById('accessEmailsPane').hidden = true; document.getElementById('accessOverviewPane').hidden = true; navigate('access'); renderAccessRequests(); }
-function renderAccessRequests() { const requests = getAccessRequests().filter((request) => requestFilter === 'todos' || request.status === requestFilter).sort((a, b) => new Date(b.criado_em) - new Date(a.criado_em)); document.getElementById('pendingRequestCount').textContent = getAccessRequests().filter((request) => request.status === 'pendente').length; document.getElementById('accessRequestsBody').innerHTML = requests.map((request) => `<tr><td>${new Date(request.criado_em).toLocaleDateString('pt-BR')}</td><td><strong>${request.nome}</strong></td><td>${request.empresa}</td><td>${request.email}</td><td>${request.cargo}</td><td><span class="status-pill ${request.status}">${request.status}</span></td><td>${request.status === 'pendente' ? `<select class="role-select" data-approve-request="${request.request_id}"><option value="">Perfil...</option><option>Administrador</option><option>Gerente</option><option>CLM</option><option>Especialista</option><option>Parceiro</option></select><button class="table-action" data-view-request="${request.request_id}">Detalhes</button><button class="table-action reject-action" data-reject-request="${request.request_id}">Rejeitar</button>` : `<button class="table-action" data-view-request="${request.request_id}">Detalhes</button>`}</td></tr>`).join('') || '<tr><td colspan="7">Nenhuma solicitação encontrada.</td></tr>'; document.querySelectorAll('[data-approve-request]').forEach((select) => select.addEventListener('change', () => { if (select.value) approveRequest(select.dataset.approveRequest, select.value); })); document.querySelectorAll('[data-reject-request]').forEach((button) => button.addEventListener('click', () => openRejectRequest(button.dataset.rejectRequest))); document.querySelectorAll('[data-view-request]').forEach((button) => button.addEventListener('click', () => showRequestDetails(button.dataset.viewRequest))); }
+function renderAccessRequests() { const requests = getAccessRequests().filter((request) => requestFilter === 'todos' || request.status === requestFilter).sort((a, b) => new Date(b.criado_em) - new Date(a.criado_em)); document.getElementById('pendingRequestCount').textContent = getAccessRequests().filter((request) => request.status === 'pendente').length; document.getElementById('accessRequestsBody').innerHTML = requests.map((request) => `<tr><td>${new Date(request.criado_em).toLocaleDateString('pt-BR')}</td><td><strong>${escapeHtml(request.nome)}</strong></td><td>${escapeHtml(request.empresa)}</td><td>${escapeHtml(request.email)}</td><td>${escapeHtml(request.cargo)}</td><td><span class="status-pill ${escapeHtml(request.status)}">${escapeHtml(request.status)}</span></td><td>${request.status === 'pendente' ? `<select class="role-select" data-approve-request="${escapeHtml(request.request_id)}"><option value="">Perfil...</option><option>Administrador</option><option>Gerente</option><option>CLM</option><option>Especialista</option><option>Parceiro</option></select><button class="table-action" data-view-request="${escapeHtml(request.request_id)}">Detalhes</button><button class="table-action reject-action" data-reject-request="${escapeHtml(request.request_id)}">Rejeitar</button>` : `<button class="table-action" data-view-request="${escapeHtml(request.request_id)}">Detalhes</button>`}</td></tr>`).join('') || '<tr><td colspan="7">Nenhuma solicitação encontrada.</td></tr>'; document.querySelectorAll('[data-approve-request]').forEach((select) => select.addEventListener('change', () => { if (select.value) approveRequest(select.dataset.approveRequest, select.value); })); document.querySelectorAll('[data-reject-request]').forEach((button) => button.addEventListener('click', () => openRejectRequest(button.dataset.rejectRequest))); document.querySelectorAll('[data-view-request]').forEach((button) => button.addEventListener('click', () => showRequestDetails(button.dataset.viewRequest))); }
 function showRequestDetails(id) { const request = getAccessRequests().find((item) => item.request_id === id); if (request) showToast(`${request.nome} · ${request.email} · ${request.descricao_uso}`); }
 async function approveRequest(id, perfil) { const request = getAccessRequests().find((item) => item.request_id === id); if (!request) return; request.status = 'aprovado'; request.perfil = perfil; request.aprovado_por = USER_NAME; request.aprovado_em = new Date().toISOString(); try { await updateAccessRequest(request); showToast('Solicitação aprovada. Cadastre o usuário no Firebase Authentication para liberar o login.'); renderAccessView(); } catch (error) { console.error(error); showToast('Não foi possível aprovar a solicitação.'); } }
 function openRejectRequest(id) { selectedRequestId = id; document.getElementById('rejectReason').value = ''; document.getElementById('rejectError').textContent = ''; document.getElementById('rejectRequestModal').hidden = false; }
 async function rejectRequest() { const reason = document.getElementById('rejectReason').value.trim(); if (!reason) { document.getElementById('rejectError').textContent = 'Informe o motivo da rejeição.'; return; } const request = getAccessRequests().find((item) => item.request_id === selectedRequestId); if (!request) return; request.status = 'rejeitado'; request.rejeitado_por = USER_NAME; request.rejeitado_em = new Date().toISOString(); request.motivo_rejeicao = reason; try { await updateAccessRequest(request); document.getElementById('rejectRequestModal').hidden = true; renderAccessView(); } catch (error) { console.error(error); document.getElementById('rejectError').textContent = 'Não foi possível rejeitar a solicitação.'; } }
-function renderSimulatedEmails() { document.getElementById('simulatedEmailsList').innerHTML = getSimulatedEmails().slice().reverse().map((email) => `<details class="simulated-email"><summary>${email.assunto} <span>${email.para}</span></summary><pre>${email.corpo}</pre></details>`).join('') || '<p class="empty-state">Nenhum e-mail simulado.</p>'; }
+function renderSimulatedEmails() { document.getElementById('simulatedEmailsList').innerHTML = getSimulatedEmails().slice().reverse().map((email) => `<details class="simulated-email"><summary>${escapeHtml(email.assunto)} <span>${escapeHtml(email.para)}</span></summary><pre>${escapeHtml(email.corpo)}</pre></details>`).join('') || '<p class="empty-state">Nenhum e-mail simulado.</p>'; }
 function openRequestModal() {
   document.getElementById('accessRequestForm')?.reset();  document.getElementById('accessRequestForm')?.reset();
   const errorEl = document.getElementById('requestError');
@@ -138,32 +140,85 @@ function closeRequestModal() { document.getElementById('accessRequestModal').hid
 async function submitAccessRequest(event) { event.preventDefault(); const form = event.currentTarget; const errorEl = document.getElementById('requestError'); const submitButton = form.querySelector('[type="submit"]'); errorEl.textContent = ''; submitButton.disabled = true; try { const data = Object.fromEntries(new FormData(form).entries()); await createAccessRequest(data); form.reset(); closeRequestModal(); showToast('Solicitação enviada com sucesso.'); } catch (error) { console.error(error); errorEl.textContent = 'Não foi possível enviar. Verifique sua conexão e tente novamente.'; } finally { submitButton.disabled = false; } }
 function showToast(message) { const toast = document.getElementById('toastMessage'); toast.textContent = message; toast.hidden = false; setTimeout(() => { toast.hidden = true; }, 2800); }
 let partnerState = { motion: '', partner: null, manual: '', distributor: null, manualMode: false };
-function openWorkspace(id) { const meeting = id ? getMeetingById(id) : null; state.readOnly = meeting?.status === 'concluida'; const bar = document.getElementById('activeMeetingBar'); bar.hidden = !meeting; document.getElementById('meetingTabs').hidden = !meeting; if (!meeting) return; partnerState = { motion: '', partner: null, manual: '', distributor: null, manualMode: false }; document.getElementById('activeMeetingLabel').textContent = `${meeting.cliente} — ${meeting.assunto}`; document.getElementById('opportunityInput').checked = meeting.gerou_oportunidade; document.getElementById('nextStepInput').value = meeting.proximo_passo || ''; document.getElementById('opportunityInput').disabled = state.readOnly; document.getElementById('nextStepInput').disabled = state.readOnly; document.getElementById('completeMeetingButton').hidden = state.readOnly; const formSolution = normalizePartnerSearch(meeting.solucao_ms); const selectedPlay = state.plays.find((play) => [play.titulo, play.solucao_potencial].some((value) => normalizePartnerSearch(value) === formSolution)); activePlayId = meeting.sales_play_ativo || selectedPlay?.id || activePlayId; activeDiscoveryStage = meeting.etapa_discovery_ativa || 'abertura'; if (selectedPlay && !meeting.sales_play_ativo && !state.readOnly) { meeting.sales_play_ativo = selectedPlay.id; saveMeeting(meeting); } renderMeetingContextPanel(meeting); renderDiscovery(); renderReport(id); renderMeetingTabs(); }
+function openWorkspace(id) { const meeting = id ? getMeetingById(id) : null; state.readOnly = meeting?.status === 'concluida'; const bar = document.getElementById('activeMeetingBar'); bar.hidden = !meeting; document.getElementById('meetingTabs').hidden = !meeting; if (!meeting) return; partnerState = { motion: '', partner: null, manual: '', distributor: null, manualMode: false }; document.getElementById('activeMeetingLabel').textContent = `${meeting.cliente} — ${meeting.assunto}`; document.getElementById('opportunityInput').checked = meeting.gerou_oportunidade; document.getElementById('nextStepInput').value = meeting.proximo_passo || ''; document.getElementById('opportunityInput').disabled = state.readOnly; document.getElementById('nextStepInput').disabled = state.readOnly; document.getElementById('completeMeetingButton').hidden = state.readOnly; const formSolution = normalizePartnerSearch(meeting.solucao_ms); const selectedPlay = state.plays.find((play) => [play.titulo, play.solucao_potencial].some((value) => normalizePartnerSearch(value) === formSolution)); activePlayId = meeting.sales_play_ativo || selectedPlay?.id || activePlayId; activeDiscoveryStage = meeting.etapa_discovery_ativa || 'abertura'; if (selectedPlay && !meeting.sales_play_ativo && !state.readOnly) { meeting.sales_play_ativo = selectedPlay.id; saveMeeting(meeting); } if (lastWorkspaceMeetingId !== id) { selectedQuestion = null; lastWorkspaceMeetingId = id; } renderMeetingContextPanel(meeting); renderDiscovery(); renderReport(id); renderMeetingTabs(); initMeetingTimer(id); }
 function renderMeetingContextPanel(meeting) { const primaryContext = String(meeting.contexto_previo || '').trim(); const additionalContexts = (meeting.contextos_adicionais || []).map((context) => String(context || '').trim()).filter(Boolean); document.getElementById('meetingContextText').innerHTML = primaryContext ? escapeHtml(primaryContext).replace(/\n/g, '<br>') : '<p class="meeting-context-empty">Nenhum contexto prévio foi registrado.</p>'; document.getElementById('meetingAdditionalContextSection').hidden = additionalContexts.length === 0; document.getElementById('meetingAdditionalContextText').innerHTML = additionalContexts.map((context) => `<p>${escapeHtml(context).replace(/\n/g, '<br>')}</p>`).join(''); }
 function savePartnerState() { if (!state.activeMeetingId || state.readOnly) return; const partnerName = partnerState.partner?.nome || partnerState.manual || ''; document.getElementById('distributorError').hidden = !partnerState.manual || Boolean(partnerState.distributor); if (!partnerState.motion || !partnerName || (partnerState.manual && !partnerState.distributor)) { document.getElementById('partnerSaveState').textContent = partnerState.manual && !partnerState.distributor ? 'Distribuidora pendente' : 'Preenchimento pendente'; return; } const responsibleSource = partnerState.partner || partnerState.distributor; const calculated = calcularDasEOwner(partnerState.motion, responsibleSource); salvarDadosParceiro(state.activeMeetingId, { opportunity_intent: partnerState.motion, parceiro_nome: partnerName, parceiro_manual: Boolean(partnerState.manual), distribuidora: partnerState.distributor?.nome || '', das: calculated.das, primary_partner: partnerName, engajamento: 'Engajar via QRP', owner: calculated.owner }); document.getElementById('partnerSaveState').textContent = 'Salvo'; }
-function renderPartnerSuggestions(input, container, list, onSelect) { const query = normalizePartnerSearch(input.value); container.innerHTML = list.filter((item) => normalizePartnerSearch(item.nome).includes(query)).sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR')).map((item) => `<button type="button" data-partner-name="${encodeURIComponent(item.nome)}">${item.nome}</button>`).join('') + (list === PARTNERS_LIST ? '<button type="button" class="manual-option" data-manual="true">+ Não encontrei — digitar manualmente</button>' : ''); container.querySelectorAll('button').forEach((button) => button.addEventListener('click', () => onSelect(button)));
+function renderPartnerSuggestions(input, container, list, onSelect) { const query = normalizePartnerSearch(input.value); container.innerHTML = list.filter((item) => normalizePartnerSearch(item.nome).includes(query)).sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR')).map((item) => `<button type="button" data-partner-name="${encodeURIComponent(item.nome)}">${escapeHtml(item.nome)}</button>`).join('') + (list === PARTNERS_LIST ? '<button type="button" class="manual-option" data-manual="true">+ Não encontrei — digitar manualmente</button>' : ''); container.querySelectorAll('button').forEach((button) => button.addEventListener('click', () => onSelect(button)));
 }
 function closePartnerSuggestions() { document.getElementById('partnerSuggestions').innerHTML = ''; document.getElementById('distributorSuggestions').innerHTML = ''; }
 function renderPartnerPane() { const saved = state.activeMeetingId ? getDadosParceiro(state.activeMeetingId) : null; if (saved) { partnerState.motion = saved.opportunity_intent || ''; partnerState.partner = saved && !saved.parceiro_manual ? findPartnerByName(saved.parceiro_nome) : null; partnerState.manual = saved.parceiro_manual ? saved.parceiro_nome : ''; partnerState.manualMode = Boolean(saved.parceiro_manual); partnerState.distributor = saved.distribuidora ? findPartnerByName(saved.distribuidora) : null; } document.getElementById('opportunityIntentOptions').innerHTML = OPPORTUNITY_MOTIONS.map((motion) => `<button type="button" class="intent-pill ${motion.id === partnerState.motion ? 'active' : ''}" data-motion="${motion.id}">${motion.label}</button>`).join(''); document.getElementById('partnerSearch').value = partnerState.partner?.nome || partnerState.manual; document.getElementById('manualPartnerInput').value = partnerState.manual; document.getElementById('distributorSearch').value = partnerState.distributor?.nome || ''; document.getElementById('manualPartnerField').hidden = !partnerState.manualMode; document.getElementById('distributorField').hidden = !partnerState.manualMode; document.getElementById('distributorError').hidden = !partnerState.manualMode || Boolean(partnerState.distributor); const calculated = calcularDasEOwner(partnerState.motion, partnerState.partner, partnerState.distributor); document.getElementById('partnerDas').value = partnerState.motion ? calculated.das : 'Selecione o motion e o parceiro'; document.getElementById('partnerOwner').value = partnerState.motion ? calculated.owner : 'Não identificado'; document.getElementById('primaryPartner').value = partnerState.partner?.nome || partnerState.manual || ''; document.querySelectorAll('.intent-pill').forEach((button) => button.addEventListener('click', () => { partnerState.motion = button.dataset.motion; partnerState.partner = null; partnerState.manual = ''; partnerState.manualMode = false; partnerState.distributor = null; savePartnerState(); renderPartnerPane(); })); renderPartnerSuggestions(document.getElementById('partnerSearch'), document.getElementById('partnerSuggestions'), PARTNERS_LIST, (button) => { if (button.dataset.manual) { partnerState.partner = null; partnerState.manual = ''; document.getElementById('manualPartnerField').hidden = false; document.getElementById('distributorField').hidden = false; document.getElementById('manualPartnerInput').focus(); } else { partnerState.partner = findPartnerByName(decodeURIComponent(button.dataset.partnerName)); partnerState.manual = ''; partnerState.manualMode = false; partnerState.distributor = null; savePartnerState(); renderPartnerPane(); } }); renderPartnerSuggestions(document.getElementById('distributorSearch'), document.getElementById('distributorSuggestions'), DISTRIBUTORS_LIST, (button) => { partnerState.distributor = findPartnerByName(decodeURIComponent(button.dataset.partnerName)); savePartnerState(); renderPartnerPane(); }); }
 let activeChecklistId = QUALIFICATION_CHECKLISTS[0]?.id || '';
 let activeChecklistInstanceId = '';
-function renderChecklists() { const tabs = document.getElementById('checklistTabs'); if (!QUALIFICATION_CHECKLISTS.length) { tabs.innerHTML = ''; document.getElementById('checklistContent').innerHTML = '<div class="empty-state">O arquivo de dados dos 5 checklists ainda não foi adicionado ao projeto.</div>'; return; } tabs.innerHTML = QUALIFICATION_CHECKLISTS.map((checklist) => `<button class="checklist-tab ${checklist.id === activeChecklistId ? 'active' : ''}" data-checklist="${checklist.id}">${checklist.icone || '▣'} ${checklist.titulo || checklist.nome}</button>`).join(''); document.querySelectorAll('.checklist-tab').forEach((tab) => tab.addEventListener('click', () => { activeChecklistId = tab.dataset.checklist; activeChecklistInstanceId = ''; renderChecklists(); })); const checklist = QUALIFICATION_CHECKLISTS.find((item) => item.id === activeChecklistId) || QUALIFICATION_CHECKLISTS[0]; const instances = getChecklistInstances(checklist.id); if (!activeChecklistInstanceId || !instances.some((item) => item.instance_id === activeChecklistInstanceId)) activeChecklistInstanceId = instances[0]?.instance_id || ''; document.getElementById('checklistInstanceSelect').innerHTML = instances.map((instance) => `<option value="${instance.instance_id}">${instance.nome_instancia}</option>`).join('') || '<option value="">Nenhuma instância</option>'; document.getElementById('checklistInstanceSelect').value = activeChecklistInstanceId; const progress = getChecklistProgress(activeChecklistInstanceId, checklist); document.getElementById('checklistContent').innerHTML = `<div class="checklist-intro"><p class="eyebrow">Checklist operacional</p><h2>${checklist.titulo}</h2><p>${checklist.subtitulo || ''}</p><div class="checklist-progress"><div><span style="width:${progress.percent}%"></span></div><strong>${progress.percent}%</strong><small>${progress.marked} de ${progress.total} itens marcados</small></div></div>${(checklist.secoes || []).map((section) => `<section class="checklist-section"><h3>${section.nome}</h3>${(section.itens || []).map((item) => `<label class="checklist-item"><input type="checkbox" data-checklist-item="${encodeURIComponent(item)}" ${activeChecklistInstanceId && getAllChecklistInstances().find((instance) => instance.instance_id === activeChecklistInstanceId)?.itens_marcados?.[item] ? 'checked' : ''} ${activeChecklistInstanceId ? '' : 'disabled'}><span>${item}</span></label>`).join('')}</section>`).join('') || '<div class="empty-state">O seed não contém seções para este checklist.</div>'}`; document.querySelectorAll('[data-checklist-item]').forEach((input) => input.addEventListener('change', () => { toggleChecklistItem(activeChecklistInstanceId, decodeURIComponent(input.dataset.checklistItem), input.checked); renderChecklists(); })); }
+function renderChecklists() { const tabs = document.getElementById('checklistTabs'); if (!QUALIFICATION_CHECKLISTS.length) { tabs.innerHTML = ''; document.getElementById('checklistContent').innerHTML = '<div class="empty-state">O arquivo de dados dos 5 checklists ainda não foi adicionado ao projeto.</div>'; return; } tabs.innerHTML = QUALIFICATION_CHECKLISTS.map((checklist) => `<button class="checklist-tab ${checklist.id === activeChecklistId ? 'active' : ''}" data-checklist="${checklist.id}">${checklist.icone || '▣'} ${checklist.titulo || checklist.nome}</button>`).join(''); document.querySelectorAll('.checklist-tab').forEach((tab) => tab.addEventListener('click', () => { activeChecklistId = tab.dataset.checklist; activeChecklistInstanceId = ''; renderChecklists(); })); const checklist = QUALIFICATION_CHECKLISTS.find((item) => item.id === activeChecklistId) || QUALIFICATION_CHECKLISTS[0]; const instances = getChecklistInstances(checklist.id); if (!activeChecklistInstanceId || !instances.some((item) => item.instance_id === activeChecklistInstanceId)) activeChecklistInstanceId = instances[0]?.instance_id || ''; document.getElementById('checklistInstanceSelect').innerHTML = instances.map((instance) => `<option value="${escapeHtml(instance.instance_id)}">${escapeHtml(instance.nome_instancia)}</option>`).join('') || '<option value="">Nenhuma instância</option>'; document.getElementById('checklistInstanceSelect').value = activeChecklistInstanceId; const progress = getChecklistProgress(activeChecklistInstanceId, checklist); document.getElementById('checklistContent').innerHTML = `<div class="checklist-intro"><p class="eyebrow">Checklist operacional</p><h2>${checklist.titulo}</h2><p>${checklist.subtitulo || ''}</p><div class="checklist-progress"><div><span style="width:${progress.percent}%"></span></div><strong>${progress.percent}%</strong><small>${progress.marked} de ${progress.total} itens marcados</small></div></div>${(checklist.secoes || []).map((section) => `<section class="checklist-section"><h3>${section.nome}</h3>${(section.itens || []).map((item) => `<label class="checklist-item"><input type="checkbox" data-checklist-item="${encodeURIComponent(item)}" ${activeChecklistInstanceId && getAllChecklistInstances().find((instance) => instance.instance_id === activeChecklistInstanceId)?.itens_marcados?.[item] ? 'checked' : ''} ${activeChecklistInstanceId ? '' : 'disabled'}><span>${item}</span></label>`).join('')}</section>`).join('') || '<div class="empty-state">O seed não contém seções para este checklist.</div>'}`; document.querySelectorAll('[data-checklist-item]').forEach((input) => input.addEventListener('change', () => { toggleChecklistItem(activeChecklistInstanceId, decodeURIComponent(input.dataset.checklistItem), input.checked); renderChecklists(); })); }
 function createChecklistInstanceFromPrompt() { if (!activeChecklistId) return; document.getElementById('newChecklistInstanceForm').hidden = false; document.getElementById('newChecklistInstanceName').focus(); }
 function confirmChecklistInstance() { const input = document.getElementById('newChecklistInstanceName'); if (!input.value.trim()) { input.classList.add('invalid'); return; } const instance = createChecklistInstance(activeChecklistId, input.value.trim(), state.activeMeetingId || null); activeChecklistInstanceId = instance.instance_id; input.value = ''; input.classList.remove('invalid'); document.getElementById('newChecklistInstanceForm').hidden = true; renderChecklists(); }
 function getActivePlay() { return state.plays.find((play) => play.id === Number(activePlayId)) || state.plays[0]; }
 function getResponseKey(playId, stage, questionUid) { return `${state.activeMeetingId}:${playId}:${stage}:${questionUid}`; }
 function getSavedResponse(questionUid, stage) { const meeting = state.activeMeetingId ? getMeetingById(state.activeMeetingId) : null; return meeting?.respostas?.[getResponseKey(activePlayId, stage, questionUid)] || null; }
-function saveDiscoveryResponse(questionUid, stage, value, status = 'respondida', pergunta = '') { if (!state.activeMeetingId || state.readOnly) return; const meeting = getMeetingById(state.activeMeetingId); const now = new Date().toISOString(); const key = getResponseKey(activePlayId, stage, questionUid); meeting.respostas = { ...(meeting.respostas || {}), [key]: { meeting_id: state.activeMeetingId, sales_play_id: Number(activePlayId), etapa_spin: stage, question_uid: questionUid, pergunta, resposta: value, status, usuario_responsavel: USER_NAME, created_at: meeting.respostas?.[key]?.created_at || now, updated_at: now } }; saveMeeting(meeting); registrarAuditoria(state.activeMeetingId, `Resposta registrada — ${stageLabels[stage] || stage}: ${pergunta || questionUid}.`); }
-function renderDiscovery() { const play = getActivePlay(); if (!play) return; document.getElementById('discoveryPlayTitle').textContent = play.titulo; document.getElementById('discoveryPlayMeta').textContent = `Categoria: ${play.categoria.join(' / ')}`; document.getElementById('discoveryPlayTrigger').textContent = `Gatilho: ${play.gatilho}`; document.getElementById('discoveryPlayGuidance').textContent = play.orientacao_clm; document.getElementById('salesPlaySelector').innerHTML = state.plays.map((item) => `<option value="${item.id}" ${item.id === play.id ? 'selected' : ''}>${item.titulo}</option>`).join(''); document.getElementById('spinTabs').innerHTML = SPIN_STAGES.map((stage) => `<button role="tab" class="spin-tab ${stage.id === activeDiscoveryStage ? 'active' : ''}" data-stage="${stage.id}">${stage.label}</button>`).join(''); document.querySelectorAll('.spin-tab').forEach((tab) => tab.addEventListener('click', () => { activeDiscoveryStage = tab.dataset.stage; selectedQuestion = null; if (state.activeMeetingId && !state.readOnly) { const meeting = getMeetingById(state.activeMeetingId); meeting.etapa_discovery_ativa = activeDiscoveryStage; saveMeeting(meeting); } renderDiscovery(); })); if (activeDiscoveryStage === 'qualificacao') renderQualification(play); else if (activeDiscoveryStage === 'proximo_passo') renderNextStep(play); else renderSpinQuestions(play, activeDiscoveryStage); document.querySelectorAll('[data-answer-status]').forEach((button) => { button.disabled = state.readOnly || !selectedQuestion; }); }
+function saveDiscoveryResponse(questionUid, stage, value, status = 'respondida', pergunta = '', options = {}) {
+  if (!state.activeMeetingId || state.readOnly) return;
+  const meeting = getMeetingById(state.activeMeetingId);
+  if (!meeting) return;
+  const now = new Date().toISOString();
+  const key = getResponseKey(activePlayId, stage, questionUid);
+  const previous = meeting.respostas?.[key];
+  const question = pergunta || previous?.pergunta || (stage === 'qualificacao' ? QUALIFICATION_ITEMS[Number(String(questionUid).split('-')[1]) - 1] || '' : '');
+  const isSelected = selectedQuestion && String(selectedQuestion.uid) === String(questionUid) && selectedQuestion.stage === stage;
+  const tags = isSelected ? [...(selectedQuestion.tags || [])] : (previous?.tags || []);
+  meeting.respostas = { ...(meeting.respostas || {}), [key]: { ...(previous || {}), meeting_id: state.activeMeetingId, sales_play_id: Number(activePlayId), etapa_spin: stage, question_uid: questionUid, pergunta: question, resposta: value, status, tags, usuario_responsavel: USER_NAME, created_at: previous?.created_at || now, updated_at: now } };
+  saveMeeting(meeting);
+  if (!options.silent) registrarAuditoria(state.activeMeetingId, `Resposta registrada — ${stageLabels[stage] || stage}: ${question || questionUid}.`);
+}
+function renderDiscovery() { const play = getActivePlay(); if (!play) return; document.getElementById('discoveryPlayTitle').textContent = play.titulo; document.getElementById('discoveryPlayMeta').textContent = `Categoria: ${play.categoria.join(' / ')}`; document.getElementById('discoveryPlayTrigger').textContent = `Gatilho: ${play.gatilho}`; document.getElementById('discoveryPlayGuidance').textContent = play.orientacao_clm; document.getElementById('salesPlaySelector').innerHTML = state.plays.map((item) => `<option value="${item.id}" ${item.id === play.id ? 'selected' : ''}>${escapeHtml(item.titulo)}</option>`).join(''); document.getElementById('spinTabs').innerHTML = SPIN_STAGES.map((stage) => `<button role="tab" class="spin-tab ${stage.id === activeDiscoveryStage ? 'active' : ''}" data-stage="${stage.id}">${stage.label}</button>`).join(''); document.querySelectorAll('.spin-tab').forEach((tab) => tab.addEventListener('click', () => { flushAutosave(); activeDiscoveryStage = tab.dataset.stage; selectedQuestion = null; if (state.activeMeetingId && !state.readOnly) { const meeting = getMeetingById(state.activeMeetingId); meeting.etapa_discovery_ativa = activeDiscoveryStage; saveMeeting(meeting); } renderDiscovery(); })); if (activeDiscoveryStage === 'qualificacao') renderQualification(play); else if (activeDiscoveryStage === 'proximo_passo') renderNextStep(play); else renderSpinQuestions(play, activeDiscoveryStage); document.querySelectorAll('[data-answer-status]').forEach((button) => { button.disabled = state.readOnly || !selectedQuestion; }); decorateQuestionRows(); refreshProgress(); renderSignalsPanel(); renderAnswerTags(); if (selectedQuestion) highlightActiveQuestion(selectedQuestion.uid); }
 function groupQuestionsByContext(questions) { const groups = []; questions.forEach((question) => { const ambiente = typeof question === 'string' ? '' : question.ambiente || ''; const current = groups[groups.length - 1]; if (ambiente && current?.ambiente === ambiente) current.questions.push(question); else groups.push({ ambiente, questions: [question] }); }); return groups; }
 function personalizeOpeningText(text, meeting = null) { const replacements = { '{nome_cliente}': meeting?.cliente || '{nome_cliente}', '{nome_clm}': USER_NAME, '{cliente}': meeting?.cliente || '{nome_cliente}', '{empresa}': meeting?.empresa || '{empresa}', '{clm}': USER_NAME }; return Object.entries(replacements).reduce((result, [placeholder, value]) => result.replaceAll(placeholder, value), text); }
 function formatOpeningText(text, meeting = null) { return personalizeOpeningText(text, meeting).split(/\n\s*\n/).map((paragraph) => `<p>${escapeHtml(paragraph).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')}</p>`).join(''); }
-function renderOpeningScript(play) { const meeting = state.activeMeetingId ? getMeetingById(state.activeMeetingId) : null; const defaultSpeech = 'Olá, **{nome_cliente}**, tudo bem?\n\nMuito obrigado por separar esse tempo para conversar comigo!\n\nAntes de tudo, gostaria de me apresentar. Meu nome é **{nome_clm}**, faço parte do time da Microsoft e estarei acompanhando a **{empresa}** ao longo dos próximos 12 meses.\n\nMinha ideia é conhecer melhor você, sua equipe e o negócio de vocês, para que possamos construir um relacionamento mais próximo e entender como a Microsoft pode apoiá-los ao longo desse período.\n\nAntes da nossa conversa, fiz um levantamento sobre a **{empresa}** e identifiquei alguns pontos que gostaria de explorar com você, principalmente para entender melhor o momento atual da empresa, seus desafios e prioridades.\n\nMas, antes de falarmos sobre qualquer solução ou tecnologia, quero ouvir você!\n\n**Posso te fazer algumas perguntas para conhecer melhor o cenário de vocês?** Ou, se preferir, fique à vontade para começar me contando como estão as coisas por aí hoje.'; const speech = play.abertura_fala || defaultSpeech; const transition = play.abertura_transicao ? `<p class="opening-transition"><strong>Transição</strong> ${escapeHtml(personalizeOpeningText(play.abertura_transicao, meeting))}</p>` : ''; return `<section class="opening-script"><p class="eyebrow">Como iniciar</p>${formatOpeningText(speech, meeting)}${transition}</section>`; }
+function renderOpeningScript(play) { const meeting = state.activeMeetingId ? getMeetingById(state.activeMeetingId) : null; const defaultSpeech = 'Olá, **{nome_cliente}**, tudo bem?\n\nMuito obrigado por separar esse tempo para conversar comigo!\n\nAntes de tudo, gostaria de me apresentar. Meu nome é **{nome_clm}**, faço parte do time da Microsoft e estarei acompanhando a **{empresa}** ao longo dos próximos 12 meses.\n\nMinha ideia é conhecer melhor você, sua equipe e o negócio de vocês, para que possamos construir um relacionamento mais próximo e entender como a Microsoft pode apoiá-los ao longo desse período.\n\nAntes da nossa conversa, fiz um levantamento sobre a **{empresa}** e identifiquei alguns pontos que gostaria de explorar com você, principalmente para entender melhor o momento atual da empresa, seus desafios e prioridades.\n\nMas, antes de falarmos sobre qualquer solução ou tecnologia, quero ouvir você!\n\n**Posso te fazer algumas perguntas para conhecer melhor o cenário de vocês?** Ou, se preferir, fique à vontade para começar me contando como estão as coisas por aí hoje.'; const speech = play.abertura_fala || defaultSpeech; const transition = play.abertura_transicao ? `<p class="opening-transition"><strong>Transição</strong> ${escapeHtml(personalizeOpeningText(play.abertura_transicao, meeting))}</p>` : ''; lastOpeningPlainText = personalizeOpeningText(speech, meeting).replace(/\*\*/g, ''); const openingDone = Boolean(meeting?.abertura_concluida); const openingActions = `<div class="opening-actions"><button type="button" class="secondary-button" data-opening-copy>Copiar fala</button>${state.readOnly ? '' : `<button type="button" class="answer-primary-button" data-opening-done>${openingDone ? '✓ Abertura concluída — ir para Situação' : 'Abertura concluída — ir para Situação'}</button>`}</div>`; return `<section class="opening-script"><p class="eyebrow">Como iniciar</p>${formatOpeningText(speech, meeting)}${transition}${openingActions}</section>`; }
 function renderSpinQuestions(play, stage) { const questions = [...(play[SPIN_STAGES.find((item) => item.id === stage).source] || []), ...getCustomQuestions(play.id, stage)]; let questionIndex = 0; const renderQuestion = (question) => { const index = questionIndex++; const questionText = question.text || question; const questionUid = question.id || `custom-${index}`; const response = getSavedResponse(questionUid, stage); const objective = question.objetivo ? `<small class="question-objective">Queremos descobrir: ${escapeHtml(question.objetivo)}</small>` : ''; const source = question.custom ? 'Pergunta personalizada' : play.id >= 26 ? 'Roteiro Discovery' : 'Planilha 360'; return `<article class="discovery-question-row"><div><span class="question-number">${index + 1}</span><p>${escapeHtml(questionText)}</p>${objective}<small>Fonte: ${source} · ${SPIN_STAGES.find((item) => item.id === stage).label}</small></div><button class="ask-question-button" data-question="${encodeURIComponent(questionText)}" data-question-uid="${questionUid}">${response?.status === 'respondida' ? 'Editar resposta' : 'Fazer esta pergunta'}</button></article>`; }; const groupedQuestions = groupQuestionsByContext(questions).map((group) => { const renderedQuestions = group.questions.map(renderQuestion).join(''); return group.ambiente ? `<section class="discovery-question-group"><h3 class="discovery-question-group-heading">${escapeHtml(group.ambiente)}</h3>${renderedQuestions}</section>` : renderedQuestions; }).join(''); document.getElementById('discoveryQuestionList').innerHTML = `${stage === 'abertura' ? renderOpeningScript(play) : ''}${groupedQuestions}`; document.querySelectorAll('.ask-question-button').forEach((button) => button.addEventListener('click', () => selectQuestion(decodeURIComponent(button.dataset.question), button.dataset.questionUid, stage))); if (!selectedQuestion && questions.length) { const firstQuestion = questions[0]; selectQuestion(firstQuestion.text || firstQuestion, firstQuestion.id || 'custom-0', stage); } document.querySelectorAll('[data-answer-status]').forEach((button) => { button.disabled = state.readOnly || !selectedQuestion; }); }
 function getCustomQuestions(playId, stage) { const meeting = state.activeMeetingId ? getMeetingById(state.activeMeetingId) : null; return (meeting?.perguntas_personalizadas || []).filter((question) => question.sales_play_id === playId && question.etapa_spin === stage); }
-function selectQuestion(text, uid, stage) { selectedQuestion = { text, uid, stage }; const saved = getSavedResponse(uid, stage); document.getElementById('selectedQuestionText').textContent = text; document.getElementById('answerSolution').textContent = getActivePlay().solucao_potencial; document.getElementById('answerStage').textContent = SPIN_STAGES.find((item) => item.id === stage)?.label || stage; document.getElementById('answerTime').textContent = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }); document.getElementById('answerInput').value = saved?.resposta || ''; document.getElementById('answerInput').disabled = state.readOnly; }
-function renderQualification(play) { const meeting = state.activeMeetingId ? getMeetingById(state.activeMeetingId) : null; document.getElementById('discoveryQuestionList').innerHTML = QUALIFICATION_ITEMS.map((item, index) => { const saved = meeting?.respostas?.[getResponseKey(play.id, 'qualificacao', `qual-${index + 1}`)]; return `<div class="qualification-row"><p><span class="question-number">${index + 1}</span>${item}</p><div class="qualification-controls"><select data-qualification="qual-${index + 1}" ${state.readOnly ? 'disabled' : ''}><option value="">Selecionar</option><option ${saved?.resposta === 'Sim' ? 'selected' : ''}>Sim</option><option ${saved?.resposta === 'Não' ? 'selected' : ''}>Não</option><option ${saved?.resposta === 'Não confirmado' ? 'selected' : ''}>Não confirmado</option></select><input data-qualification-note="qual-${index + 1}" value="${saved?.observacao || ''}" placeholder="Observação" ${state.readOnly ? 'disabled' : ''}></div></div>`; }).join(''); document.querySelectorAll('[data-qualification]').forEach((field) => field.addEventListener('change', () => { const note = document.querySelector(`[data-qualification-note="${field.dataset.qualification}"]`).value; saveDiscoveryResponse(field.dataset.qualification, 'qualificacao', field.value, 'respondida'); const meeting = getMeetingById(state.activeMeetingId); const key = getResponseKey(play.id, 'qualificacao', field.dataset.qualification); meeting.respostas[key].observacao = note; saveMeeting(meeting); })); }
-function renderNextStep(play) { const meeting = state.activeMeetingId ? getMeetingById(state.activeMeetingId) : null; const values = meeting?.proximo_passo_detalhado || {}; document.getElementById('discoveryQuestionList').innerHTML = `<div class="next-step-form"><label>Próxima melhor ação<input data-next-field="acao" value="${values.acao || ''}" ${state.readOnly ? 'disabled' : ''}></label><label>Responsável<input data-next-field="responsavel" value="${values.responsavel || ''}" ${state.readOnly ? 'disabled' : ''}></label><label>Data / prazo<input data-next-field="prazo" type="date" value="${values.prazo || ''}" ${state.readOnly ? 'disabled' : ''}></label><label>Cliente / stakeholder envolvido<input data-next-field="stakeholder" value="${values.stakeholder || ''}" ${state.readOnly ? 'disabled' : ''}></label><label>Parceiro envolvido<input data-next-field="parceiro" value="${values.parceiro || ''}" ${state.readOnly ? 'disabled' : ''}></label><label>Reunião necessária<input data-next-field="reuniao" value="${values.reuniao || ''}" ${state.readOnly ? 'disabled' : ''}></label><label>Dados pendentes<textarea data-next-field="dados" rows="3" ${state.readOnly ? 'disabled' : ''}>${values.dados || ''}</textarea></label><label>Observações<textarea data-next-field="observacoes" rows="3" ${state.readOnly ? 'disabled' : ''}>${values.observacoes || ''}</textarea></label></div>`; document.querySelectorAll('[data-next-field]').forEach((field) => field.addEventListener('change', () => { if (!state.activeMeetingId || state.readOnly) return; const currentMeeting = getMeetingById(state.activeMeetingId); currentMeeting.proximo_passo_detalhado = { ...(currentMeeting.proximo_passo_detalhado || {}), [field.dataset.nextField]: field.value }; saveMeeting(currentMeeting); })); }
+function selectQuestion(text, uid, stage) {
+  flushAutosave();
+  const saved = getSavedResponse(uid, stage);
+  selectedQuestion = { text, uid, stage, tags: [...(saved?.tags || [])] };
+  document.getElementById('selectedQuestionText').textContent = text;
+  document.getElementById('answerSolution').textContent = getActivePlay().solucao_potencial;
+  document.getElementById('answerStage').textContent = SPIN_STAGES.find((item) => item.id === stage)?.label || stage;
+  document.getElementById('answerTime').textContent = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+  document.getElementById('answerInput').value = saved?.resposta || '';
+  document.getElementById('answerInput').disabled = state.readOnly;
+  setAutosaveLabel('');
+  renderAnswerTags();
+  updateRelatedPlays();
+  highlightActiveQuestion(uid);
+}
+function renderQualification(play) {
+  const meeting = state.activeMeetingId ? getMeetingById(state.activeMeetingId) : null;
+  document.getElementById('discoveryQuestionList').innerHTML = QUALIFICATION_ITEMS.map((item, index) => {
+    const saved = meeting?.respostas?.[getResponseKey(play.id, 'qualificacao', `qual-${index + 1}`)];
+    return `<div class="qualification-row"><p><span class="question-number">${index + 1}</span>${escapeHtml(item)}</p><div class="qualification-controls"><select data-qualification="qual-${index + 1}" ${state.readOnly ? 'disabled' : ''}><option value="">Selecionar</option><option ${saved?.resposta === 'Sim' ? 'selected' : ''}>Sim</option><option ${saved?.resposta === 'Não' ? 'selected' : ''}>Não</option><option ${saved?.resposta === 'Não confirmado' ? 'selected' : ''}>Não confirmado</option></select><input data-qualification-note="qual-${index + 1}" value="${escapeHtml(saved?.observacao || '')}" placeholder="Observação" ${state.readOnly ? 'disabled' : ''}></div></div>`;
+  }).join('');
+  document.querySelectorAll('[data-qualification]').forEach((field) => field.addEventListener('change', () => saveQualificationRow(field.dataset.qualification)));
+  document.querySelectorAll('[data-qualification-note]').forEach((field) => { field.addEventListener('change', () => saveQualificationRow(field.dataset.qualificationNote)); field.addEventListener('blur', () => saveQualificationRow(field.dataset.qualificationNote)); });
+}
+function saveQualificationRow(uid) {
+  if (state.readOnly || !state.activeMeetingId) return;
+  const select = document.querySelector(`[data-qualification="${uid}"]`);
+  const noteField = document.querySelector(`[data-qualification-note="${uid}"]`);
+  if (!select || !noteField) return;
+  const play = getActivePlay();
+  const key = getResponseKey(play.id, 'qualificacao', uid);
+  const previous = getMeetingById(state.activeMeetingId)?.respostas?.[key];
+  const answer = select.value;
+  const note = noteField.value.trim();
+  if (!previous && !answer && !note) return;
+  if (previous && previous.resposta === answer && (previous.observacao || '') === note) return;
+  saveDiscoveryResponse(uid, 'qualificacao', answer, answer ? 'respondida' : 'sem_resposta', '', { silent: Boolean(previous && previous.resposta === answer) });
+  const meeting = getMeetingById(state.activeMeetingId);
+  meeting.respostas[key].observacao = note;
+  saveMeeting(meeting);
+  refreshProgress();
+}
+function renderNextStep(play) { const meeting = state.activeMeetingId ? getMeetingById(state.activeMeetingId) : null; const values = meeting?.proximo_passo_detalhado || {}; document.getElementById('discoveryQuestionList').innerHTML = `<div class="next-step-form"><label>Próxima melhor ação<input data-next-field="acao" value="${escapeHtml(values.acao)}" ${state.readOnly ? 'disabled' : ''}></label><label>Responsável<input data-next-field="responsavel" value="${escapeHtml(values.responsavel)}" ${state.readOnly ? 'disabled' : ''}></label><label>Data / prazo<input data-next-field="prazo" type="date" value="${escapeHtml(values.prazo)}" ${state.readOnly ? 'disabled' : ''}></label><label>Cliente / stakeholder envolvido<input data-next-field="stakeholder" value="${escapeHtml(values.stakeholder)}" ${state.readOnly ? 'disabled' : ''}></label><label>Parceiro envolvido<input data-next-field="parceiro" value="${escapeHtml(values.parceiro)}" ${state.readOnly ? 'disabled' : ''}></label><label>Reunião necessária<input data-next-field="reuniao" value="${escapeHtml(values.reuniao)}" ${state.readOnly ? 'disabled' : ''}></label><label>Dados pendentes<textarea data-next-field="dados" rows="3" ${state.readOnly ? 'disabled' : ''}>${escapeHtml(values.dados)}</textarea></label><label>Observações<textarea data-next-field="observacoes" rows="3" ${state.readOnly ? 'disabled' : ''}>${escapeHtml(values.observacoes)}</textarea></label></div>`; document.querySelectorAll('[data-next-field]').forEach((field) => field.addEventListener('change', () => { if (!state.activeMeetingId || state.readOnly) return; const currentMeeting = getMeetingById(state.activeMeetingId); currentMeeting.proximo_passo_detalhado = { ...(currentMeeting.proximo_passo_detalhado || {}), [field.dataset.nextField]: field.value }; saveMeeting(currentMeeting); })); }
 
 function renderFinalChecklist() { const previous = getFinalChecklist(state.activeMeetingId); finalChecklistDraft = FINAL_QUALIFICATION_QUESTIONS.map((pergunta, index) => ({ pergunta, resposta: previous?.respostas?.[index]?.resposta || '' })); document.getElementById('finalChecklistItems').innerHTML = FINAL_QUALIFICATION_QUESTIONS.map((pergunta, index) => `<div class="final-check-item" data-final-row="${index}"><span>${index + 1}. ${pergunta}</span><div class="final-check-options"><button type="button" data-final-check="${index}" data-value="sim">Sim</button><button type="button" data-final-check="${index}" data-value="nao">Não</button></div></div>`).join(''); document.querySelectorAll('[data-final-check]').forEach((button) => button.addEventListener('click', () => { finalChecklistDraft[Number(button.dataset.finalCheck)].resposta = button.dataset.value; updateFinalChecklistMessage(); })); updateFinalChecklistMessage(); }
 function getFinalChecklistValues() { return finalChecklistDraft; }
@@ -172,14 +227,14 @@ function getSelectedOpportunityProductRows() { return [...document.querySelector
 function readOpportunityProductRows() { return getSelectedOpportunityProductRows().filter((item) => item.produto && Number.isInteger(item.quantidade) && item.quantidade > 0); }
 function renderOpportunityProductRows(selectedProducts = []) { const products = getOpportunityProductOptions(); selectedProducts.forEach((selected) => { if (!products.some((product) => (product.sku && product.sku === selected.sku) || product.nome === selected.produto)) products.push({ sku: selected.sku || '', nome: selected.produto, grupo: selected.grupo || 'Cloud' }); }); const groups = ['Cloud', 'On-premises']; document.getElementById('opportunityProductsList').innerHTML = groups.map((group) => { const groupProducts = products.filter((product) => (product.grupo || 'Cloud') === group).sort((first, second) => first.nome.localeCompare(second.nome, 'pt-BR', { sensitivity: 'base' })); if (!groupProducts.length) return ''; return `<section class="opportunity-product-group"><h3>${group}</h3>${groupProducts.map((product) => { const selected = selectedProducts.find((item) => (product.sku && item.sku === product.sku) || item.produto === product.nome); const sku = product.sku || ''; return `<div class="opportunity-product-row"><label class="opportunity-product-check"><input type="checkbox" data-opportunity-product data-product-name="${escapeHtml(product.nome)}" data-product-sku="${escapeHtml(sku)}" data-product-group="${escapeHtml(group)}" ${selected ? 'checked' : ''}><span><strong>${escapeHtml(product.nome)}</strong><small>${sku ? `SKU ${escapeHtml(sku)} · ` : ''}${group}</small></span></label><label class="opportunity-product-quantity">Quantidade<input data-opportunity-quantity type="number" min="1" step="1" value="${selected?.quantidade || 1}" ${selected ? '' : 'disabled'}></label></div>`; }).join('')}</section>`; }).join(''); }
 function validateOpportunityProducts() { const isOpportunity = document.getElementById('opportunityInput').checked; const selected = [...document.querySelectorAll('[data-opportunity-product]:checked')]; const valid = !isOpportunity || (selected.length > 0 && selected.every((checkbox) => { const quantity = Number(checkbox.closest('.opportunity-product-row').querySelector('[data-opportunity-quantity]').value); return Number.isInteger(quantity) && quantity > 0; })); const error = document.getElementById('opportunityProductsError'); error.textContent = valid ? '' : 'Marque pelo menos um produto e informe uma quantidade inteira maior que zero.'; const continueButton = document.getElementById('continueOpportunityChecklistButton'); if (continueButton) continueButton.disabled = !valid; return valid; }
-function updateFinalChecklistMessage() { const values = getFinalChecklistValues(); const answered = values.filter((item) => item.resposta); const total = values.filter((item) => item.resposta === 'sim').length; const complete = answered.length === values.length; const percent = total * 10; const message = document.getElementById('qualificationMessage'); document.querySelectorAll('.final-check-item').forEach((item, index) => { item.classList.toggle('is-no', values[index].resposta === 'nao'); item.classList.toggle('is-unanswered', !values[index].resposta); item.querySelectorAll('[data-final-check]').forEach((button) => button.classList.toggle('selected', button.dataset.value === values[index].resposta)); }); message.className = `qualification-message ${!complete || percent < 80 ? 'warning' : 'positive'}`; message.textContent = !complete ? `Responda todas as 10 perguntas para continuar. (${answered.length}/10 respondidas)` : percent < 80 ? `Apenas ${percent}% das perguntas foram confirmadas como "Sim". Recomendamos buscar mais informações antes de finalizar.` : `${percent}% de aderência. Esta reunião apresenta bons indicadores de oportunidade com alto potencial de pipeline.`; document.getElementById('qualificationConfirmButton').textContent = percent < 80 ? 'Finalizar mesmo assim' : 'Finalizar reunião'; document.getElementById('qualificationBackButton').hidden = complete && percent >= 80; document.getElementById('qualificationConfirmButton').disabled = !complete || !validateOpportunityProducts(); }
+function updateFinalChecklistMessage() { const values = getFinalChecklistValues(); const answered = values.filter((item) => item.resposta); const total = values.filter((item) => item.resposta === 'sim').length; const complete = answered.length === values.length; const percent = values.length ? Math.round((total / values.length) * 100) : 0; const message = document.getElementById('qualificationMessage'); document.querySelectorAll('.final-check-item').forEach((item, index) => { item.classList.toggle('is-no', values[index].resposta === 'nao'); item.classList.toggle('is-unanswered', !values[index].resposta); item.querySelectorAll('[data-final-check]').forEach((button) => button.classList.toggle('selected', button.dataset.value === values[index].resposta)); }); message.className = `qualification-message ${!complete || percent < 80 ? 'warning' : 'positive'}`; message.textContent = !complete ? `Responda todas as ${values.length} perguntas para continuar. (${answered.length}/${values.length} respondidas)` : percent < 80 ? `Apenas ${percent}% das perguntas foram confirmadas como "Sim". Recomendamos buscar mais informações antes de finalizar.` : `${percent}% de aderência. Esta reunião apresenta bons indicadores de oportunidade com alto potencial de pipeline.`; document.getElementById('qualificationConfirmButton').textContent = percent < 80 ? 'Finalizar mesmo assim' : 'Finalizar reunião'; document.getElementById('qualificationBackButton').hidden = complete && percent >= 80; document.getElementById('qualificationConfirmButton').disabled = !complete || !validateOpportunityProducts(); }
 function openQualificationModal() { renderFinalChecklist(); const meeting = getMeetingById(state.activeMeetingId); const opportunityProducts = Boolean(document.getElementById('opportunityInput').checked); document.getElementById('opportunityProductsStep').hidden = !opportunityProducts; document.getElementById('qualificationChecklistStep').hidden = opportunityProducts; document.getElementById('backOpportunityProductsButton').hidden = !opportunityProducts; document.getElementById('qualificationModal').hidden = false; if (opportunityProducts) { renderOpportunityProductRows(meeting?.produtos_oportunidade || []); validateOpportunityProducts(); } else updateFinalChecklistMessage(); }
 function continueToOpportunityChecklist() { if (!validateOpportunityProducts()) return; const meeting = getMeetingById(state.activeMeetingId); meeting.produtos_oportunidade = readOpportunityProductRows(); saveMeeting(meeting); document.getElementById('opportunityProductsStep').hidden = true; document.getElementById('qualificationChecklistStep').hidden = false; document.getElementById('backOpportunityProductsButton').hidden = false; updateFinalChecklistMessage(); }
 function returnToOpportunityProducts() { document.getElementById('opportunityProductsStep').hidden = false; document.getElementById('qualificationChecklistStep').hidden = true; renderOpportunityProductRows(getMeetingById(state.activeMeetingId)?.produtos_oportunidade || readOpportunityProductRows()); validateOpportunityProducts(); }
 function closeQualificationModal() { document.getElementById('qualificationModal').hidden = true; }
-function finalizeMeeting() { if (!validateOpportunityProducts()) return; const values = getFinalChecklistValues(); const total = values.filter((item) => item.resposta === 'sim').length; const checklist = { meeting_id: state.activeMeetingId, respostas: values, total_sim: total, percentual: total * 10, decisao_usuario: total < 8 ? 'finalizou_apos_alerta' : 'finalizar_direto', respondido_em: new Date().toISOString() }; saveFinalChecklist(state.activeMeetingId, checklist); registrarAuditoria(state.activeMeetingId, `Checklist de qualificação final registrado (${total}/10 · ${total * 10}%).`); const meeting = getMeetingById(state.activeMeetingId); meeting.produtos_oportunidade = meeting.gerou_oportunidade ? readOpportunityProductRows() : []; meeting.status = 'concluida'; saveMeeting(meeting); registrarAuditoria(state.activeMeetingId, 'Reunião finalizada e relatório gerado.'); closeQualificationModal(); navigate('workspace', state.activeMeetingId); setMeetingTab('summary'); }
+function finalizeMeeting() { if (!validateOpportunityProducts()) return; const values = getFinalChecklistValues(); const total = values.filter((item) => item.resposta === 'sim').length; const percentOfTotal = values.length ? Math.round((total / values.length) * 100) : 0; const checklist = { meeting_id: state.activeMeetingId, respostas: values, total_sim: total, percentual: percentOfTotal, decisao_usuario: percentOfTotal < 80 ? 'finalizou_apos_alerta' : 'finalizar_direto', respondido_em: new Date().toISOString() }; saveFinalChecklist(state.activeMeetingId, checklist); registrarAuditoria(state.activeMeetingId, `Checklist de qualificação final registrado (${total}/${values.length} · ${percentOfTotal}%).`); const meeting = getMeetingById(state.activeMeetingId); meeting.produtos_oportunidade = meeting.gerou_oportunidade ? readOpportunityProductRows() : []; meeting.cronometro_ms = stopMeetingTimerAndGetElapsed(); meeting.status = 'concluida'; saveMeeting(meeting); registrarAuditoria(state.activeMeetingId, 'Reunião finalizada e relatório gerado.'); closeQualificationModal(); navigate('workspace', state.activeMeetingId); setMeetingTab('summary'); }
 function reportCard(title, content, key = '') { const friendlyTitles = { accountPlan: 'Account Plan', followUpEmail: 'Follow Up Email', crmDescription: 'Profile Description', executiveSummary: 'Executive Summary', nextSteps: 'Next Steps', customerProfile: 'Customer Profile', businessChallenges: 'Business Challenges' }; const displayTitle = friendlyTitles[title] || title.replace(/([a-z])([A-Z])/g, '$1 $2').replace(/\b\w/g, (letter) => letter.toUpperCase()); const meeting = state.activeMeetingId ? getMeetingById(state.activeMeetingId) : null; const identifier = title === 'Dados da reunião' && meeting ? `<p class="report-identifier"><b>${meeting.identificador_tipo === 'oportunidade' ? 'Oportunidade' : 'Lead'}:</b> ${escapeHtml(meeting.identificador_numero || 'Não informado')}</p>` : ''; const editable = REPORTABLE_MATERIALS.includes(key); return `<article class="report-card ${editable ? 'editable-report-card' : ''}"><div class="report-card-heading"><h2>${displayTitle}</h2>${editable ? `<button class="save-material-button" data-material-key="${key}" hidden>Salvar</button>` : ''}</div><div class="report-card-content" data-material-content="${key}">${identifier}${editable ? `<p>${escapeHtml(content).replaceAll('\n', '<br>')}</p>` : content}</div></article>`; }
-function renderReport(meetingId) { const meeting = getMeetingById(meetingId); if (!meeting) return; const intelligence = gerarInteligenciaEstruturada(meetingId); const materials = getReportMaterials(meetingId); const checklist = getFinalChecklist(meetingId); const partner = getDadosParceiro(meetingId); document.getElementById('reportTitle').textContent = `${meeting.empresa}${meeting.tpid ? ` (${meeting.tpid})` : ''}`; document.getElementById('reportSubtitle').textContent = `${primaryPlay(meeting)?.titulo || meeting.assunto} · atualizado em ${new Date(meeting.updated_at).toLocaleString('pt-BR')}`; const checklistHtml = checklist ? `<strong>${checklist.total_sim}/10 · ${checklist.percentual}%</strong><ul>${checklist.respostas.map((item) => `<li class="${item.resposta === 'nao' ? 'report-no' : ''}">${item.resposta === 'sim' ? '✓' : '×'} ${escapeHtml(item.pergunta)}</li>`).join('')}</ul><p>${checklist.percentual < 80 ? 'Reunião finalizada abaixo do recomendado (80%), por decisão do CLM.' : 'Esta reunião apresenta bons indicadores de oportunidade.'}</p>` : '<p>Não registrado.</p>'; const dataHtml = `<p><b>Cliente:</b> ${escapeHtml(meeting.cliente)}<br><b>TPID:</b> ${escapeHtml(meeting.tpid || 'Não informado')}<br><b>Status:</b> Concluída<br><b>Participantes:</b> ${escapeHtml(meeting.cliente)} (Cliente), ${USER_NAME} (CLM)</p><p><b>Anotações originais:</b><br>${escapeHtml([meeting.contexto_previo, ...(meeting.contextos_adicionais || [])].filter(Boolean).join('\n') || 'Não informado.')}</p>`; const intelligenceHtml = `<p>${escapeHtml(intelligence.opening)}</p><p><b>Produtos:</b> ${escapeHtml(intelligence.products.join(', '))}<br><b>SPIN:</b> ${escapeHtml(intelligence.spin)}<br><b>Oportunidades:</b> ${escapeHtml(intelligence.opportunities.join(', '))}<br><b>${escapeHtml(intelligence.qualification)}</b></p>`; const partnerHtml = partner ? `<p><b>Opportunity Intent:</b> ${escapeHtml((OPPORTUNITY_MOTIONS.find((motion) => motion.id === partner.opportunity_intent) || {}).label || partner.opportunity_intent)}<br><b>Parceiro:</b> ${escapeHtml(partner.parceiro_nome)}${partner.distribuidora ? `<br><b>Distribuidora:</b> ${escapeHtml(partner.distribuidora)}` : ''}<br><b>DAS / Owner:</b> ${escapeHtml(partner.das)}<br><b>Engajamento:</b> ${escapeHtml(partner.engajamento)}</p>` : '<p>Não informado.</p>'; document.getElementById('reportCards').innerHTML = reportCard('Dados da reunião', dataHtml) + reportCard('Parceiro envolvido', partnerHtml) + reportCard('Inteligência estruturada', intelligenceHtml) + reportCard('accountPlan', materials.account_plan, 'account_plan') + reportCard('followUpEmail', materials.follow_up_email, 'follow_up_email') + reportCard('crmDescription', materials.crm_description, 'crm_description') + reportCard('executiveSummary', materials.executive_summary, 'executive_summary') + reportCard(`Perguntas e Respostas Registradas (${allSavedResponses(meeting).length})`, `<pre>${escapeHtml(gerarTranscricaoCompleta(meetingId))}</pre><button id="copyTranscriptButton" class="copy-button">Copiar como texto</button>`) + reportCard('Checklist de Qualificação Final', checklistHtml) + reportCard('Auditoria', `<ul class="audit-list">${auditHtml(meetingId)}</ul>`); bindReportActions(meetingId); }
+function renderReport(meetingId) { const meeting = getMeetingById(meetingId); if (!meeting) return; const intelligence = gerarInteligenciaEstruturada(meetingId); const materials = getReportMaterials(meetingId); const checklist = getFinalChecklist(meetingId); const partner = getDadosParceiro(meetingId); document.getElementById('reportTitle').textContent = `${meeting.empresa}${meeting.tpid ? ` (${meeting.tpid})` : ''}`; document.getElementById('reportSubtitle').textContent = `${primaryPlay(meeting)?.titulo || meeting.assunto} · atualizado em ${new Date(meeting.updated_at).toLocaleString('pt-BR')}`; const checklistHtml = checklist ? `<strong>${checklist.total_sim}/${checklist.respostas.length} · ${checklist.percentual}%</strong><ul>${checklist.respostas.map((item) => `<li class="${item.resposta === 'nao' ? 'report-no' : ''}">${item.resposta === 'sim' ? '✓' : '×'} ${escapeHtml(item.pergunta)}</li>`).join('')}</ul><p>${checklist.percentual < 80 ? 'Reunião finalizada abaixo do recomendado (80%), por decisão do CLM.' : 'Esta reunião apresenta bons indicadores de oportunidade.'}</p>` : '<p>Não registrado.</p>'; const dataHtml = `<p><b>Cliente:</b> ${escapeHtml(meeting.cliente)}<br><b>TPID:</b> ${escapeHtml(meeting.tpid || 'Não informado')}<br><b>Status:</b> Concluída<br><b>Participantes:</b> ${escapeHtml(meeting.cliente)} (Cliente), ${escapeHtml(USER_NAME)} (CLM)</p>${meeting.cronometro_ms ? `<p><b>Duração da reunião:</b> ${formatDuration(meeting.cronometro_ms)}</p>` : ''}<p><b>Anotações originais:</b><br>${escapeHtml([meeting.contexto_previo, ...(meeting.contextos_adicionais || [])].filter(Boolean).join('\n') || 'Não informado.')}</p>`; const intelligenceHtml = `<p>${escapeHtml(intelligence.opening)}</p><p><b>Produtos:</b> ${escapeHtml(intelligence.products.join(', '))}<br><b>SPIN:</b> ${escapeHtml(intelligence.spin)}<br><b>Oportunidades:</b> ${escapeHtml(intelligence.opportunities.join(', '))}<br><b>${escapeHtml(intelligence.qualification)}</b>${signalsSummaryText(meeting) ? `<br><b>Sinais de alto potencial:</b> ${escapeHtml(signalsSummaryText(meeting))}` : ''}</p>`; const partnerHtml = partner ? `<p><b>Opportunity Intent:</b> ${escapeHtml((OPPORTUNITY_MOTIONS.find((motion) => motion.id === partner.opportunity_intent) || {}).label || partner.opportunity_intent)}<br><b>Parceiro:</b> ${escapeHtml(partner.parceiro_nome)}${partner.distribuidora ? `<br><b>Distribuidora:</b> ${escapeHtml(partner.distribuidora)}` : ''}<br><b>DAS / Owner:</b> ${escapeHtml(partner.das)}<br><b>Engajamento:</b> ${escapeHtml(partner.engajamento)}</p>` : '<p>Não informado.</p>'; document.getElementById('reportCards').innerHTML = reportCard('Dados da reunião', dataHtml) + reportCard('Parceiro envolvido', partnerHtml) + reportCard('Inteligência estruturada', intelligenceHtml) + reportCard('accountPlan', materials.account_plan, 'account_plan') + reportCard('followUpEmail', materials.follow_up_email, 'follow_up_email') + reportCard('crmDescription', materials.crm_description, 'crm_description') + reportCard('executiveSummary', materials.executive_summary, 'executive_summary') + reportCard(`Perguntas e Respostas Registradas (${allSavedResponses(meeting).length})`, `<pre>${escapeHtml(gerarTranscricaoCompleta(meetingId))}</pre><button id="copyTranscriptButton" class="copy-button">Copiar como texto</button>`) + reportCard('Checklist de Qualificação Final', checklistHtml) + reportCard('Auditoria', `<ul class="audit-list">${auditHtml(meetingId)}</ul>`); bindReportActions(meetingId); }
 const renderReportBase = renderReport;
 renderReport = function renderReportWithOpportunityProducts(meetingId) { renderReportBase(meetingId); const meeting = getMeetingById(meetingId); const reportCards = document.getElementById('reportCards'); if (!reportCards || !meeting?.gerou_oportunidade) return; const products = meeting.produtos_oportunidade || []; const rows = products.length ? products.map((item) => `<li><strong>${escapeHtml(item.produto)}</strong><span>Quantidade: ${item.quantidade}</span></li>`).join('') : '<li>Nenhum produto foi registrado para esta oportunidade.</li>'; reportCards.insertAdjacentHTML('afterbegin', `<article class="report-card opportunity-summary-card"><div class="report-card-heading"><h2>Produtos e quantidades da oportunidade</h2></div><div class="report-card-content"><ul>${rows}</ul></div></article>`); };
 function bindReportActions(meetingId) { document.getElementById('copyTranscriptButton')?.addEventListener('click', () => navigator.clipboard?.writeText(gerarTranscricaoCompleta(meetingId))); document.querySelectorAll('.save-material-button').forEach((button) => button.addEventListener('click', () => { const key = button.dataset.materialKey; const editor = button.parentElement.nextElementSibling.querySelector('textarea'); saveReportMaterial(meetingId, { [key]: editor.value }); registrarAuditoria(meetingId, `Texto de ${key} editado manualmente por ${USER_NAME}.`); renderReport(meetingId); })); }
@@ -198,9 +253,9 @@ function render() {
   const visible = getVisiblePlays();
   elements.grid.innerHTML = visible.map((play, index) => `
     <article class="play-card" data-id="${play.id}" style="animation-delay: ${Math.min(index * 35, 280)}ms">
-      <div class="card-top"><span class="play-number">${String(play.id).padStart(2, '0')}</span><div class="chips">${play.categoria.map((category) => `<span class="chip">${category}</span>`).join('')}</div></div>
-      <h3>${play.titulo}</h3><p class="trigger">${play.gatilho}</p>
-      <div class="card-footer"><span>${play.solucao_potencial}</span><span class="arrow">↗</span></div>
+      <div class="card-top"><span class="play-number">${String(play.id).padStart(2, '0')}</span><div class="chips">${play.categoria.map((category) => `<span class="chip">${escapeHtml(category)}</span>`).join('')}</div></div>
+      <h3>${escapeHtml(play.titulo)}</h3><p class="trigger">${escapeHtml(play.gatilho)}</p>
+      <div class="card-footer"><span>${escapeHtml(play.solucao_potencial)}</span><span class="arrow">↗</span></div>
     </article>`).join('');
   elements.empty.hidden = visible.length > 0;
   elements.count.textContent = `${visible.length} ${visible.length === 1 ? 'resultado' : 'resultados'}`;
@@ -269,7 +324,7 @@ document.getElementById('addContextButton').addEventListener('click', () => addC
 document.getElementById('saveDraftButton').addEventListener('click', () => saveFromForm('rascunho'));
 document.getElementById('meetingForm').addEventListener('submit', (event) => { event.preventDefault(); saveFromForm('em_andamento'); });
 document.getElementById('workspaceBackButton').addEventListener('click', () => { updateActiveMeeting(); navigate('dashboard'); });
-document.getElementById('completeMeetingButton').addEventListener('click', () => { if (!state.activeMeetingId) return; updateActiveMeeting(); openQualificationModal(); });
+document.getElementById('completeMeetingButton').addEventListener('click', () => { if (!state.activeMeetingId) return; flushAutosave(); updateActiveMeeting(); openQualificationModal(); });
 document.getElementById('qualificationConfirmButton').addEventListener('click', finalizeMeeting);
 document.getElementById('continueOpportunityChecklistButton').addEventListener('click', continueToOpportunityChecklist);
 document.getElementById('cancelOpportunityProductsButton').addEventListener('click', closeQualificationModal);
@@ -298,7 +353,7 @@ document.getElementById('distributorSearch').addEventListener('input', () => ren
 document.getElementById('manualPartnerInput').addEventListener('input', (event) => { partnerState.manual = event.target.value.trim(); savePartnerState(); renderPartnerPane(); });
 document.addEventListener('click', (event) => { const manualOption = event.target.closest('#partnerSuggestions [data-manual="true"]'); if (manualOption) { partnerState.partner = null; partnerState.manual = ''; partnerState.manualMode = true; closePartnerSuggestions(); document.getElementById('manualPartnerField').hidden = false; document.getElementById('distributorField').hidden = false; document.getElementById('distributorError').hidden = false; document.getElementById('manualPartnerInput').value = ''; document.getElementById('manualPartnerInput').focus(); return; } if (!event.target.closest('#partnerSearch, #partnerSuggestions, #distributorSearch, #distributorSuggestions')) closePartnerSuggestions(); });
 document.getElementById('partnerSuggestions').addEventListener('click', (event) => { const manualOption = event.target.closest('[data-manual="true"]'); if (!manualOption) return; event.preventDefault(); event.stopImmediatePropagation(); partnerState.partner = null; partnerState.manual = ''; partnerState.manualMode = true; closePartnerSuggestions(); document.getElementById('manualPartnerField').hidden = false; document.getElementById('distributorField').hidden = false; document.getElementById('distributorError').hidden = false; document.getElementById('manualPartnerInput').value = ''; document.getElementById('manualPartnerInput').focus(); }, true);
-document.getElementById('salesPlayOptions').innerHTML = state.plays.map((play) => `<option value="${play.titulo}">`).join('');
+document.getElementById('salesPlayOptions').innerHTML = state.plays.map((play) => `<option value="${escapeHtml(play.titulo)}">`).join('');
 document.getElementById('matrixBody').innerHTML = OPPORTUNITY_MATRIX.map((row) => `<tr><td>${row.sinal}</td><td>${row.abordagem}</td><td>${row.tipo}</td></tr>`).join('');
 document.getElementById('matrixSearch').addEventListener('input', (event) => { const query = event.target.value.toLocaleLowerCase('pt-BR'); document.querySelectorAll('#matrixBody tr').forEach((row) => { row.hidden = !row.textContent.toLocaleLowerCase('pt-BR').includes(query); }); });
 document.getElementById('libraryFilterGroup').innerHTML = ['TODOS', 'CROSS-SELL', 'UPSELL', 'ADOPTION', 'EXPANSION', 'MODERNIZATION', 'CONSOLIDATION', 'DISCOVERY'].map((filter) => `<button class="filter ${filter === 'TODOS' ? 'active' : ''}" data-filter="${filter}">${filter === 'TODOS' ? 'Todos' : filter}</button>`).join('');
@@ -309,11 +364,383 @@ document.getElementById('accessAlertButton').addEventListener('click', openPendi
 document.querySelectorAll('.access-filters .filter').forEach((button) => button.addEventListener('click', () => { requestFilter = button.dataset.requestFilter; document.querySelectorAll('.access-filters .filter').forEach((item) => item.classList.toggle('active', item === button)); renderAccessRequests(); }));
 document.querySelectorAll('.access-tab').forEach((button) => button.addEventListener('click', () => { const tab = button.dataset.accessTab; document.querySelectorAll('.access-tab').forEach((item) => item.classList.toggle('active', item === button)); document.getElementById('accessRequestsPane').hidden = tab !== 'requests'; document.getElementById('accessEmailsPane').hidden = tab !== 'emails'; document.getElementById('accessOverviewPane').hidden = tab !== 'overview'; }));
 window.addEventListener('discovery:access-requests-updated', (event) => { const current = updateAccessNotification(); if (isAdmin() && current > (event.detail?.previousPending || 0)) showToast('Nova solicitação de acesso recebida.'); if (!document.getElementById('accessView').hidden) renderAccessRequests(); });
-document.getElementById('saveAnswerButton').addEventListener('click', () => { if (!selectedQuestion) return; saveDiscoveryResponse(selectedQuestion.uid, selectedQuestion.stage, document.getElementById('answerInput').value.trim(), 'respondida', selectedQuestion.text); renderDiscovery(); selectQuestion(selectedQuestion.text, selectedQuestion.uid, selectedQuestion.stage); });
-document.getElementById('cancelAnswerButton').addEventListener('click', () => { if (selectedQuestion) selectQuestion(selectedQuestion.text, selectedQuestion.uid, selectedQuestion.stage); });
-document.querySelectorAll('[data-answer-status]').forEach((button) => button.addEventListener('click', () => { if (!selectedQuestion) return; saveDiscoveryResponse(selectedQuestion.uid, selectedQuestion.stage, '', button.dataset.answerStatus, selectedQuestion.text); renderDiscovery(); selectQuestion(selectedQuestion.text, selectedQuestion.uid, selectedQuestion.stage); }));
+document.getElementById('saveAnswerButton').addEventListener('click', () => { if (!selectedQuestion) return; cancelPendingAutosave(); saveDiscoveryResponse(selectedQuestion.uid, selectedQuestion.stage, document.getElementById('answerInput').value.trim(), 'respondida', selectedQuestion.text); renderDiscovery(); selectQuestion(selectedQuestion.text, selectedQuestion.uid, selectedQuestion.stage); });
+document.getElementById('cancelAnswerButton').addEventListener('click', () => { cancelPendingAutosave(); if (selectedQuestion) selectQuestion(selectedQuestion.text, selectedQuestion.uid, selectedQuestion.stage); });
+document.querySelectorAll('[data-answer-status]').forEach((button) => button.addEventListener('click', () => { if (!selectedQuestion) return; cancelPendingAutosave(); saveDiscoveryResponse(selectedQuestion.uid, selectedQuestion.stage, document.getElementById('answerInput').value.trim(), button.dataset.answerStatus, selectedQuestion.text); renderDiscovery(); selectQuestion(selectedQuestion.text, selectedQuestion.uid, selectedQuestion.stage); }));
 document.getElementById('addCustomQuestionButton').addEventListener('click', () => { if (!state.activeMeetingId || state.readOnly || !['abertura', 'situacao', 'problema', 'implicacao', 'need_payoff'].includes(activeDiscoveryStage)) return; const text = window.prompt('Digite a pergunta personalizada:'); if (!text?.trim()) return; const meeting = getMeetingById(state.activeMeetingId); meeting.perguntas_personalizadas = [...(meeting.perguntas_personalizadas || []), { id: `custom-${Date.now()}`, text: text.trim(), sales_play_id: Number(activePlayId), etapa_spin: activeDiscoveryStage, custom: true }]; saveMeeting(meeting); renderDiscovery(); });
 document.getElementById('workspaceView').addEventListener('change', (event) => { const selector = event.target.closest('#salesPlaySelector'); if (!selector) return; activePlayId = Number(selector.value); selectedQuestion = null; if (state.activeMeetingId && !state.readOnly) { const meeting = getMeetingById(state.activeMeetingId); meeting.sales_play_ativo = activePlayId; saveMeeting(meeting); } renderDiscovery(); });
+/* =====================================================================
+   MELHORIAS DO WORKSPACE (autosave, progresso, aderência, sinais, tags,
+   plays relacionados, abertura guiada, cronômetro)
+   ===================================================================== */
+const SIGNAL_STORAGE_FIELD = 'sinais';
+let lastOpeningPlainText = '';
+let lastWorkspaceMeetingId = null;
+let answerAutosaveTimer = null;
+let relatedPlaysTimer = null;
+let playKeywordIndex = null;
+const meetingTimer = { meetingId: null, base: 0, startedAt: null, interval: null, lastPersist: 0 };
+
+function tr(text, variables = {}) {
+  if (window.t) return window.t(text, variables);
+  return Object.entries(variables).reduce((value, [name, replacement]) => value.replaceAll(`{${name}}`, replacement), text);
+}
+function normalizeText(value) { return String(value || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase('pt-BR').replace(/[^a-z0-9]+/g, ' ').trim(); }
+
+/* ---------- Autosave da resposta ---------- */
+function cancelPendingAutosave() { clearTimeout(answerAutosaveTimer); answerAutosaveTimer = null; }
+function setAutosaveLabel(text) { const label = document.getElementById('answerAutosaveState'); if (label) label.textContent = text; }
+function writeAnswerSilently(target, value) {
+  if (!target || state.readOnly || !state.activeMeetingId) return false;
+  const text = String(value || '').trim();
+  if (!text) return false; // autosave nunca apaga uma resposta
+  const previous = getMeetingById(state.activeMeetingId)?.respostas?.[getResponseKey(activePlayId, target.stage, target.uid)];
+  if (previous && previous.resposta === text) return false;
+  saveDiscoveryResponse(target.uid, target.stage, text, 'respondida', target.text, { silent: true });
+  return true;
+}
+function flushAutosave() {
+  if (answerAutosaveTimer === null) return;
+  cancelPendingAutosave();
+  const input = document.getElementById('answerInput');
+  if (selectedQuestion && input && writeAnswerSilently(selectedQuestion, input.value)) refreshProgress();
+}
+function onAnswerInput() {
+  if (state.readOnly || !selectedQuestion) return;
+  setAutosaveLabel(tr('Digitando…'));
+  cancelPendingAutosave();
+  const target = selectedQuestion;
+  answerAutosaveTimer = setTimeout(() => {
+    answerAutosaveTimer = null;
+    const input = document.getElementById('answerInput');
+    if (writeAnswerSilently(target, input.value)) {
+      setAutosaveLabel(tr('Rascunho salvo às {time}', { time: new Date().toLocaleTimeString(window.DiscoveryI18n?.getLocale?.() || 'pt-BR', { hour: '2-digit', minute: '2-digit' }) }));
+      refreshProgress();
+      decorateQuestionRows();
+    } else setAutosaveLabel('');
+  }, 800);
+  clearTimeout(relatedPlaysTimer);
+  relatedPlaysTimer = setTimeout(updateRelatedPlays, 450);
+}
+function saveAndGoNext() {
+  if (!selectedQuestion || state.readOnly) return;
+  const current = selectedQuestion;
+  cancelPendingAutosave();
+  saveDiscoveryResponse(current.uid, current.stage, document.getElementById('answerInput').value.trim(), 'respondida', current.text);
+  renderDiscovery();
+  const buttons = [...document.querySelectorAll('.ask-question-button')];
+  const index = buttons.findIndex((button) => button.dataset.questionUid === String(current.uid));
+  if (index >= 0 && index < buttons.length - 1) { buttons[index + 1].click(); document.getElementById('answerInput').focus(); return; }
+  const stageIndex = SPIN_STAGES.findIndex((item) => item.id === current.stage);
+  const nextStage = SPIN_STAGES[stageIndex + 1];
+  if (nextStage) { showToast(tr('Etapa concluída. Seguindo para {stage}.', { stage: tr(nextStage.label) })); document.querySelector(`.spin-tab[data-stage="${nextStage.id}"]`)?.click(); }
+  else showToast(tr('Última pergunta registrada.'));
+}
+
+/* ---------- Pergunta ativa, ✓ / ⏭ ---------- */
+function highlightActiveQuestion(uid) {
+  document.querySelectorAll('.discovery-question-row').forEach((row) => row.classList.toggle('active-question', row.querySelector('.ask-question-button')?.dataset.questionUid === String(uid)));
+  const active = document.querySelector('.discovery-question-row.active-question');
+  if (active?.scrollIntoView) active.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+}
+function decorateQuestionRows() {
+  if (!state.activeMeetingId) return;
+  document.querySelectorAll('.discovery-question-row').forEach((row) => {
+    const button = row.querySelector('.ask-question-button');
+    if (!button) return;
+    const response = getSavedResponse(button.dataset.questionUid, activeDiscoveryStage);
+    row.querySelector('.q-state')?.remove();
+    row.classList.toggle('answered', response?.status === 'respondida');
+    if (!response) return;
+    const done = response.status === 'respondida';
+    const icon = document.createElement('span');
+    icon.className = `q-state ${done ? 'q-done' : 'q-skip'}`;
+    icon.title = done ? tr('Respondida') : (responseStatusLabels[response.status] || response.status);
+    icon.textContent = done ? '✓' : '⏭';
+    row.querySelector('p')?.prepend(icon);
+    button.textContent = done ? tr('Editar resposta') : tr('Fazer esta pergunta');
+  });
+}
+
+/* ---------- Progresso por etapa + aderência em tempo real ---------- */
+function stageQuestionUids(play, stageId) {
+  const stage = SPIN_STAGES.find((item) => item.id === stageId);
+  if (!stage?.source) return [];
+  return [...(play[stage.source] || []), ...getCustomQuestions(play.id, stageId)].map((question, index) => question.id || `custom-${index}`);
+}
+function computeProgress() {
+  const play = getActivePlay();
+  const meeting = state.activeMeetingId ? getMeetingById(state.activeMeetingId) : null;
+  const perStage = {};
+  let total = 0, done = 0;
+  SPIN_STAGES.forEach((stage) => {
+    if (stage.id === 'proximo_passo') return;
+    let items, answered;
+    if (stage.id === 'qualificacao') {
+      items = QUALIFICATION_ITEMS.length;
+      answered = QUALIFICATION_ITEMS.filter((_, index) => meeting?.respostas?.[getResponseKey(play.id, 'qualificacao', `qual-${index + 1}`)]?.resposta).length;
+    } else {
+      const uids = stageQuestionUids(play, stage.id);
+      items = uids.length;
+      answered = uids.filter((uid) => meeting?.respostas?.[getResponseKey(play.id, stage.id, uid)]?.status === 'respondida').length;
+    }
+    perStage[stage.id] = { items, answered };
+    if (stage.id !== 'abertura' && stage.id !== 'qualificacao') { total += items; done += answered; }
+  });
+  return { perStage, total, done, percent: total ? Math.round((done / total) * 100) : 0 };
+}
+function computeAdherence() {
+  const play = getActivePlay();
+  const meeting = state.activeMeetingId ? getMeetingById(state.activeMeetingId) : null;
+  const total = QUALIFICATION_ITEMS.length;
+  const values = QUALIFICATION_ITEMS.map((_, index) => meeting?.respostas?.[getResponseKey(play.id, 'qualificacao', `qual-${index + 1}`)]?.resposta || '');
+  const yes = values.filter((value) => value === 'Sim').length;
+  return { yes, answered: values.filter(Boolean).length, total, percent: total ? Math.round((yes / total) * 100) : 0 };
+}
+function refreshProgress() {
+  if (!state.activeMeetingId || !getActivePlay()) { document.getElementById('meetingProgress')?.remove(); return; }
+  const progress = computeProgress();
+  document.querySelectorAll('.spin-tab').forEach((tab) => {
+    tab.querySelector('.tab-count')?.remove();
+    const info = progress.perStage[tab.dataset.stage];
+    if (!info || !info.items) return;
+    const badge = document.createElement('span');
+    badge.className = `tab-count ${info.answered === info.items ? 'complete' : ''}`;
+    badge.textContent = `${info.answered}/${info.items}`;
+    tab.appendChild(badge);
+  });
+  const tabs = document.getElementById('spinTabs');
+  let box = document.getElementById('meetingProgress');
+  if (!box && tabs) { box = document.createElement('div'); box.id = 'meetingProgress'; box.setAttribute('aria-live', 'polite'); tabs.parentNode.insertBefore(box, tabs); }
+  if (!box) return;
+  const adherence = computeAdherence();
+  const adherenceClass = !adherence.answered ? 'idle' : adherence.percent >= 80 ? 'positive' : 'warning';
+  const adherenceText = adherence.answered
+    ? tr('Aderência à qualificação: {percent}% ({yes}/{total} confirmados · meta 80%)', { percent: String(adherence.percent), yes: String(adherence.yes), total: String(adherence.total) })
+    : tr('Aderência à qualificação: preencha a aba Qualificação para acompanhar.');
+  box.classList.toggle('done', progress.percent === 100);
+  box.innerHTML = `<strong>${tr('{done} de {total} perguntas respondidas', { done: String(progress.done), total: String(progress.total) })}</strong> · ${tr('{percent}% da descoberta', { percent: String(progress.percent) })}<div class="bar"><span style="width:${progress.percent}%"></span></div><div class="adherence ${adherenceClass}">${escapeHtml(adherenceText)}</div>`;
+}
+
+/* ---------- Sinais de alto potencial (checklist ao vivo) ---------- */
+function parseSignals(text) {
+  const raw = String(text || '').trim().replace(/\.$/, '');
+  if (!raw) return [];
+  let parts = (raw.includes(';') ? raw.split(';') : raw.split(',')).map((item) => item.trim()).filter(Boolean);
+  if (!raw.includes(';') && parts.length >= 3) {
+    const last = parts.pop();
+    parts.push(...last.split(/\s+ou\s+/).map((item) => item.trim()).filter(Boolean));
+  }
+  return parts.map((item) => item.charAt(0).toLocaleUpperCase('pt-BR') + item.slice(1));
+}
+function getMarkedSignals(meeting, playId) { return new Set(meeting?.[SIGNAL_STORAGE_FIELD]?.[playId] || []); }
+function renderSignalsPanel() {
+  const guidance = document.getElementById('discoveryPlayGuidance');
+  if (!guidance) return;
+  let panel = document.getElementById('signalsPanel');
+  if (!panel) {
+    panel = document.createElement('details');
+    panel.id = 'signalsPanel'; panel.className = 'signals-panel'; panel.open = true;
+    guidance.insertAdjacentElement('afterend', panel);
+  }
+  const play = getActivePlay();
+  const meeting = state.activeMeetingId ? getMeetingById(state.activeMeetingId) : null;
+  const signals = meeting && play ? parseSignals(play.sinais_alto_potencial) : [];
+  panel.hidden = !signals.length;
+  if (!signals.length) { panel.innerHTML = ''; return; }
+  const marked = getMarkedSignals(meeting, play.id);
+  panel.innerHTML = `<summary>${tr('Sinais de alto potencial')} <b>${marked.size}/${signals.length}</b></summary><p class="signals-hint">${tr('Marque os sinais que o cliente confirmar durante a conversa.')}</p><div class="signals-list">${signals.map((signal, index) => `<label class="signal-item"><input type="checkbox" data-signal="${index}" ${marked.has(index) ? 'checked' : ''} ${state.readOnly ? 'disabled' : ''}><span>${escapeHtml(signal)}</span></label>`).join('')}</div>`;
+}
+function toggleSignal(index, checked) {
+  if (state.readOnly || !state.activeMeetingId) return;
+  const play = getActivePlay();
+  const meeting = getMeetingById(state.activeMeetingId);
+  const signals = parseSignals(play.sinais_alto_potencial);
+  const marked = getMarkedSignals(meeting, play.id);
+  if (checked) marked.add(index); else marked.delete(index);
+  meeting[SIGNAL_STORAGE_FIELD] = { ...(meeting[SIGNAL_STORAGE_FIELD] || {}), [play.id]: [...marked].sort((a, b) => a - b) };
+  saveMeeting(meeting);
+  registrarAuditoria(state.activeMeetingId, `Sinal ${checked ? 'identificado' : 'desmarcado'} — ${signals[index] || index}.`);
+  renderSignalsPanel();
+}
+function signalsSummaryText(meeting) {
+  const lines = [];
+  Object.entries(meeting?.[SIGNAL_STORAGE_FIELD] || {}).forEach(([playId, indexes]) => {
+    const play = state.plays.find((item) => item.id === Number(playId));
+    const signals = parseSignals(play?.sinais_alto_potencial);
+    const names = (indexes || []).map((index) => signals[index]).filter(Boolean);
+    if (names.length) lines.push(`${play.titulo}: ${names.join('; ')}`);
+  });
+  return lines.join(' | ');
+}
+
+/* ---------- Tags nas respostas (Dor, Impacto, Oportunidade) ---------- */
+function renderAnswerTags() {
+  const box = document.getElementById('answerTags');
+  if (!box) return;
+  const tags = selectedQuestion?.tags || [];
+  const disabled = state.readOnly || !selectedQuestion || !['situacao', 'problema', 'implicacao', 'need_payoff', 'abertura'].includes(selectedQuestion.stage);
+  box.innerHTML = `<span class="answer-tags-label">${tr('Marcar resposta como')}</span>${RESPONSE_TAGS.map((tag) => `<button type="button" class="answer-tag ${tags.includes(tag.id) ? 'active' : ''}" data-answer-tag="${tag.id}" aria-pressed="${tags.includes(tag.id)}" ${disabled ? 'disabled' : ''}>${tr(tag.label)}</button>`).join('')}`;
+}
+function toggleAnswerTag(id) {
+  if (!selectedQuestion || state.readOnly) return;
+  const tags = new Set(selectedQuestion.tags || []);
+  if (tags.has(id)) tags.delete(id); else tags.add(id);
+  selectedQuestion.tags = [...tags];
+  const meeting = getMeetingById(state.activeMeetingId);
+  const key = getResponseKey(activePlayId, selectedQuestion.stage, selectedQuestion.uid);
+  if (meeting?.respostas?.[key]) { meeting.respostas[key] = { ...meeting.respostas[key], tags: selectedQuestion.tags, updated_at: new Date().toISOString() }; saveMeeting(meeting); }
+  renderAnswerTags();
+}
+
+/* ---------- Sugestão de play relacionado ---------- */
+function buildPlayKeywordIndex() {
+  const stop = new Set(['microsoft', 'solucao', 'solucoes', 'para', 'como', 'dados', 'cloud', 'servicos', 'plataforma', 'ambiente', 'modernizacao', 'infraestrutura', 'discovery', 'gestao']);
+  const perPlay = state.plays.map((play) => ({ id: play.id, titulo: play.titulo, words: new Set(normalizeText(`${play.titulo} ${play.solucao_potencial}`).split(' ').filter((word) => word.length >= 4 && !stop.has(word))) }));
+  const frequency = {};
+  perPlay.forEach((play) => play.words.forEach((word) => { frequency[word] = (frequency[word] || 0) + 1; }));
+  return perPlay.map((play) => ({ ...play, words: [...play.words].filter((word) => frequency[word] <= 2) })).filter((play) => play.words.length);
+}
+function findRelatedPlays(text, excludeId) {
+  if (!playKeywordIndex) playKeywordIndex = buildPlayKeywordIndex();
+  const tokens = new Set(normalizeText(text).split(' '));
+  return playKeywordIndex.filter((play) => play.id !== Number(excludeId))
+    .map((play) => ({ id: play.id, titulo: play.titulo, score: play.words.filter((word) => tokens.has(word)).length }))
+    .filter((play) => play.score > 0).sort((a, b) => b.score - a.score).slice(0, 2);
+}
+function updateRelatedPlays() {
+  const box = document.getElementById('relatedPlays');
+  const input = document.getElementById('answerInput');
+  if (!box || !input) return;
+  const related = selectedQuestion ? findRelatedPlays(input.value, activePlayId) : [];
+  box.hidden = !related.length;
+  box.innerHTML = related.length ? `<span>${tr('Esta resposta lembra outros plays:')}</span>${related.map((play) => `<button type="button" class="related-play" data-related-play="${play.id}">${escapeHtml(play.titulo)} ↗</button>`).join('')}` : '';
+}
+
+/* ---------- Cronômetro da reunião ---------- */
+function formatDuration(ms) {
+  const total = Math.max(0, Math.floor(ms / 1000));
+  const hours = Math.floor(total / 3600), minutes = Math.floor((total % 3600) / 60), seconds = total % 60;
+  return hours ? `${hours}h ${String(minutes).padStart(2, '0')}min` : `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+}
+function timerElapsed() { return meetingTimer.base + (meetingTimer.startedAt ? Date.now() - meetingTimer.startedAt : 0); }
+function persistMeetingTimer() {
+  if (!meetingTimer.meetingId || state.readOnly) return;
+  const meeting = getMeetingById(meetingTimer.meetingId);
+  if (!meeting || meeting.status === 'concluida') return;
+  meeting.cronometro_ms = timerElapsed();
+  saveMeeting(meeting);
+  meetingTimer.lastPersist = Date.now();
+}
+function renderMeetingTimer() {
+  const holder = document.getElementById('meetingTimer');
+  if (!holder) return;
+  const running = Boolean(meetingTimer.startedAt);
+  holder.classList.toggle('paused', !running);
+  holder.querySelector('.timer-value').textContent = `⏱ ${formatDuration(timerElapsed())}`;
+  holder.querySelector('button').textContent = tr(running ? 'Pausar' : 'Retomar');
+}
+function pauseMeetingTimer() {
+  if (meetingTimer.startedAt) { meetingTimer.base = timerElapsed(); meetingTimer.startedAt = null; persistMeetingTimer(); }
+  clearInterval(meetingTimer.interval); meetingTimer.interval = null;
+  renderMeetingTimer();
+}
+function leaveWorkspaceTimer() { if (meetingTimer.meetingId) { pauseMeetingTimer(); meetingTimer.meetingId = null; } }
+function stopMeetingTimerAndGetElapsed() {
+  const elapsed = meetingTimer.meetingId ? timerElapsed() : 0;
+  meetingTimer.base = elapsed; meetingTimer.startedAt = null;
+  clearInterval(meetingTimer.interval); meetingTimer.interval = null;
+  renderMeetingTimer();
+  return elapsed;
+}
+function startMeetingTimer() {
+  if (state.readOnly || !meetingTimer.meetingId || meetingTimer.startedAt) return;
+  meetingTimer.startedAt = Date.now();
+  clearInterval(meetingTimer.interval);
+  meetingTimer.interval = setInterval(() => {
+    if (document.getElementById('workspaceView')?.hidden) { pauseMeetingTimer(); return; }
+    renderMeetingTimer();
+    if (Date.now() - meetingTimer.lastPersist > 30000) persistMeetingTimer();
+  }, 1000);
+  renderMeetingTimer();
+}
+function initMeetingTimer(id) {
+  const meeting = getMeetingById(id);
+  const bar = document.getElementById('activeMeetingBar');
+  if (!meeting || !bar) return;
+  let holder = document.getElementById('meetingTimer');
+  if (!holder) {
+    holder = document.createElement('span');
+    holder.id = 'meetingTimer'; holder.className = 'meeting-timer';
+    holder.innerHTML = '<span class="timer-value"></span><button type="button" class="timer-toggle"></button>';
+    bar.insertBefore(holder, document.getElementById('completeMeetingButton'));
+    holder.querySelector('button').addEventListener('click', () => { if (meetingTimer.startedAt) pauseMeetingTimer(); else startMeetingTimer(); });
+  }
+  holder.querySelector('button').hidden = state.readOnly;
+  if (meetingTimer.meetingId === id && !state.readOnly) { renderMeetingTimer(); return; } // chamada repetida (hashchange)
+  if (meetingTimer.meetingId && meetingTimer.meetingId !== id) pauseMeetingTimer();
+  meetingTimer.meetingId = id; meetingTimer.base = meeting.cronometro_ms || 0; meetingTimer.startedAt = null;
+  clearInterval(meetingTimer.interval); meetingTimer.interval = null;
+  if (state.readOnly) { holder.classList.remove('paused'); holder.querySelector('.timer-value').textContent = `⏱ ${formatDuration(meetingTimer.base)}`; return; }
+  startMeetingTimer();
+}
+
+/* ---------- Ligações de eventos ---------- */
+(function bindWorkspaceEnhancements() {
+  const input = document.getElementById('answerInput');
+  const label = input?.closest('label');
+  if (input && label && !document.getElementById('answerExtras')) {
+    const extras = document.createElement('div');
+    extras.id = 'answerExtras'; extras.className = 'answer-extras';
+    extras.innerHTML = '<div id="answerTags" class="answer-tags"></div><div id="relatedPlays" class="related-plays" hidden></div><div id="answerAutosaveState" class="answer-autosave" aria-live="polite"></div>';
+    label.insertAdjacentElement('afterend', extras);
+    renderAnswerTags();
+    extras.querySelector('#answerTags').addEventListener('click', (event) => { const button = event.target.closest('[data-answer-tag]'); if (button) toggleAnswerTag(button.dataset.answerTag); });
+    extras.querySelector('#relatedPlays').addEventListener('click', (event) => { const button = event.target.closest('[data-related-play]'); if (button) openDetail(Number(button.dataset.relatedPlay)); });
+    input.addEventListener('input', onAnswerInput);
+    input.addEventListener('keydown', (event) => { if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') { event.preventDefault(); saveAndGoNext(); } });
+  }
+  const saveButton = document.getElementById('saveAnswerButton');
+  if (saveButton && !document.getElementById('saveAndNextButton')) {
+    const next = document.createElement('button');
+    next.type = 'button'; next.id = 'saveAndNextButton'; next.className = 'answer-primary-button save-next-button';
+    next.textContent = 'Salvar e próxima pergunta'; next.title = 'Atalho: Ctrl + Enter';
+    saveButton.insertAdjacentElement('afterend', next);
+    next.addEventListener('click', saveAndGoNext);
+  }
+  document.getElementById('discoveryQuestionList')?.addEventListener('click', (event) => {
+    const copy = event.target.closest('[data-opening-copy]');
+    if (copy) { navigator.clipboard?.writeText(lastOpeningPlainText).then(() => showToast(tr('Fala copiada.')), () => showToast(tr('Não foi possível copiar a fala.'))); return; }
+    const done = event.target.closest('[data-opening-done]');
+    if (done && state.activeMeetingId && !state.readOnly) {
+      const meeting = getMeetingById(state.activeMeetingId);
+      if (!meeting.abertura_concluida) { meeting.abertura_concluida = true; saveMeeting(meeting); registrarAuditoria(state.activeMeetingId, 'Abertura da reunião realizada.'); }
+      document.querySelector('.spin-tab[data-stage="situacao"]')?.click();
+    }
+  });
+  document.getElementById('discoveryPlayGuidance')?.parentElement?.addEventListener('change', (event) => {
+    const checkbox = event.target.closest?.('[data-signal]');
+    if (checkbox) toggleSignal(Number(checkbox.dataset.signal), checkbox.checked);
+  });
+  window.addEventListener('beforeunload', () => { flushAutosave(); persistMeetingTimer(); });
+  document.addEventListener('visibilitychange', () => { if (document.hidden) { flushAutosave(); persistMeetingTimer(); } });
+  window.addEventListener('discovery:language-changed', () => {
+    if (!state.activeMeetingId) return;
+    refreshProgress(); renderSignalsPanel(); renderAnswerTags(); renderMeetingTimer(); decorateQuestionRows(); updateRelatedPlays();
+  });
+  window.addEventListener('discovery:meetings-synced', () => {
+    if (!views.dashboard.hidden) renderDashboard();
+    const route = window.location.hash.slice(1);
+    if (!views.workspace.hidden && /^(reuniao|relatorio)\//.test(route)) {
+      const id = route.split('/')[1];
+      if (getMeetingById(id) && lastWorkspaceMeetingId !== id) {
+        navigate('workspace', id);
+        if (route.startsWith('relatorio/')) setMeetingTab('summary');
+      }
+    }
+  });
+}());
+
 renderDiscovery();
 
 document.getElementById('loginForm').addEventListener('submit', async (event) => {
@@ -413,3 +840,16 @@ else if (initialRoute === 'auditoria-ligacao') navigate('callAudit');
 else if (initialRoute === 'validacao-acessos') { if (isAdmin()) navigate('access'); else navigate('dashboard'); }
 else if (initialRoute === 'nova-reuniao') navigate('form');
 else navigate('dashboard');
+
+
+function renderAdminRemoteOverview() {
+  if (typeof fetchAllMeetingsRemote !== 'function') return;
+  fetchAllMeetingsRemote().then((rows) => {
+    if (!rows || !rows.length || document.getElementById('accessView').hidden) return;
+    const people = {};
+    rows.forEach((row) => { const person = row.owner_name || row.owner_email || 'Sem identificação'; (people[person] = people[person] || []).push(row); });
+    document.getElementById('accessPeopleBody').innerHTML = Object.entries(people).map(([person, items]) => `<tr><td>${escapeHtml(person)}</td><td>${items.length}</td><td>${items.filter((item) => item.status === 'rascunho').length}</td><td>${items.filter((item) => item.status === 'em_andamento').length}</td><td>${items.filter((item) => item.status === 'concluida').length}</td><td>${formatDate(items.slice().sort((x, y) => new Date(y.updated_at) - new Date(x.updated_at))[0].data)}</td></tr>`).join('');
+    const events = rows.flatMap((row) => (row.audit || []).map((event) => ({ ...event, empresa: row.empresa }))).sort((x, y) => new Date(y.data_hora) - new Date(x.data_hora)).slice(0, 200);
+    document.getElementById('accessAuditBody').innerHTML = events.map((event) => `<tr><td>${new Date(event.data_hora).toLocaleString('pt-BR')}</td><td>${escapeHtml(event.descricao)}</td><td>${escapeHtml(event.empresa)}</td></tr>`).join('') || '<tr><td colspan="3">Nenhum evento registrado.</td></tr>';
+  }).catch((error) => console.warn('Visão geral remota indisponível:', error));
+}
